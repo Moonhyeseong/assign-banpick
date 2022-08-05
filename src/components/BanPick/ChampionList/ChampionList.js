@@ -5,10 +5,17 @@ import ChampionFilter from './ChampionFilter';
 
 const ChampionList = () => {
   const [championData, setChampionData] = useState([]);
+  const [search, setSearch] = useState('');
   const championList = Object.values(championData);
   championList.sort((a, b) => a.name.localeCompare(b.name));
 
-  console.log(championList);
+  const searchList = championList.filter(champion => {
+    return (
+      champion.name.includes(search) ||
+      champion.id.toLowerCase().includes(search)
+    );
+  });
+
   useEffect(() => {
     fetch(
       'https://ddragon.leagueoflegends.com/cdn/12.14.1/data/ko_KR/champion.json'
@@ -19,10 +26,10 @@ const ChampionList = () => {
 
   return (
     <ChampionListLayout>
-      <ChampionFilter />
+      <ChampionFilter search={search} setSearch={setSearch} />
       <ListLayout>
-        {championList.map((champion, idx) => {
-          return <ChampionCard key={idx} champion={champion} />;
+        {searchList.map(champion => {
+          return <ChampionCard key={champion.key} champion={champion} />;
         })}
       </ListLayout>
       <SelectBtn>선택</SelectBtn>
@@ -42,6 +49,7 @@ const ListLayout = styled.div`
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: flex-start;
+  align-content: flex-start;
   gap: 12px;
   padding-left: 32px;
   width: 700px;

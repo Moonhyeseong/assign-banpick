@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Nav from '../components/Nav';
+import Nav from '../Nav';
 
 const ContentsWrapper = ({ children }) => {
   return (

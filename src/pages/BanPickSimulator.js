@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import ChampionList from '../components/BanPick/ChampionList/ChampionList';
 import PickList from '../components/BanPick/PickBanList/PickList';
 import BanPickIndicator from '../components/BanPick/BanPickIndicator';
+import SimulatorForm from '../components/SimulatorForm';
 
-const BanPick = () => {
-  return (
+const BanPickSimulator = () => {
+  const [isReady, setIsReady] = useState(false);
+  // const [isReady, setIsReady] = useState(true);
+
+  const [simulatorFormData, setSimulatorFormData] = useState({
+    blue: '',
+    red: '',
+    mode: '',
+    time: '',
+  });
+
+  return !isReady ? (
+    <SimulatorForm
+      simulatorFormData={simulatorFormData}
+      setSimulatorFormData={setSimulatorFormData}
+      setIsReady={setIsReady}
+    />
+  ) : (
     <BanPickLayout>
-      <BanPickIndicator />
+      <BanPickIndicator simulatorFormData={simulatorFormData} />
       <ListLayout>
         <PickList position="left" />
         <ChampionList />
@@ -17,7 +34,7 @@ const BanPick = () => {
   );
 };
 
-export default BanPick;
+export default BanPickSimulator;
 
 const BanPickLayout = styled.div`
   display: flex;

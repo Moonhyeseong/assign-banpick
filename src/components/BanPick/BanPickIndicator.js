@@ -1,12 +1,13 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-const BanPickIndicator = () => {
+const BanPickIndicator = ({ simulatorFormData }) => {
   return (
     <IndicatorLayout>
       <TeamInfo side="blue">
         <TeamName side="blue">
-          <TeamSide>BLUE</TeamSide>TEAM1
+          <TeamSide>BLUE</TeamSide>
+          {simulatorFormData.blue === '' ? 'BLUE TEAM' : simulatorFormData.blue}
         </TeamName>
       </TeamInfo>
       <Timer>
@@ -16,7 +17,8 @@ const BanPickIndicator = () => {
       </Timer>
       <TeamInfo side="red">
         <TeamName side="blue">
-          <TeamSide>RED</TeamSide>TEAM2
+          <TeamSide>RED</TeamSide>
+          {simulatorFormData.red === '' ? 'RED TEAM' : simulatorFormData.red}
         </TeamName>
       </TeamInfo>
     </IndicatorLayout>

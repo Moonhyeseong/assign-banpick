@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import BanPick from './pages/BanPick';
-import ContentsWrapper from './pages/ContentsWrapper';
+import ContentsWrapper from './components/Layout/ContentsWrapper';
+import BanPickSimulator from './pages/BanPickSimulator';
 
 const Router = () => {
   return (
     <BrowserRouter>
       <ContentsWrapper>
         <Routes>
-          <Route path="" element={<BanPick />} />
+          <Route path="" element={<BanPickSimulator />} />
         </Routes>
       </ContentsWrapper>
     </BrowserRouter>

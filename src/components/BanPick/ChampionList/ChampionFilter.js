@@ -1,16 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ChampionFilter = () => {
+const ChampionFilter = ({ search, setSearch }) => {
+  const onChange = e => {
+    setSearch(e.target.value);
+  };
   return (
     <FilterLayout>
-      <PositionFilter>
+      {/* <PositionFilter>
         {POSITION_ICON.map((postion, idx) => {
           return <PostionIcon src={postion.url} key={idx} />;
         })}
-      </PositionFilter>
+      </PositionFilter> */}
       <SearchFilter>
-        <SearchInput type="text" placeholder="챔피언의 이름을 입력하세요" />
+        <SearchInput
+          type="text"
+          placeholder="챔피언의 이름을 입력하세요"
+          value={search}
+          onChange={e => onChange(e)}
+        />
       </SearchFilter>
     </FilterLayout>
   );
@@ -70,6 +78,7 @@ const SearchInput = styled.input`
 
   font-size: 16px;
   color: ${props => props.theme.white.white80};
+
   &::placeholder {
     color: ${props => props.theme.white.white80};
     font-size: 12px;

@@ -22,6 +22,10 @@ const ChampionCardLayout = styled.div`
   color: ${props => props.theme.white.white80};
   font-size: 12px;
   font-weight: 600;
+
+  :hover {
+    opacity: 0.3;
+  }
 `;
 
 const ChampionIcon = styled.img`
