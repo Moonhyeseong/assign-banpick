@@ -19,7 +19,7 @@ const NavLayout = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 50px;
+  height: 40px;
   padding-left: 80px;
   padding-right: 80px;
   background-color: ${props => props.theme.black.black85};

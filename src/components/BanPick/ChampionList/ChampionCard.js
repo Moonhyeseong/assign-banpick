@@ -1,13 +1,47 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-const ChampionCard = ({ champion }) => {
+const ChampionCard = ({
+  champion,
+  banList,
+  pickList,
+  setPickList,
+  setBanList,
+  name,
+  selectedChampions,
+}) => {
+  const isSelected = selectedChampions.includes(champion);
+
+  const handlePickList = champion => {
+    if (!isSelected && pickList.blue.length < 5) {
+      let prevArr = [...pickList.blue];
+      prevArr.push(champion);
+      setPickList({ ...pickList, blue: prevArr });
+    }
+  };
+
+  const handleBanList = () => {
+    if (!isSelected && banList.blue.length < 5) {
+      let prevArr = [...banList.blue];
+      prevArr.push(champion);
+      setBanList({ ...banList, blue: prevArr });
+    }
+  };
+
   return (
-    <ChampionCardLayout>
+    <ChampionCardLayout
+      isSelected={isSelected}
+      onClick={() => {
+        handlePickList(champion);
+      }}
+    >
       <ChampionIcon
-        src={`http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${champion.id}.png`}
+        src={
+          champion &&
+          `http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${champion}.png`
+        }
       />
-      {champion.name}
+      {name}
     </ChampionCardLayout>
   );
 };
@@ -24,8 +58,14 @@ const ChampionCardLayout = styled.div`
   font-weight: 600;
 
   :hover {
-    opacity: 0.3;
+    opacity: 0.2;
   }
+
+  ${props =>
+    props.isSelected &&
+    css`
+      opacity: 0.2;
+    `}
 `;
 
 const ChampionIcon = styled.img`

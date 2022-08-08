@@ -6,7 +6,6 @@ const SimulatorForm = ({
   setSimulatorFormData,
   setIsReady,
 }) => {
-  console.log(simulatorFormData);
   const handleTeamName = (e, team) => {
     setSimulatorFormData({ ...simulatorFormData, [team]: e.target.value });
   };

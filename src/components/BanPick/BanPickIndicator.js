@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-const BanPickIndicator = ({ simulatorFormData }) => {
+const BanPickIndicator = ({ simulatorFormData, phase }) => {
   return (
     <IndicatorLayout>
       <TeamInfo side="blue">
@@ -11,9 +11,9 @@ const BanPickIndicator = ({ simulatorFormData }) => {
         </TeamName>
       </TeamInfo>
       <Timer>
-        <PatchVersion> Patch 12.4</PatchVersion>
+        <PatchVersion> Patch 12.4.1</PatchVersion>
         <LeftTime>:17</LeftTime>
-        <PaseInfo>1st BAN PHASE</PaseInfo>
+        <PhaseInfo>{phase()}</PhaseInfo>
       </Timer>
       <TeamInfo side="red">
         <TeamName side="blue">
@@ -94,9 +94,8 @@ const LeftTime = styled.p`
   font-weight: 700;
 `;
 
-const PaseInfo = styled.p`
+const PhaseInfo = styled.p`
   padding: 4px;
-  background-color: ${props => props.theme.black.black93};
   text-align: center;
   font-weight: 700;
 `;

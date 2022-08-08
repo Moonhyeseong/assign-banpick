@@ -1,15 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
+import BanCard from './BanCard';
 
-const BanList = () => {
+const BanList = ({ side, banList }) => {
   return (
-    <BanListLayout>
-      <BanListItem />
-      <BanListItem />
-      <BanListItem />
-      <BanListItem />
-      <BanListItem />
-    </BanListLayout>
+    <>
+      <EmptyCards>
+        {DEFAULT_LIST.map(idx => {
+          return <BanCard key={idx} side={side} selecting={true} />;
+        })}
+      </EmptyCards>
+      <BanListLayout>
+        {banList.map((champion, idx) => {
+          return (
+            <BanCard
+              key={idx}
+              champion={champion}
+              side={side}
+              selecting={true}
+            />
+          );
+        })}
+      </BanListLayout>
+    </>
   );
 };
 
@@ -21,8 +34,10 @@ const BanListLayout = styled.div`
   bottom: 8px;
 `;
 
-const BanListItem = styled.div`
-  width: 66px;
-  height: 66px;
-  border: 1px solid ${props => props.theme.black.black85}; ;
+const EmptyCards = styled.div`
+  position: absolute;
+  display: flex;
+  bottom: 8px;
 `;
+
+const DEFAULT_LIST = [0, 1, 2, 3, 4];

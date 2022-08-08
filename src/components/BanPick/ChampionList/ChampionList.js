@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ChampionCard from './ChampionCard';
 import ChampionFilter from './ChampionFilter';
 
-const ChampionList = () => {
+const ChampionList = ({ setPickList, setBanList, banList, pickList }) => {
   const [championData, setChampionData] = useState([]);
   const [search, setSearch] = useState('');
   const championList = Object.values(championData);
@@ -12,9 +12,16 @@ const ChampionList = () => {
   const searchList = championList.filter(champion => {
     return (
       champion.name.includes(search) ||
-      champion.id.toLowerCase().includes(search)
+      champion.id.toLowerCase().includes(search.toLowerCase())
     );
   });
+
+  const selectedChampions = [
+    ...banList.red,
+    ...banList.blue,
+    ...pickList.red,
+    ...pickList.blue,
+  ];
 
   useEffect(() => {
     fetch(
@@ -29,9 +36,23 @@ const ChampionList = () => {
       <ChampionFilter search={search} setSearch={setSearch} />
       <ListLayout>
         {searchList.map(champion => {
-          return <ChampionCard key={champion.key} champion={champion} />;
+          return (
+            <ChampionCard
+              key={champion.key}
+              champion={champion.id}
+              name={champion.name}
+              setPickList={setPickList}
+              setBanList={setBanList}
+              banList={banList}
+              pickList={pickList}
+              selectedChampions={selectedChampions}
+            />
+          );
         })}
       </ListLayout>
+      {
+        //선택 버튼 활성화 - push 되어야할 순서의 해당 인덱스가 채워져 있을때 버튼 활성화
+      }
       <SelectBtn>선택</SelectBtn>
     </ChampionListLayout>
   );
@@ -76,7 +97,7 @@ const SelectBtn = styled.div`
   width: 280px;
   height: 50px;
   background-color: ${props => props.theme.black.black70};
-  border-radius: 20px;
+  border-radius: 25px;
 
   font-weight: 500;
   font-size: 22px;
