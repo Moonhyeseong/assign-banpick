@@ -3,7 +3,12 @@ import styled from 'styled-components';
 import ChampionCard from './ChampionCard';
 import ChampionFilter from './ChampionFilter';
 
-const ChampionList = ({ setPickList, setBanList, banList, pickList }) => {
+const ChampionList = ({
+  setBanPickList,
+  banPickList,
+  phaseCounter,
+  setSelectedChampion,
+}) => {
   const [championData, setChampionData] = useState([]);
   const [search, setSearch] = useState('');
   const championList = Object.values(championData);
@@ -17,10 +22,10 @@ const ChampionList = ({ setPickList, setBanList, banList, pickList }) => {
   });
 
   const selectedChampions = [
-    ...banList.red,
-    ...banList.blue,
-    ...pickList.red,
-    ...pickList.blue,
+    ...banPickList.banList.red,
+    ...banPickList.banList.blue,
+    ...banPickList.pickList.red,
+    ...banPickList.pickList.blue,
   ];
 
   useEffect(() => {
@@ -41,11 +46,10 @@ const ChampionList = ({ setPickList, setBanList, banList, pickList }) => {
               key={champion.key}
               champion={champion.id}
               name={champion.name}
-              setPickList={setPickList}
-              setBanList={setBanList}
-              banList={banList}
-              pickList={pickList}
+              banPickList={banPickList}
+              setBanPickList={setBanPickList}
               selectedChampions={selectedChampions}
+              setSelectedChampion={setSelectedChampion}
             />
           );
         })}

@@ -1,18 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 
-const PickCard = ({ side, champion, player }) => {
+const PickCard = ({
+  side,
+  champion,
+  phaseCounter,
+  pickList,
+  role,
+  index,
+  selectedChampion,
+}) => {
+  //픽 밴 카드는 자신의 인덱스, 이번순서 채워질 배열을 인덱스가 필요
+  //두개가 같을때 선택중인 카드임
+  const [isSelecting, setIsSselecting] = useState(true);
+
+  const curruntIndex = pickList.indexOf('');
+  console.log(curruntIndex);
+
+  // useEffect(() => {
+  //   if (phaseCounter === 0 && banPickList.pickList[side].length === id) {
+  //     setIsSselecting(true);
+  //   }
+  // }, [id, phaseCounter, banPickList.pickList, side]);
+
   const imgURL =
-    champion &&
-    `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion}_0.jpg`;
+    selectedChampion &&
+    `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${selectedChampion}_0.jpg`;
 
   return (
     <PickCardLayout>
-      <PlayerName side={side}>{player && player.role}</PlayerName>
-      <ChampionName side={side}>{champion}</ChampionName>
-      <BackgroundImage side={side} imgURL={imgURL}>
-        <GradientMask side={side} selecting={true} champion={champion} />
-      </BackgroundImage>
+      <PlayerName side={side}>{role}</PlayerName>
+      <ChampionName side={side}>
+        {champion === '' ? 'Champion' : champion}
+      </ChampionName>
+      {index === curruntIndex && (
+        <BackgroundImage side={side} imgURL={imgURL}>
+          <GradientMask
+            side={side}
+            isSelecting={isSelecting}
+            champion={champion}
+          />
+        </BackgroundImage>
+      )}
     </PickCardLayout>
   );
 };
@@ -55,7 +84,7 @@ const GradientMask = styled.div`
   );
 
   ${props =>
-    props.selecting &&
+    props.isSelecting &&
     props.side === 'blue' &&
     !props.champion &&
     css`
@@ -68,7 +97,7 @@ const GradientMask = styled.div`
     `};
 
   ${props =>
-    props.selecting &&
+    props.isSelecting &&
     props.side === 'red' &&
     !props.champion &&
     css`

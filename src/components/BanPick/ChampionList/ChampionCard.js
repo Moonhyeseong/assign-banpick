@@ -3,28 +3,27 @@ import styled, { css } from 'styled-components';
 
 const ChampionCard = ({
   champion,
-  banList,
-  pickList,
-  setPickList,
-  setBanList,
+  banPickList,
+  setBanPickList,
   name,
   selectedChampions,
+  setSelectedChampion,
 }) => {
   const isSelected = selectedChampions.includes(champion);
 
   const handlePickList = champion => {
-    if (!isSelected && pickList.blue.length < 5) {
-      let prevArr = [...pickList.blue];
+    if (!isSelected && banPickList.pickList.blue.length < 5) {
+      let prevArr = [...banPickList.pickList.blue];
       prevArr.push(champion);
-      setPickList({ ...pickList, blue: prevArr });
+      setBanPickList({ ...banPickList.pickList, blue: prevArr });
     }
   };
 
   const handleBanList = () => {
-    if (!isSelected && banList.blue.length < 5) {
-      let prevArr = [...banList.blue];
+    if (!isSelected && banPickList.banList.blue.length < 5) {
+      let prevArr = [...banPickList.banList.blue];
       prevArr.push(champion);
-      setBanList({ ...banList, blue: prevArr });
+      setBanPickList({ ...banPickList.banList, blue: prevArr });
     }
   };
 
@@ -33,6 +32,7 @@ const ChampionCard = ({
       isSelected={isSelected}
       onClick={() => {
         handlePickList(champion);
+        setSelectedChampion(champion);
       }}
     >
       <ChampionIcon

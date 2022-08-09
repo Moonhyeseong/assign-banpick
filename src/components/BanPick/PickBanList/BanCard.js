@@ -1,10 +1,10 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-const BanCard = ({ champion, side, selecting }) => {
+const BanCard = ({ champion, side, selecting, selectedChampion }) => {
   const imgURL =
-    champion &&
-    `http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${champion}.png`;
+    selectedChampion &&
+    `http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${selectedChampion}.png`;
   return (
     <BanCardLayout imgURL={imgURL}>
       <GradientMask side={side} selecting={selecting} champion={champion} />
