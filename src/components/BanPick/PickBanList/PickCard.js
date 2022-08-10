@@ -4,36 +4,35 @@ import styled, { css } from 'styled-components';
 const PickCard = ({
   side,
   champion,
-  phaseCounter,
   pickList,
   role,
   index,
   selectedChampion,
+  phaseInfo,
+  turn,
 }) => {
-  //픽 밴 카드는 자신의 인덱스, 이번순서 채워질 배열을 인덱스가 필요
-  //두개가 같을때 선택중인 카드임
-  const [isSelecting, setIsSselecting] = useState(true);
+  const [isSelecting, setIsSelecting] = useState(false);
+  const currentIndex = pickList.indexOf('');
 
-  const curruntIndex = pickList.indexOf('');
-  console.log(curruntIndex);
+  useEffect(() => {
+    setIsSelecting(false);
+    if (phaseInfo === 'pickList') {
+      if (turn === side) setIsSelecting(currentIndex === index);
+    }
+  }, [currentIndex, index, phaseInfo, side, turn]);
 
-  // useEffect(() => {
-  //   if (phaseCounter === 0 && banPickList.pickList[side].length === id) {
-  //     setIsSselecting(true);
-  //   }
-  // }, [id, phaseCounter, banPickList.pickList, side]);
-
-  const imgURL =
-    selectedChampion &&
-    `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${selectedChampion}_0.jpg`;
+  const imgURL = champion
+    ? `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion}_0.jpg`
+    : selectedChampion &&
+      `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${selectedChampion}_0.jpg`;
 
   return (
     <PickCardLayout>
       <PlayerName side={side}>{role}</PlayerName>
       <ChampionName side={side}>
-        {champion === '' ? 'Champion' : champion}
+        {champion ? champion : isSelecting && selectedChampion}
       </ChampionName>
-      {index === curruntIndex && (
+      {(isSelecting || champion) && (
         <BackgroundImage side={side} imgURL={imgURL}>
           <GradientMask
             side={side}

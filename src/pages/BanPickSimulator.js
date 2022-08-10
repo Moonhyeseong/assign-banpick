@@ -7,6 +7,7 @@ import SimulatorForm from '../components/SimulatorForm';
 
 const BanPickSimulator = () => {
   const [isReady, setIsReady] = useState(true);
+  // const [isFinish, setIsFinish] = useState(false);
   const [simulatorFormData, setSimulatorFormData] = useState({
     blue: '',
     red: '',
@@ -14,6 +15,8 @@ const BanPickSimulator = () => {
     time: '',
   });
 
+  const [selectedChampion, setSelectedChampion] = useState('');
+  const [phaseCounter, setPhaseCounter] = useState(0);
   const [banPickList, setBanPickList] = useState({
     banList: {
       blue: ['', '', '', '', ''],
@@ -24,53 +27,47 @@ const BanPickSimulator = () => {
       red: ['', '', '', '', ''],
     },
   });
-  const [selectedChampion, setSelectedChampion] = useState('');
-  // console.log(banPickList.banList.blue.indexOf(''));
-
-  const [phaseCounter, setPhaseCounter] = useState(0);
-
-  //state일 필요가 있을까?
-  //선택 버튼 클릭시 각 페이즈에 따라 배열의 첫번쨰 요소 shift
-  const [phaseIndicator, setPhaseIndicator] = useState({
-    phase1: {
-      banPhase1: ['blue', 'red', 'blue', 'red', 'blue', 'red'],
-      pickPhase1: ['blue', 'red', 'red', 'blue', 'blue', 'red'],
-    },
-    phase2: {
-      banPhase2: ['red', 'blue', 'red', 'blue'],
-      pickPhase2: ['red', 'blue', 'blue', 'red'],
-    },
+  const [turn, setTurn] = useState('blue');
+  const [turnData, setTurnData] = useState({
+    turn: [
+      'red',
+      'blue',
+      'red',
+      'blue',
+      'red',
+      'blue',
+      'red',
+      'red',
+      'blue',
+      'blue',
+      'red',
+      'red',
+      'blue',
+      'red',
+      'blue',
+      'red',
+      'blue',
+      'blue',
+      'red',
+    ],
   });
-  //pickPhase1: ['blue', 'red', 'red', 'blue', 'blue', 'red', 'red', 'blue', 'blue', 'red'],
-  //               0       1      1      0       0       1      1      0       0       1
-  //               0       1      2      3       4       5      6      7       8       9
 
-  // 각 밴, 픽 리스트 컴포넌트에 팀 턴 정보 배열로 미리 정의
+  const phaseInfo =
+    phaseCounter === 0 || phaseCounter === 2 ? 'banList' : 'pickList';
 
-  // useEffect(() => {
-  //   if (phaseIndicator.phase1.banPhase1.length === 0) {
-  //     setPhaseCounter(prev => prev + 1);
-  //   }
+  const handleTurn = () => {
+    setTurn(turnData.turn.shift());
+  };
 
-  //   if (phaseIndicator.phase1.pickPhase1.length === 0) {
-  //     setPhaseCounter(prev => prev + 1);
-  //   }
+  const handleSelectBtn = () => {
+    const index = banPickList[phaseInfo][turn].indexOf('');
+    banPickList[phaseInfo][turn][index] = selectedChampion;
+    handleTurn();
+    setSelectedChampion('');
+  };
 
-  //   if (phaseIndicator.phase2.banPhase2.length === 0) {
-  //     setPhaseCounter(prev => prev + 1);
-  //   }
-
-  //   if (phaseIndicator.phase2.pickPhase2.length === 0) {
-  //     setPhaseCounter(prev => prev + 1);
-  //   }
-  // }, [
-  //   phaseIndicator.phase1.banPhase1.length,
-  //   phaseIndicator.phase1.pickPhase1.length,
-  //   phaseIndicator.phase2.banPhase2.length,
-  //   phaseIndicator.phase2.pickPhase2.length,
-  // ]);
-
-  useEffect(() => {
+  //phaseCounter 업데이트
+  const updatePhaseCounter = () => {
     if (
       banPickList.banList.blue.indexOf('') === 3 &&
       banPickList.banList.red.indexOf('') === 3
@@ -98,12 +95,37 @@ const BanPickSimulator = () => {
     ) {
       setPhaseCounter(4);
     }
-  }, [
-    banPickList.banList.blue,
-    banPickList.banList.red,
-    banPickList.pickList.blue,
-    banPickList.pickList.red,
-  ]);
+  };
+
+  useEffect(() => {
+    updatePhaseCounter();
+  });
+
+  useEffect(() => {
+    setTurnData({
+      turn: [
+        'red',
+        'blue',
+        'red',
+        'blue',
+        'red',
+        'blue',
+        'red',
+        'red',
+        'blue',
+        'blue',
+        'red',
+        'red',
+        'blue',
+        'red',
+        'blue',
+        'red',
+        'blue',
+        'blue',
+        'red',
+      ],
+    });
+  }, []);
 
   const getPhaseTitle = () => {
     if (phaseCounter === 0) {
@@ -129,27 +151,29 @@ const BanPickSimulator = () => {
     <BanPickLayout>
       <BanPickIndicator
         simulatorFormData={simulatorFormData}
-        phase={getPhaseTitle}
+        phaseTitle={getPhaseTitle}
       />
       <ListLayout>
         <PickList
           side="blue"
           banPickList={banPickList}
           selectedChampion={selectedChampion}
-          phaseCounter={phaseCounter}
+          phaseInfo={phaseInfo}
+          turn={turn}
         />
         <ChampionList
           setBanPickList={setBanPickList}
           banPickList={banPickList}
-          phaseCounter={phaseCounter}
           selectedChampion={selectedChampion}
           setSelectedChampion={setSelectedChampion}
+          handleSelectBtn={handleSelectBtn}
         />
         <PickList
           side="red"
           banPickList={banPickList}
           selectedChampion={selectedChampion}
-          phaseCounter={phaseCounter}
+          phaseInfo={phaseInfo}
+          turn={turn}
         />
       </ListLayout>
     </BanPickLayout>

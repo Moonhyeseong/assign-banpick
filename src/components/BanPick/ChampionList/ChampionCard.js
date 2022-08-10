@@ -11,27 +11,11 @@ const ChampionCard = ({
 }) => {
   const isSelected = selectedChampions.includes(champion);
 
-  const handlePickList = champion => {
-    if (!isSelected && banPickList.pickList.blue.length < 5) {
-      let prevArr = [...banPickList.pickList.blue];
-      prevArr.push(champion);
-      setBanPickList({ ...banPickList.pickList, blue: prevArr });
-    }
-  };
-
-  const handleBanList = () => {
-    if (!isSelected && banPickList.banList.blue.length < 5) {
-      let prevArr = [...banPickList.banList.blue];
-      prevArr.push(champion);
-      setBanPickList({ ...banPickList.banList, blue: prevArr });
-    }
-  };
-
   return (
     <ChampionCardLayout
       isSelected={isSelected}
+      disabled={isSelected}
       onClick={() => {
-        handlePickList(champion);
         setSelectedChampion(champion);
       }}
     >
@@ -48,14 +32,17 @@ const ChampionCard = ({
 
 export default ChampionCard;
 
-const ChampionCardLayout = styled.div`
+const ChampionCardLayout = styled.button`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 80px;
   height: 110px;
-  cursor: pointer;
-  text-align: center;
   color: ${props => props.theme.white.white80};
   font-size: 12px;
   font-weight: 600;
+
+  cursor: pointer;
 
   :hover {
     opacity: 0.2;

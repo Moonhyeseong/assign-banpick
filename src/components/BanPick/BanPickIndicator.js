@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-const BanPickIndicator = ({ simulatorFormData, phase }) => {
+const BanPickIndicator = ({ simulatorFormData, phaseTitle }) => {
   return (
     <IndicatorLayout>
       <TeamInfo side="blue">
@@ -13,7 +13,7 @@ const BanPickIndicator = ({ simulatorFormData, phase }) => {
       <Timer>
         <PatchVersion> Patch 12.4.1</PatchVersion>
         <LeftTime>:17</LeftTime>
-        <PhaseInfo>{phase()}</PhaseInfo>
+        <PhaseInfo>{phaseTitle()}</PhaseInfo>
       </Timer>
       <TeamInfo side="red">
         <TeamName side="blue">

@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import ChampionCard from './ChampionCard';
 import ChampionFilter from './ChampionFilter';
 
 const ChampionList = ({
   setBanPickList,
   banPickList,
-  phaseCounter,
+  selectedChampion,
   setSelectedChampion,
+  handleSelectBtn,
+  phaseCounter,
 }) => {
   const [championData, setChampionData] = useState([]);
   const [search, setSearch] = useState('');
@@ -26,6 +28,7 @@ const ChampionList = ({
     ...banPickList.banList.blue,
     ...banPickList.pickList.red,
     ...banPickList.pickList.blue,
+    selectedChampion,
   ];
 
   useEffect(() => {
@@ -56,8 +59,19 @@ const ChampionList = ({
       </ListLayout>
       {
         //선택 버튼 활성화 - push 되어야할 순서의 해당 인덱스가 채워져 있을때 버튼 활성화
+        // 선택 버튼을 눌렀을때 이번 밴 픽 턴에 해당하는 요소가 밴픽 리스트에 채워져야함
+        // 밴, 픽 페이즈에 따라 턴을 바꾸어 줘야함
+        // 페이즈 정보는 리스트의 요소에 따라 변경돰
+        // 턴 정보만 변경 필요
       }
-      <SelectBtn>선택</SelectBtn>
+      <SelectBtn
+        selectedChampion={selectedChampion}
+        onClick={() => {
+          handleSelectBtn();
+        }}
+      >
+        선택
+      </SelectBtn>
     </ChampionListLayout>
   );
 };
@@ -105,4 +119,13 @@ const SelectBtn = styled.div`
 
   font-weight: 500;
   font-size: 22px;
+
+  ${props =>
+    props.selectedChampion === ''
+      ? css`
+          opacity: 0.3;
+        `
+      : css`
+          cursor: pointer;
+        `}
 `;

@@ -3,35 +3,37 @@ import styled from 'styled-components';
 import PickCard from './PickCard';
 import BanList from './BanList';
 const PickList = ({
+  banPickList: { banList, pickList },
   side,
-  banPickList,
-  phase,
-  phaseCounter,
   selectedChampion,
+  turn,
+  phaseInfo,
 }) => {
   return (
     <PickListLayout>
       <PickListWrapper>
-        {banPickList.pickList[side].map((champion, idx) => {
+        {pickList[side].map((champion, idx) => {
           return (
             <PickCard
               key={idx}
               side={side}
               index={idx}
               champion={champion}
-              pickList={banPickList.pickList[side]}
-              phaseCounter={phaseCounter}
+              pickList={pickList[side]}
+              phaseInfo={phaseInfo}
               role={ROLE_INFO[idx]}
               selectedChampion={selectedChampion}
+              turn={turn}
             />
           );
         })}
       </PickListWrapper>
       <BanList
         side={side}
-        banList={banPickList.banList[side]}
-        phase={phase}
+        banList={banList[side]}
         selectedChampion={selectedChampion}
+        turn={turn}
+        phaseInfo={phaseInfo}
       />
     </PickListLayout>
   );

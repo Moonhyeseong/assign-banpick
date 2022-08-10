@@ -2,17 +2,20 @@ import React from 'react';
 import styled from 'styled-components';
 import BanCard from './BanCard';
 
-const BanList = ({ side, banList, selectedChampion }) => {
+const BanList = ({ side, banList, selectedChampion, turn, phaseInfo }) => {
   return (
     <BanListLayout>
       {banList.map((champion, idx) => {
         return (
           <BanCard
             key={idx}
+            index={idx}
             champion={champion}
             side={side}
-            selecting={true}
             selectedChampion={selectedChampion}
+            banList={banList}
+            turn={turn}
+            phaseInfo={phaseInfo}
           />
         );
       })}

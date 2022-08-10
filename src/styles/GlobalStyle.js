@@ -11,6 +11,8 @@ const GlobalStyle = createGlobalStyle`
 
   *{
         box-sizing: border-box;
+        border: none;
+        background: none;
   }
 
   ul,dl,dt,dd,li{
