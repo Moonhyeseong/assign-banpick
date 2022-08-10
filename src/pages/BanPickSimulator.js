@@ -167,6 +167,7 @@ const BanPickSimulator = () => {
           selectedChampion={selectedChampion}
           setSelectedChampion={setSelectedChampion}
           handleSelectBtn={handleSelectBtn}
+          phaseCounter={phaseCounter}
         />
         <PickList
           side="red"

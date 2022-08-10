@@ -3,18 +3,17 @@ import styled, { css } from 'styled-components';
 
 const ChampionCard = ({
   champion,
-  banPickList,
-  setBanPickList,
   name,
   selectedChampions,
   setSelectedChampion,
+  phaseCounter,
 }) => {
   const isSelected = selectedChampions.includes(champion);
 
   return (
     <ChampionCardLayout
       isSelected={isSelected}
-      disabled={isSelected}
+      disabled={isSelected || phaseCounter === 4}
       onClick={() => {
         setSelectedChampion(champion);
       }}
@@ -52,6 +51,7 @@ const ChampionCardLayout = styled.button`
     props.isSelected &&
     css`
       opacity: 0.2;
+      cursor: default;
     `}
 `;
 

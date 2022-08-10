@@ -4,7 +4,6 @@ import ChampionCard from './ChampionCard';
 import ChampionFilter from './ChampionFilter';
 
 const ChampionList = ({
-  setBanPickList,
   banPickList,
   selectedChampion,
   setSelectedChampion,
@@ -49,23 +48,17 @@ const ChampionList = ({
               key={champion.key}
               champion={champion.id}
               name={champion.name}
-              banPickList={banPickList}
-              setBanPickList={setBanPickList}
+              phaseCounter={phaseCounter}
               selectedChampions={selectedChampions}
               setSelectedChampion={setSelectedChampion}
             />
           );
         })}
       </ListLayout>
-      {
-        //선택 버튼 활성화 - push 되어야할 순서의 해당 인덱스가 채워져 있을때 버튼 활성화
-        // 선택 버튼을 눌렀을때 이번 밴 픽 턴에 해당하는 요소가 밴픽 리스트에 채워져야함
-        // 밴, 픽 페이즈에 따라 턴을 바꾸어 줘야함
-        // 페이즈 정보는 리스트의 요소에 따라 변경돰
-        // 턴 정보만 변경 필요
-      }
+
       <SelectBtn
         selectedChampion={selectedChampion}
+        disabled={phaseCounter === 4 || selectedChampion === ''}
         onClick={() => {
           handleSelectBtn();
         }}
@@ -106,7 +99,7 @@ const ListLayout = styled.div`
   }
 `;
 
-const SelectBtn = styled.div`
+const SelectBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -116,12 +109,12 @@ const SelectBtn = styled.div`
   height: 50px;
   background-color: ${props => props.theme.black.black70};
   border-radius: 25px;
-
+  color: white;
   font-weight: 500;
   font-size: 22px;
 
   ${props =>
-    props.selectedChampion === ''
+    props.disabled
       ? css`
           opacity: 0.3;
         `

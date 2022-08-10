@@ -92,7 +92,7 @@ const GradientMask = styled.div`
         ${props => props.theme.blue.blueB50} 5%,
         rgba(0, 0, 0, 0)
       );
-      animation: blink 1s ease-in-out infinite alternate;
+      animation: blink 0.5s ease-in-out infinite alternate;
     `};
 
   ${props =>
@@ -105,7 +105,7 @@ const GradientMask = styled.div`
         ${props => props.theme.red.redB50} 5%,
         rgba(0, 0, 0, 0)
       );
-      animation: blink 1s ease-in-out infinite alternate;
+      animation: blink 0.5s ease-in-out infinite alternate;
     `};
 `;
 
