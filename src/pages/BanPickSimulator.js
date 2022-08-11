@@ -6,7 +6,7 @@ import BanPickIndicator from '../components/BanPick/BanPickIndicator';
 import SimulatorForm from '../components/SimulatorForm';
 
 const BanPickSimulator = () => {
-  const [isReady, setIsReady] = useState(true);
+  const [isReady, setIsReady] = useState(false);
   // const [isFinish, setIsFinish] = useState(false);
   const [simulatorFormData, setSimulatorFormData] = useState({
     blue: '',
@@ -27,37 +27,30 @@ const BanPickSimulator = () => {
       red: ['', '', '', '', ''],
     },
   });
+
+  // swap Test
+  // const [banPickList, setBanPickList] = useState({
+  //   banList: {
+  //     blue: ['Teemo', 'Vi', 'Galio', 'Ashe', 'Ahri'],
+  //     red: ['Teemo', 'Vi', 'Galio', 'Ashe', 'Ahri'],
+  //   },
+  //   pickList: {
+  //     blue: ['Teemo', 'Vi', 'Galio', 'Ashe', 'Ahri'],
+  //     red: ['Teemo', 'Vi', 'Galio', 'Ashe', 'Ahri'],
+  //   },
+  // });
+
   const [turn, setTurn] = useState('blue');
   const [turnData, setTurnData] = useState({
-    turn: [
-      'red',
-      'blue',
-      'red',
-      'blue',
-      'red',
-      'blue',
-      'red',
-      'red',
-      'blue',
-      'blue',
-      'red',
-      'red',
-      'blue',
-      'red',
-      'blue',
-      'red',
-      'blue',
-      'blue',
-      'red',
-    ],
+    turn: [],
   });
-
-  const phaseInfo =
-    phaseCounter === 0 || phaseCounter === 2 ? 'banList' : 'pickList';
 
   const handleTurn = () => {
     setTurn(turnData.turn.shift());
   };
+
+  const phaseInfo =
+    phaseCounter === 0 || phaseCounter === 2 ? 'banList' : 'pickList';
 
   const handleSelectBtn = () => {
     const index = banPickList[phaseInfo][turn].indexOf('');
@@ -159,6 +152,7 @@ const BanPickSimulator = () => {
           banPickList={banPickList}
           selectedChampion={selectedChampion}
           phaseInfo={phaseInfo}
+          phaseCounter={phaseCounter}
           turn={turn}
         />
         <ChampionList
@@ -174,6 +168,7 @@ const BanPickSimulator = () => {
           banPickList={banPickList}
           selectedChampion={selectedChampion}
           phaseInfo={phaseInfo}
+          phaseCounter={phaseCounter}
           turn={turn}
         />
       </ListLayout>

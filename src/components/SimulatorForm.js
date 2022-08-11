@@ -155,7 +155,7 @@ const TeamNameInput = styled.input`
   height: 40px;
   margin: 16px 40px;
   font-size: 24px;
-
+  background-color: white;
   &:focus-visible {
     outline: none;
   }

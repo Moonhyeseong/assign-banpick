@@ -10,9 +10,26 @@ const PickCard = ({
   selectedChampion,
   phaseInfo,
   turn,
+  swapItems,
+  setSwapItems,
+  phaseCounter,
 }) => {
   const [isSelecting, setIsSelecting] = useState(false);
+
   const currentIndex = pickList.indexOf('');
+  const isSwapPhase = phaseCounter === 4 && true;
+  const imgURL = champion
+    ? `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion}_0.jpg`
+    : selectedChampion &&
+      `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${selectedChampion}_0.jpg`;
+
+  const handleSwapItems = () => {
+    if (swapItems.currentIndex === '') {
+      setSwapItems({ ...swapItems, side: side, currentIndex: index });
+    } else {
+      setSwapItems({ ...swapItems, replaceIndex: index });
+    }
+  };
 
   useEffect(() => {
     setIsSelecting(false);
@@ -21,14 +38,15 @@ const PickCard = ({
     }
   }, [currentIndex, index, phaseInfo, side, turn]);
 
-  const imgURL = champion
-    ? `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion}_0.jpg`
-    : selectedChampion &&
-      `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${selectedChampion}_0.jpg`;
-
   return (
-    <PickCardLayout>
-      <PlayerName side={side}>{role}</PlayerName>
+    <PickCardLayout
+      isSwapPhase={isSwapPhase}
+      onClick={() => {
+        isSwapPhase && handleSwapItems();
+      }}
+    >
+      {/* <PlayerName side={side}>{role}</PlayerName> */}
+      <PlayerRole side={side}>{role}</PlayerRole>
       <ChampionName side={side}>
         {champion ? champion : isSelecting && selectedChampion}
       </ChampionName>
@@ -41,6 +59,27 @@ const PickCard = ({
           />
         </BackgroundImage>
       )}
+      {isSwapPhase &&
+        swapItems.currentIndex !== index &&
+        swapItems.currentIndex !== '' && (
+          <SwapBackground>
+            <SwapIconWrapper
+              onClick={() => {
+                handleSwapItems();
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                width="50"
+              >
+                <path d="M8 5a1 1 0 100 2h5.586l-1.293 1.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L13.586 5H8zM12 15a1 1 0 100-2H6.414l1.293-1.293a1 1 0 10-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L6.414 15H12z" />
+              </svg>
+            </SwapIconWrapper>
+          </SwapBackground>
+        )}
     </PickCardLayout>
   );
 };
@@ -52,6 +91,12 @@ const PickCardLayout = styled.div`
   width: 100%;
   height: 140px;
   border-bottom: 2px solid ${props => props.theme.black.black80};
+
+  ${props =>
+    props.isSwapPhase &&
+    css`
+      cursor: pointer;
+    `}
 `;
 
 const BackgroundImage = styled.div`
@@ -114,6 +159,24 @@ const PlayerName = styled.p`
   bottom: 12px;
   z-index: 10;
   color: white;
+  font-size: 26px;
+  font-weight: 700;
+
+  ${props =>
+    props.side === 'red'
+      ? css`
+          left: 16px;
+        `
+      : css`
+          right: 16px;
+        `}
+`;
+
+const PlayerRole = styled.p`
+  position: absolute;
+  top: 14px;
+  z-index: 10;
+  color: white;
   font-size: 16px;
   font-weight: 700;
 
@@ -129,9 +192,10 @@ const PlayerName = styled.p`
 
 const ChampionName = styled.p`
   position: absolute;
+
   bottom: 12px;
   color: white;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
   z-index: 10;
 
@@ -143,4 +207,24 @@ const ChampionName = styled.p`
       : css`
           left: 16px;
         `}
+`;
+
+const SwapBackground = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  width: 100%;
+  height: 100%;
+`;
+
+const SwapIconWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
 `;

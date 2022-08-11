@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 
 const ChampionCard = ({
@@ -8,7 +8,15 @@ const ChampionCard = ({
   setSelectedChampion,
   phaseCounter,
 }) => {
-  const isSelected = selectedChampions.includes(champion);
+  const [isSelected, setIsSelected] = useState(false);
+
+  useEffect(() => {
+    if (phaseCounter === 4) {
+      setIsSelected(true);
+    } else {
+      setIsSelected(selectedChampions.includes(champion));
+    }
+  }, [champion, phaseCounter, selectedChampions]);
 
   return (
     <ChampionCardLayout

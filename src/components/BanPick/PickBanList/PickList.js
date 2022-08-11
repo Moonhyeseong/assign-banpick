@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import PickCard from './PickCard';
 import BanList from './BanList';
@@ -8,7 +8,33 @@ const PickList = ({
   selectedChampion,
   turn,
   phaseInfo,
+  phaseCounter,
 }) => {
+  const [swapItems, setSwapItems] = useState({
+    side: '',
+    currentIndex: '',
+    replaceIndex: '',
+  });
+
+  const swapListItem = useCallback(() => {
+    [
+      pickList[side][swapItems.currentIndex],
+      pickList[side][swapItems.replaceIndex],
+    ] = [
+      pickList[side][swapItems.replaceIndex],
+      pickList[side][swapItems.currentIndex],
+    ];
+    setSwapItems({
+      side: '',
+      currentIndex: '',
+      replaceIndex: '',
+    });
+  }, [pickList, side, swapItems.currentIndex, swapItems.replaceIndex]);
+
+  useEffect(() => {
+    swapItems.replaceIndex !== '' && swapListItem();
+  });
+
   return (
     <PickListLayout>
       <PickListWrapper>
@@ -24,6 +50,9 @@ const PickList = ({
               role={ROLE_INFO[idx]}
               selectedChampion={selectedChampion}
               turn={turn}
+              swapItems={swapItems}
+              setSwapItems={setSwapItems}
+              phaseCounter={phaseCounter}
             />
           );
         })}
