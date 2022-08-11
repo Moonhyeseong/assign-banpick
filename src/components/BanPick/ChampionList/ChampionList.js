@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import ChampionCard from './ChampionCard';
 import ChampionFilter from './ChampionFilter';
+import { PHASEDATA } from '../PHASEDATA';
 
 const ChampionList = ({
-  banPickList,
+  championData,
   selectedChampion,
   setSelectedChampion,
+  selectedChampions,
   handleSelectBtn,
   phaseCounter,
 }) => {
-  const [championData, setChampionData] = useState([]);
   const [search, setSearch] = useState('');
   const championList = Object.values(championData);
   championList.sort((a, b) => a.name.localeCompare(b.name));
@@ -21,22 +22,6 @@ const ChampionList = ({
       champion.id.toLowerCase().includes(search.toLowerCase())
     );
   });
-
-  const selectedChampions = [
-    ...banPickList.banList.red,
-    ...banPickList.banList.blue,
-    ...banPickList.pickList.red,
-    ...banPickList.pickList.blue,
-    selectedChampion,
-  ];
-
-  useEffect(() => {
-    fetch(
-      'https://ddragon.leagueoflegends.com/cdn/12.14.1/data/ko_KR/champion.json'
-    )
-      .then(response => response.json())
-      .then(data => setChampionData(data.data));
-  }, []);
 
   return (
     <ChampionListLayout>
@@ -58,7 +43,9 @@ const ChampionList = ({
 
       <SelectBtn
         selectedChampion={selectedChampion}
-        disabled={phaseCounter === 4 || selectedChampion === ''}
+        disabled={
+          phaseCounter === PHASEDATA.swapPhase || selectedChampion === ''
+        }
         onClick={() => {
           handleSelectBtn();
         }}

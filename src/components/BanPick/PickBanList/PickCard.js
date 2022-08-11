@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
+import { PHASEDATA } from '../PHASEDATA';
 
 const PickCard = ({
   side,
@@ -17,7 +18,8 @@ const PickCard = ({
   const [isSelecting, setIsSelecting] = useState(false);
 
   const currentIndex = pickList.indexOf('');
-  const isSwapPhase = phaseCounter === 4 && true;
+  const isSwapPhase = phaseCounter === PHASEDATA.swapPhase;
+
   const imgURL = champion
     ? `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion}_0.jpg`
     : selectedChampion &&
@@ -45,7 +47,7 @@ const PickCard = ({
         isSwapPhase && handleSwapItems();
       }}
     >
-      {/* <PlayerName side={side}>{role}</PlayerName> */}
+      <PlayerName side={side}>{` `}</PlayerName>
       <PlayerRole side={side}>{role}</PlayerRole>
       <ChampionName side={side}>
         {champion ? champion : isSelecting && selectedChampion}

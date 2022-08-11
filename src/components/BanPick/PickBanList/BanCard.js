@@ -26,15 +26,20 @@ const BanCard = ({
     }
   }, [champion, currentIndex, index, phaseInfo, side, turn]);
 
-  const imgURL = champion
-    ? `http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${champion}.png`
-    : selectedChampion &&
-      `http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${selectedChampion}.png`;
+  const getImgURL = () => {
+    if (champion === 'NO DATA') {
+      return 'https://ddragon.leagueoflegends.com/cdn/12.13.1/img/profileicon/29.png';
+    } else if (champion) {
+      return `http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${champion}.png`;
+    } else if (selectedChampion) {
+      return `http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${selectedChampion}.png`;
+    }
+  };
 
   return (
     <BanCardLayout>
       {(isSelecting || champion) && (
-        <BanCardImage imgURL={imgURL}>
+        <BanCardImage imgURL={getImgURL()}>
           <GradientMask
             side={side}
             isSelecting={isSelecting}

@@ -2,12 +2,18 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ChampionList from '../components/BanPick/ChampionList/ChampionList';
 import PickList from '../components/BanPick/PickBanList/PickList';
-import BanPickIndicator from '../components/BanPick/BanPickIndicator';
+import BanPickIndicator from '../components/BanPick/BanPickIndicator/BanPickIndicator';
 import SimulatorForm from '../components/SimulatorForm';
+import { PHASEDATA } from '../components/BanPick/PHASEDATA';
 
 const BanPickSimulator = () => {
   const [isReady, setIsReady] = useState(false);
+
   // const [isFinish, setIsFinish] = useState(false);
+
+  // 백엔드로 보낼 데이터 정보 검토
+  // phaseCounter 매직넘버 개선
+
   const [simulatorFormData, setSimulatorFormData] = useState({
     blue: '',
     red: '',
@@ -15,8 +21,11 @@ const BanPickSimulator = () => {
     time: '',
   });
 
+  const [championData, setChampionData] = useState([]);
   const [selectedChampion, setSelectedChampion] = useState('');
-  const [phaseCounter, setPhaseCounter] = useState(0);
+
+  const [phaseCounter, setPhaseCounter] = useState(PHASEDATA.banPhase1);
+
   const [banPickList, setBanPickList] = useState({
     banList: {
       blue: ['', '', '', '', ''],
@@ -28,18 +37,7 @@ const BanPickSimulator = () => {
     },
   });
 
-  // swap Test
-  // const [banPickList, setBanPickList] = useState({
-  //   banList: {
-  //     blue: ['Teemo', 'Vi', 'Galio', 'Ashe', 'Ahri'],
-  //     red: ['Teemo', 'Vi', 'Galio', 'Ashe', 'Ahri'],
-  //   },
-  //   pickList: {
-  //     blue: ['Teemo', 'Vi', 'Galio', 'Ashe', 'Ahri'],
-  //     red: ['Teemo', 'Vi', 'Galio', 'Ashe', 'Ahri'],
-  //   },
-  // });
-
+  const [leftTime, setLeftTime] = useState(30);
   const [turn, setTurn] = useState('blue');
   const [turnData, setTurnData] = useState({
     turn: [],
@@ -49,14 +47,41 @@ const BanPickSimulator = () => {
     setTurn(turnData.turn.shift());
   };
 
+  const selectedChampions = [
+    ...banPickList.banList.red,
+    ...banPickList.banList.blue,
+    ...banPickList.pickList.red,
+    ...banPickList.pickList.blue,
+    selectedChampion,
+  ];
+
   const phaseInfo =
-    phaseCounter === 0 || phaseCounter === 2 ? 'banList' : 'pickList';
+    phaseCounter === PHASEDATA.banPhase1 || phaseCounter === PHASEDATA.banPhase2
+      ? 'banList'
+      : 'pickList';
 
   const handleSelectBtn = () => {
     const index = banPickList[phaseInfo][turn].indexOf('');
-    banPickList[phaseInfo][turn][index] = selectedChampion;
+
+    const getTimeOutItem = () => {
+      const championList = Object.values(championData);
+      const randomIndex = Math.floor(Math.random() * championList.length);
+
+      if (phaseInfo === 'banList') {
+        return 'NO DATA';
+      } else if (phaseInfo === 'pickList') {
+        if (selectedChampions.indexOf(championList[randomIndex]) === -1) {
+          return championList[randomIndex].id;
+        }
+      }
+    };
+
+    banPickList[phaseInfo][turn][index] = selectedChampion
+      ? selectedChampion
+      : getTimeOutItem();
     handleTurn();
     setSelectedChampion('');
+    setLeftTime(30);
   };
 
   //phaseCounter 업데이트
@@ -65,33 +90,51 @@ const BanPickSimulator = () => {
       banPickList.banList.blue.indexOf('') === 3 &&
       banPickList.banList.red.indexOf('') === 3
     ) {
-      setPhaseCounter(1);
+      setPhaseCounter(PHASEDATA.pickPhase1);
     }
 
     if (
       banPickList.pickList.blue.indexOf('') === 3 &&
       banPickList.pickList.red.indexOf('') === 3
     ) {
-      setPhaseCounter(2);
+      setPhaseCounter(PHASEDATA.banPhase2);
     }
 
     if (
       banPickList.banList.blue.indexOf('') === -1 &&
       banPickList.banList.red.indexOf('') === -1
     ) {
-      setPhaseCounter(3);
+      setPhaseCounter(PHASEDATA.pickPhase2);
     }
 
     if (
       banPickList.pickList.blue.indexOf('') === -1 &&
       banPickList.pickList.red.indexOf('') === -1
     ) {
-      setPhaseCounter(4);
+      setPhaseCounter(PHASEDATA.swapPhase);
+    }
+  };
+
+  const handleTimeOut = () => {
+    if (leftTime < 0) {
+      if (phaseCounter !== PHASEDATA.swapPhase) {
+        handleSelectBtn();
+        setLeftTime(30);
+      }
     }
   };
 
   useEffect(() => {
+    fetch(
+      'https://ddragon.leagueoflegends.com/cdn/12.15.1/data/ko_KR/champion.json'
+    )
+      .then(response => response.json())
+      .then(data => setChampionData(data.data));
+  }, []);
+
+  useEffect(() => {
     updatePhaseCounter();
+    handleTimeOut();
   });
 
   useEffect(() => {
@@ -121,15 +164,15 @@ const BanPickSimulator = () => {
   }, []);
 
   const getPhaseTitle = () => {
-    if (phaseCounter === 0) {
+    if (phaseCounter === PHASEDATA.banPhase1) {
       return '1st BAN PHASE';
-    } else if (phaseCounter === 1) {
+    } else if (phaseCounter === PHASEDATA.pickPhase1) {
       return '1st PICK PHASE';
-    } else if (phaseCounter === 2) {
+    } else if (phaseCounter === PHASEDATA.banPhase2) {
       return '2nd BAN PHASE';
-    } else if (phaseCounter === 3) {
+    } else if (phaseCounter === PHASEDATA.pickPhase2) {
       return '2nd PICK PHASE';
-    } else if (phaseCounter === 4) {
+    } else if (phaseCounter === PHASEDATA.swapPhase) {
       return 'SWAP PHASE';
     }
   };
@@ -145,6 +188,12 @@ const BanPickSimulator = () => {
       <BanPickIndicator
         simulatorFormData={simulatorFormData}
         phaseTitle={getPhaseTitle}
+        handleSelectBtn={handleSelectBtn}
+        setSelectedChampion={setSelectedChampion}
+        phaseInfo={phaseInfo}
+        selectedChampion={selectedChampion}
+        leftTime={leftTime}
+        setLeftTime={setLeftTime}
       />
       <ListLayout>
         <PickList
@@ -157,11 +206,12 @@ const BanPickSimulator = () => {
         />
         <ChampionList
           setBanPickList={setBanPickList}
-          banPickList={banPickList}
+          championData={championData}
           selectedChampion={selectedChampion}
           setSelectedChampion={setSelectedChampion}
           handleSelectBtn={handleSelectBtn}
           phaseCounter={phaseCounter}
+          selectedChampions={selectedChampions}
         />
         <PickList
           side="red"

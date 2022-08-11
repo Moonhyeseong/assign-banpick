@@ -1,9 +1,12 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import Timer from './Timer';
 
 const BanPickIndicator = ({
   simulatorFormData: { blue, red, mode, time },
   phaseTitle,
+  leftTime,
+  setLeftTime,
 }) => {
   return (
     <IndicatorLayout>
@@ -13,11 +16,18 @@ const BanPickIndicator = ({
           {blue === '' ? 'BLUE TEAM' : blue}
         </TeamName>
       </TeamInfo>
-      <Timer>
-        <PatchVersion> Patch 12.4.1</PatchVersion>
-        <LeftTime>:17</LeftTime>
+      <TimerContainer>
+        <PatchVersion> Patch 12.5.1</PatchVersion>
+        <LeftTime>
+          {time ? (
+            <Timer leftTime={leftTime} setLeftTime={setLeftTime} />
+          ) : (
+            ':∞'
+          )}
+        </LeftTime>
+
         <PhaseInfo>{phaseTitle()}</PhaseInfo>
-      </Timer>
+      </TimerContainer>
       <TeamInfo side="red">
         <TeamName side="blue">
           <TeamSide>RED</TeamSide>
@@ -38,7 +48,7 @@ const IndicatorLayout = styled.div`
   height: 100px;
 `;
 
-const Timer = styled.div`
+const TimerContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -90,11 +100,11 @@ const PatchVersion = styled.p`
   color: ${props => props.theme.white.white60};
 `;
 
-const LeftTime = styled.p`
+const LeftTime = styled.div`
   font-size: 50px;
-  text-align: center;
   color: ${props => props.theme.white.white100};
   font-weight: 700;
+  text-align: center;
 `;
 
 const PhaseInfo = styled.p`
@@ -102,3 +112,9 @@ const PhaseInfo = styled.p`
   text-align: center;
   font-weight: 700;
 `;
+
+// 타임아웃이 되었을때 루트 컴포넌트에 위치한 handleSelectBtn 함수가 실행
+// 밴페이즈일때 밴 리스트에 null 넣기
+// 픽 페이즈일때 픽 리스트에 랜덤으로 추출한 챔피언 넣기
+// handleSelectBtn함수에서 어느 문자열을 넣을지는 selectedChampion state에 저장된 문자열을 넣는다.
+//
