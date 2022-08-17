@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import PickCard from './PickCard';
 import BanList from './BanList';
+
 const PickList = ({
   banPickList: { banList, pickList },
   side,

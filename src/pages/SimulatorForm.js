@@ -4,7 +4,8 @@ import styled, { css } from 'styled-components';
 const SimulatorForm = ({
   simulatorFormData,
   setSimulatorFormData,
-  setIsReady,
+  setIsFormReady,
+  setIsPlayserReady,
 }) => {
   const handleTeamName = (e, team) => {
     setSimulatorFormData({ ...simulatorFormData, [team]: e.target.value });
@@ -21,6 +22,22 @@ const SimulatorForm = ({
   const formValidator = () => {
     const formValues = Object.values(simulatorFormData);
     return formValues.includes('');
+  };
+
+  const startSimulator = () => {
+    const { blue, red, mode, time } = simulatorFormData;
+    fetch('http://localhost:8080/start', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        blueTeam: blue,
+        redTeam: red,
+        mode: mode,
+        timer: time,
+      }),
+    }).then(res => res.json());
   };
 
   return (
@@ -54,21 +71,28 @@ const SimulatorForm = ({
         <ModeList>
           <ModeItem
             selectedOption={simulatorFormData.mode}
-            onClick={() => handleMode(0)}
+            onClick={() => {
+              handleMode(0);
+              setIsPlayserReady(true);
+            }}
             itemID={0}
           >
             SOLO
           </ModeItem>
           <ModeItem
             selectedOption={simulatorFormData.mode}
-            onClick={() => handleMode(1)}
+            onClick={() => {
+              handleMode(1);
+            }}
             itemID={1}
           >
             1 : 1
           </ModeItem>
           <ModeItem
             selectedOption={simulatorFormData.mode}
-            onClick={() => handleMode(2)}
+            onClick={() => {
+              handleMode(2);
+            }}
             itemID={2}
           >
             5 : 5
@@ -102,8 +126,9 @@ const SimulatorForm = ({
         // disabled={formValidator()}
         isDisabled={formValidator()}
         onClick={() => {
-          !formValidator() && setIsReady(prev => !prev);
+          !formValidator() && setIsFormReady(prev => !prev);
           formValidator() && alert('모든 항목을 입력, 선택해주세요');
+          startSimulator();
         }}
       >
         START

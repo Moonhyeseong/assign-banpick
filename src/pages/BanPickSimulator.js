@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import ChampionList from '../components/BanPick/ChampionList/ChampionList';
 import PickList from '../components/BanPick/PickBanList/PickList';
 import BanPickIndicator from '../components/BanPick/BanPickIndicator/BanPickIndicator';
-import SimulatorForm from '../components/SimulatorForm';
+import SimulatorForm from './SimulatorForm';
+import WatingRoom from './WatingRoom';
 import { PHASEDATA } from '../components/BanPick/PHASEDATA';
 
 const BanPickSimulator = () => {
-  const [isReady, setIsReady] = useState(false);
+  const [isFormReady, setIsFormReady] = useState(false);
+  const [isPlayserReady, setIsPlayserReady] = useState(false);
 
   // const [isFinish, setIsFinish] = useState(false);
 
@@ -176,12 +178,14 @@ const BanPickSimulator = () => {
       return 'SWAP PHASE';
     }
   };
-
-  return !isReady ? (
+  //솔로일때 대기방을 생략해야한다.
+  //멀티일때 대기방에 들어가면 isFormReady가 false가 되어야한다.
+  return !isFormReady ? (
     <SimulatorForm
       simulatorFormData={simulatorFormData}
       setSimulatorFormData={setSimulatorFormData}
-      setIsReady={setIsReady}
+      setIsFormReady={setIsFormReady}
+      setIsPlayserReady={setIsPlayserReady}
     />
   ) : (
     <BanPickLayout>
@@ -194,34 +198,39 @@ const BanPickSimulator = () => {
         selectedChampion={selectedChampion}
         leftTime={leftTime}
         setLeftTime={setLeftTime}
+        isPlayserReady={isPlayserReady}
       />
-      <ListLayout>
-        <PickList
-          side="blue"
-          banPickList={banPickList}
-          selectedChampion={selectedChampion}
-          phaseInfo={phaseInfo}
-          phaseCounter={phaseCounter}
-          turn={turn}
-        />
-        <ChampionList
-          setBanPickList={setBanPickList}
-          championData={championData}
-          selectedChampion={selectedChampion}
-          setSelectedChampion={setSelectedChampion}
-          handleSelectBtn={handleSelectBtn}
-          phaseCounter={phaseCounter}
-          selectedChampions={selectedChampions}
-        />
-        <PickList
-          side="red"
-          banPickList={banPickList}
-          selectedChampion={selectedChampion}
-          phaseInfo={phaseInfo}
-          phaseCounter={phaseCounter}
-          turn={turn}
-        />
-      </ListLayout>
+      {!isPlayserReady ? (
+        <WatingRoom />
+      ) : (
+        <ListLayout>
+          <PickList
+            side="blue"
+            banPickList={banPickList}
+            selectedChampion={selectedChampion}
+            phaseInfo={phaseInfo}
+            phaseCounter={phaseCounter}
+            turn={turn}
+          />
+          <ChampionList
+            setBanPickList={setBanPickList}
+            championData={championData}
+            selectedChampion={selectedChampion}
+            setSelectedChampion={setSelectedChampion}
+            handleSelectBtn={handleSelectBtn}
+            phaseCounter={phaseCounter}
+            selectedChampions={selectedChampions}
+          />
+          <PickList
+            side="red"
+            banPickList={banPickList}
+            selectedChampion={selectedChampion}
+            phaseInfo={phaseInfo}
+            phaseCounter={phaseCounter}
+            turn={turn}
+          />
+        </ListLayout>
+      )}
     </BanPickLayout>
   );
 };

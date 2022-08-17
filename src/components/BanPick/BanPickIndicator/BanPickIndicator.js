@@ -7,6 +7,7 @@ const BanPickIndicator = ({
   phaseTitle,
   leftTime,
   setLeftTime,
+  isPlayserReady,
 }) => {
   return (
     <IndicatorLayout>
@@ -16,18 +17,21 @@ const BanPickIndicator = ({
           {blue === '' ? 'BLUE TEAM' : blue}
         </TeamName>
       </TeamInfo>
-      <TimerContainer>
-        <PatchVersion> Patch 12.5.1</PatchVersion>
-        <LeftTime>
-          {time ? (
-            <Timer leftTime={leftTime} setLeftTime={setLeftTime} />
-          ) : (
-            ':∞'
-          )}
-        </LeftTime>
+      {isPlayserReady && (
+        <TimerContainer>
+          <PatchVersion> Patch 12.5.1</PatchVersion>
+          <LeftTime>
+            {time ? (
+              <Timer leftTime={leftTime} setLeftTime={setLeftTime} />
+            ) : (
+              ':∞'
+            )}
+          </LeftTime>
 
-        <PhaseInfo>{phaseTitle()}</PhaseInfo>
-      </TimerContainer>
+          <PhaseInfo>{phaseTitle()}</PhaseInfo>
+        </TimerContainer>
+      )}
+
       <TeamInfo side="red">
         <TeamName side="blue">
           <TeamSide>RED</TeamSide>
