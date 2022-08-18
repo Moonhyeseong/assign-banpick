@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 
 const SimulatorForm = ({
@@ -6,6 +6,7 @@ const SimulatorForm = ({
   setSimulatorFormData,
   setIsFormReady,
   setIsPlayserReady,
+  setGameID,
 }) => {
   const handleTeamName = (e, team) => {
     setSimulatorFormData({ ...simulatorFormData, [team]: e.target.value });
@@ -37,8 +38,15 @@ const SimulatorForm = ({
         mode: mode,
         timer: time,
       }),
-    }).then(res => res.json());
+    })
+      .then(res => res.json())
+      .then(res => setGameID(res._id));
+    // .then(res => sessionStorage.setItem({ GAME_ID: res._id }));
   };
+
+  useEffect(() => {
+    sessionStorage.removeItem('GAME_ID');
+  });
 
   return (
     <LandingLayout>

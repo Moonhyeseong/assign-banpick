@@ -11,6 +11,7 @@ const ChampionList = ({
   selectedChampions,
   handleSelectBtn,
   phaseCounter,
+  postBanPickList,
 }) => {
   const [search, setSearch] = useState('');
   const championList = Object.values(championData);
@@ -48,6 +49,7 @@ const ChampionList = ({
         }
         onClick={() => {
           handleSelectBtn();
+          postBanPickList();
         }}
       >
         선택

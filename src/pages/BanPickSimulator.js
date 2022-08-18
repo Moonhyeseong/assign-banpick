@@ -10,11 +10,9 @@ import { PHASEDATA } from '../components/BanPick/PHASEDATA';
 const BanPickSimulator = () => {
   const [isFormReady, setIsFormReady] = useState(false);
   const [isPlayserReady, setIsPlayserReady] = useState(false);
+  const [gameID, setGameID] = useState('');
 
   // const [isFinish, setIsFinish] = useState(false);
-
-  // 백엔드로 보낼 데이터 정보 검토
-  // phaseCounter 매직넘버 개선
 
   const [simulatorFormData, setSimulatorFormData] = useState({
     blue: '',
@@ -38,6 +36,8 @@ const BanPickSimulator = () => {
       red: ['', '', '', '', ''],
     },
   });
+
+  const [banpickData, setBanpickData] = useState();
 
   const [leftTime, setLeftTime] = useState(30);
   const [turn, setTurn] = useState('blue');
@@ -81,6 +81,7 @@ const BanPickSimulator = () => {
     banPickList[phaseInfo][turn][index] = selectedChampion
       ? selectedChampion
       : getTimeOutItem();
+
     handleTurn();
     setSelectedChampion('');
     setLeftTime(30);
@@ -124,6 +125,30 @@ const BanPickSimulator = () => {
         setLeftTime(30);
       }
     }
+  };
+
+  const postBanPickList = () => {
+    fetch(`http://localhost:8080/banpick/${gameID}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        banPickList: banPickList,
+      }),
+    })
+      .then(res => res.json())
+      .then(() =>
+        setTimeout(() => {
+          getBanPickListData();
+        }, 100)
+      );
+  };
+
+  const getBanPickListData = () => {
+    fetch(`http://localhost:8080/banpick/${gameID}`)
+      .then(res => res.json())
+      .then(res => setBanpickData(res));
   };
 
   useEffect(() => {
@@ -186,6 +211,7 @@ const BanPickSimulator = () => {
       setSimulatorFormData={setSimulatorFormData}
       setIsFormReady={setIsFormReady}
       setIsPlayserReady={setIsPlayserReady}
+      setGameID={setGameID}
     />
   ) : (
     <BanPickLayout>
@@ -211,6 +237,7 @@ const BanPickSimulator = () => {
             phaseInfo={phaseInfo}
             phaseCounter={phaseCounter}
             turn={turn}
+            banpickData={banpickData}
           />
           <ChampionList
             setBanPickList={setBanPickList}
@@ -220,6 +247,7 @@ const BanPickSimulator = () => {
             handleSelectBtn={handleSelectBtn}
             phaseCounter={phaseCounter}
             selectedChampions={selectedChampions}
+            postBanPickList={postBanPickList}
           />
           <PickList
             side="red"
@@ -228,6 +256,7 @@ const BanPickSimulator = () => {
             phaseInfo={phaseInfo}
             phaseCounter={phaseCounter}
             turn={turn}
+            banpickData={banpickData}
           />
         </ListLayout>
       )}
