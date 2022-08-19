@@ -14,6 +14,7 @@ const ContentsWrapper = ({ children }) => {
 export default ContentsWrapper;
 
 const Layout = styled.div`
+  position: relative;
   width: 100%;
 `;
 

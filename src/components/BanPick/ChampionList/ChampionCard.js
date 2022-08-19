@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { PHASEDATA } from '../PHASEDATA';
+import { CONSTDATA } from '../CONSTDATA';
 
 const ChampionCard = ({
   champion,
@@ -12,7 +12,7 @@ const ChampionCard = ({
   const [isSelected, setIsSelected] = useState(false);
 
   useEffect(() => {
-    if (phaseCounter === PHASEDATA.swapPhase) {
+    if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase) {
       setIsSelected(true);
     } else {
       setIsSelected(selectedChampions.includes(champion));
@@ -22,7 +22,7 @@ const ChampionCard = ({
   return (
     <ChampionCardLayout
       isSelected={isSelected}
-      disabled={isSelected || phaseCounter === PHASEDATA.swapPhase}
+      disabled={isSelected || phaseCounter === CONSTDATA.PHASEDATA.swapPhase}
       onClick={() => {
         setSelectedChampion(champion);
       }}

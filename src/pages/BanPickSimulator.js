@@ -5,11 +5,11 @@ import PickList from '../components/BanPick/PickBanList/PickList';
 import BanPickIndicator from '../components/BanPick/BanPickIndicator/BanPickIndicator';
 import SimulatorForm from './SimulatorForm';
 import WatingRoom from './WatingRoom';
-import { PHASEDATA } from '../components/BanPick/PHASEDATA';
+import { CONSTDATA } from '../components/BanPick/CONSTDATA';
 
 const BanPickSimulator = () => {
   const [isFormReady, setIsFormReady] = useState(false);
-  const [isPlayserReady, setIsPlayserReady] = useState(false);
+  const [isPlayersReady, setIsPlayersReady] = useState(false);
   const [gameID, setGameID] = useState('');
 
   // const [isFinish, setIsFinish] = useState(false);
@@ -24,7 +24,9 @@ const BanPickSimulator = () => {
   const [championData, setChampionData] = useState([]);
   const [selectedChampion, setSelectedChampion] = useState('');
 
-  const [phaseCounter, setPhaseCounter] = useState(PHASEDATA.banPhase1);
+  const [phaseCounter, setPhaseCounter] = useState(
+    CONSTDATA.PHASEDATA.banPhase1
+  );
 
   const [banPickList, setBanPickList] = useState({
     banList: {
@@ -58,7 +60,8 @@ const BanPickSimulator = () => {
   ];
 
   const phaseInfo =
-    phaseCounter === PHASEDATA.banPhase1 || phaseCounter === PHASEDATA.banPhase2
+    phaseCounter === CONSTDATA.PHASEDATA.banPhase1 ||
+    phaseCounter === CONSTDATA.PHASEDATA.banPhase2
       ? 'banList'
       : 'pickList';
 
@@ -93,34 +96,34 @@ const BanPickSimulator = () => {
       banPickList.banList.blue.indexOf('') === 3 &&
       banPickList.banList.red.indexOf('') === 3
     ) {
-      setPhaseCounter(PHASEDATA.pickPhase1);
+      setPhaseCounter(CONSTDATA.PHASEDATA.pickPhase1);
     }
 
     if (
       banPickList.pickList.blue.indexOf('') === 3 &&
       banPickList.pickList.red.indexOf('') === 3
     ) {
-      setPhaseCounter(PHASEDATA.banPhase2);
+      setPhaseCounter(CONSTDATA.PHASEDATA.banPhase2);
     }
 
     if (
       banPickList.banList.blue.indexOf('') === -1 &&
       banPickList.banList.red.indexOf('') === -1
     ) {
-      setPhaseCounter(PHASEDATA.pickPhase2);
+      setPhaseCounter(CONSTDATA.PHASEDATA.pickPhase2);
     }
 
     if (
       banPickList.pickList.blue.indexOf('') === -1 &&
       banPickList.pickList.red.indexOf('') === -1
     ) {
-      setPhaseCounter(PHASEDATA.swapPhase);
+      setPhaseCounter(CONSTDATA.PHASEDATA.swapPhase);
     }
   };
 
   const handleTimeOut = () => {
     if (leftTime < 0) {
-      if (phaseCounter !== PHASEDATA.swapPhase) {
+      if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
         handleSelectBtn();
         setLeftTime(30);
       }
@@ -191,15 +194,15 @@ const BanPickSimulator = () => {
   }, []);
 
   const getPhaseTitle = () => {
-    if (phaseCounter === PHASEDATA.banPhase1) {
+    if (phaseCounter === CONSTDATA.PHASEDATA.banPhase1) {
       return '1st BAN PHASE';
-    } else if (phaseCounter === PHASEDATA.pickPhase1) {
+    } else if (phaseCounter === CONSTDATA.PHASEDATA.pickPhase1) {
       return '1st PICK PHASE';
-    } else if (phaseCounter === PHASEDATA.banPhase2) {
+    } else if (phaseCounter === CONSTDATA.PHASEDATA.banPhase2) {
       return '2nd BAN PHASE';
-    } else if (phaseCounter === PHASEDATA.pickPhase2) {
+    } else if (phaseCounter === CONSTDATA.PHASEDATA.pickPhase2) {
       return '2nd PICK PHASE';
-    } else if (phaseCounter === PHASEDATA.swapPhase) {
+    } else if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase) {
       return 'SWAP PHASE';
     }
   };
@@ -210,7 +213,7 @@ const BanPickSimulator = () => {
       simulatorFormData={simulatorFormData}
       setSimulatorFormData={setSimulatorFormData}
       setIsFormReady={setIsFormReady}
-      setIsPlayserReady={setIsPlayserReady}
+      setIsPlayersReady={setIsPlayersReady}
       setGameID={setGameID}
     />
   ) : (
@@ -224,10 +227,10 @@ const BanPickSimulator = () => {
         selectedChampion={selectedChampion}
         leftTime={leftTime}
         setLeftTime={setLeftTime}
-        isPlayserReady={isPlayserReady}
+        isPlayersReady={isPlayersReady}
       />
-      {!isPlayserReady ? (
-        <WatingRoom />
+      {!isPlayersReady ? (
+        <WatingRoom mode={simulatorFormData.mode} gameID={gameID} />
       ) : (
         <ListLayout>
           <PickList
@@ -248,6 +251,7 @@ const BanPickSimulator = () => {
             phaseCounter={phaseCounter}
             selectedChampions={selectedChampions}
             postBanPickList={postBanPickList}
+            isPlayersReady={isPlayersReady}
           />
           <PickList
             side="red"

@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
+import { CONSTDATA } from '../components/BanPick/CONSTDATA';
 
 const SimulatorForm = ({
   simulatorFormData,
   setSimulatorFormData,
   setIsFormReady,
-  setIsPlayserReady,
+  setIsPlayersReady,
   setGameID,
 }) => {
   const handleTeamName = (e, team) => {
@@ -81,7 +82,6 @@ const SimulatorForm = ({
             selectedOption={simulatorFormData.mode}
             onClick={() => {
               handleMode(0);
-              setIsPlayserReady(true);
             }}
             itemID={0}
           >
@@ -137,6 +137,8 @@ const SimulatorForm = ({
           !formValidator() && setIsFormReady(prev => !prev);
           formValidator() && alert('모든 항목을 입력, 선택해주세요');
           startSimulator();
+          simulatorFormData.mode === CONSTDATA.MODEDATA.solo &&
+            setIsPlayersReady(true);
         }}
       >
         START

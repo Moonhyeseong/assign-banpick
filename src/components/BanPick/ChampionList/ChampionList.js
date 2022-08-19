@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import ChampionCard from './ChampionCard';
 import ChampionFilter from './ChampionFilter';
-import { PHASEDATA } from '../PHASEDATA';
+import { CONSTDATA } from '../CONSTDATA';
 
 const ChampionList = ({
   championData,
@@ -45,7 +45,8 @@ const ChampionList = ({
       <SelectBtn
         selectedChampion={selectedChampion}
         disabled={
-          phaseCounter === PHASEDATA.swapPhase || selectedChampion === ''
+          phaseCounter === CONSTDATA.PHASEDATA.swapPhase ||
+          selectedChampion === ''
         }
         onClick={() => {
           handleSelectBtn();
