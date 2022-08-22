@@ -1,13 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { CONSTDATA } from '../components/BanPick/CONSTDATA';
+
+// 어드민 유저에게만 편집 권한
+// 어드민 유저를 갈아주기
+
+// 스왑때마다 업데이트
 
 const SimulatorForm = ({
   simulatorFormData,
   setSimulatorFormData,
   setIsFormReady,
   setIsPlayersReady,
-  setGameID,
+  userData,
+  setUserData,
+  setGameId,
 }) => {
   const handleTeamName = (e, team) => {
     setSimulatorFormData({ ...simulatorFormData, [team]: e.target.value });
@@ -19,6 +26,10 @@ const SimulatorForm = ({
 
   const handleTime = option => {
     setSimulatorFormData({ ...simulatorFormData, time: option });
+  };
+
+  const handleUserData = option => {
+    setUserData({ ...userData, side: option });
   };
 
   const formValidator = () => {
@@ -41,13 +52,16 @@ const SimulatorForm = ({
       }),
     })
       .then(res => res.json())
-      .then(res => setGameID(res._id));
-    // .then(res => sessionStorage.setItem({ GAME_ID: res._id }));
+      .then(res => {
+        setGameId(res._id);
+        sessionStorage.setItem('GAME_ID', res._id);
+      });
   };
 
   useEffect(() => {
     sessionStorage.removeItem('GAME_ID');
-  });
+    sessionStorage.removeItem('USER_ID');
+  }, []);
 
   return (
     <LandingLayout>
@@ -107,29 +121,57 @@ const SimulatorForm = ({
           </ModeItem>
         </ModeList>
       </ModeForm>
-      <TimeForm>
-        시간제한 옵션을 선택해주세요.
-        <ModeList>
-          <ModeItem
-            selectedOption={simulatorFormData.time}
-            onClick={() => {
-              handleTime(true);
-            }}
-            isTrue={true}
-          >
-            ON
-          </ModeItem>
-          <ModeItem
-            selectedOption={simulatorFormData.time}
-            onClick={() => {
-              handleTime(false);
-            }}
-            isTrue={false}
-          >
-            OFF
-          </ModeItem>
-        </ModeList>
-      </TimeForm>
+      {simulatorFormData.mode !== '' &&
+      simulatorFormData.mode !== CONSTDATA.MODEDATA.solo ? (
+        <ModeForm>
+          진영을 선택해주세요.
+          <ModeList>
+            <ModeItem
+              selectedOption={userData.side}
+              onClick={() => {
+                handleUserData('blue');
+              }}
+              side="blue"
+            >
+              BLUE
+            </ModeItem>
+            <ModeItem
+              selectedOption={userData.side}
+              onClick={() => {
+                handleUserData('red');
+              }}
+              side="red"
+            >
+              RED
+            </ModeItem>
+          </ModeList>
+        </ModeForm>
+      ) : (
+        <ModeForm>
+          시간제한 옵션을 선택해 주세요.
+          <ModeList>
+            <ModeItem
+              selectedOption={simulatorFormData.time}
+              onClick={() => {
+                handleTime(true);
+              }}
+              isTrue={true}
+            >
+              ON
+            </ModeItem>
+            <ModeItem
+              selectedOption={simulatorFormData.time}
+              onClick={() => {
+                handleTime(false);
+              }}
+              isTrue={false}
+            >
+              OFF
+            </ModeItem>
+          </ModeList>
+        </ModeForm>
+      )}
+
       <StartBtn
         // disabled={formValidator()}
         isDisabled={formValidator()}
@@ -231,15 +273,12 @@ const ModeItem = styled.span`
     css`
       opacity: 1;
     `}
-`;
 
-const TimeForm = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 600px;
-  font-size: 20px;
-  font-weight: 600;
-  margin: 40px 0;
+  ${props =>
+    props.side === props.selectedOption &&
+    css`
+      opacity: 1;
+    `}
 `;
 
 const StartBtn = styled.button`

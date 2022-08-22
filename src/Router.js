@@ -8,7 +8,8 @@ const Router = () => {
     <BrowserRouter>
       <ContentsWrapper>
         <Routes>
-          <Route path="" element={<BanPickSimulator />} />
+          <Route path="/" element={<BanPickSimulator />} />
+          <Route path="/:id" element={<BanPickSimulator />} />
         </Routes>
       </ContentsWrapper>
     </BrowserRouter>

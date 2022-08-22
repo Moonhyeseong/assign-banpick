@@ -14,11 +14,14 @@ const PickCard = ({
   swapItems,
   setSwapItems,
   phaseCounter,
+  leftTime,
+  postBanPickList,
 }) => {
   const [isSelecting, setIsSelecting] = useState(false);
 
   const currentIndex = pickList.indexOf('');
-  const isSwapPhase = phaseCounter === CONSTDATA.PHASEDATA.swapPhase;
+  const isSwapPhase =
+    phaseCounter === CONSTDATA.PHASEDATA.swapPhase && leftTime > 0;
 
   const imgURL = champion
     ? `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion}_0.jpg`

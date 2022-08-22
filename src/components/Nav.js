@@ -1,12 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import { useNavigate } from 'react-router-dom';
 const Nav = () => {
+  const navigate = useNavigate();
+
   return (
     <NavLayout>
       <Title>BanPick Simulator</Title>
       <MenuList>
-        <GoToBanPick>Simulator</GoToBanPick>
+        <GoToBanPick
+          onClick={() => {
+            sessionStorage.removeItem('GAME_ID');
+            sessionStorage.removeItem('INGAME_ID');
+          }}
+        >
+          <a href="/">Simulator</a>
+        </GoToBanPick>
       </MenuList>
     </NavLayout>
   );

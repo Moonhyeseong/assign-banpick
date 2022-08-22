@@ -2,21 +2,27 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { CONSTDATA } from '../BanPick/CONSTDATA';
 
-const WatingPlayer = ({ side, role, mode, userData }) => {
+const WatingPlayer = ({ side, role, mode, userData, playerData }) => {
   const playerRoleData = userData.role === role;
   const playerSideData = userData.side === side;
   const isOneOneOneMode = CONSTDATA.MODEDATA.oneOnOne === mode;
 
+  const isPlayerReady = playerData !== '';
   return (
     <PlayerCard role={role}>
       {playerRoleData && playerSideData ? (
         <PlayerName side={side}>{userData.name}</PlayerName>
       ) : (
         playerSideData &&
-        isOneOneOneMode && <PlayerName side={side}>{userData.name}</PlayerName>
+        isOneOneOneMode && (
+          <PlayerName side={side} isPlayerReady={isPlayerReady}>
+            {userData.name}
+          </PlayerName>
+        )
       )}
 
       {!isOneOneOneMode && <PlayerRole side={side}>{role}</PlayerRole>}
+      {isPlayerReady && <ReadyText>Ready!</ReadyText>}
       <GradientMask />
     </PlayerCard>
   );
@@ -25,6 +31,9 @@ const WatingPlayer = ({ side, role, mode, userData }) => {
 export default WatingPlayer;
 
 const PlayerCard = styled.div`
+  display: felx;
+  justify-content: center;
+  align-items: center;
   position: relative;
   width: 100%;
   height: 140px;
@@ -74,7 +83,16 @@ const PlayerName = styled.p`
     }
   }
 
-  animation: blink-effect 1s ease-in-out infinite;
+  ${props =>
+    props.isPlayerReady ||
+    css`
+      animation: blink-effect 1s ease-in-out infinite;
+    `}
+`;
+
+const ReadyText = styled.span`
+  font-weight: 700;
+  font-size: 40px;
 `;
 
 const GradientMask = styled.div``;

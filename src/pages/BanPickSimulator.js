@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import ChampionList from '../components/BanPick/ChampionList/ChampionList';
 import PickList from '../components/BanPick/PickBanList/PickList';
 import BanPickIndicator from '../components/BanPick/BanPickIndicator/BanPickIndicator';
@@ -10,15 +12,16 @@ import { CONSTDATA } from '../components/BanPick/CONSTDATA';
 const BanPickSimulator = () => {
   const [isFormReady, setIsFormReady] = useState(false);
   const [isPlayersReady, setIsPlayersReady] = useState(false);
-  const [gameID, setGameID] = useState('');
-
+  const [gameId, setGameId] = useState();
+  const params = useParams();
+  const location = useLocation();
   // const [isFinish, setIsFinish] = useState(false);
 
   const [simulatorFormData, setSimulatorFormData] = useState({
     blue: '',
     red: '',
     mode: '',
-    time: '',
+    time: true,
   });
 
   const [championData, setChampionData] = useState([]);
@@ -37,6 +40,12 @@ const BanPickSimulator = () => {
       blue: ['', '', '', '', ''],
       red: ['', '', '', '', ''],
     },
+  });
+  const [playerList, setPlayerList] = useState();
+  const [userData, setUserData] = useState({
+    side: '',
+    name: '',
+    role: '',
   });
 
   const [banpickData, setBanpickData] = useState();
@@ -121,25 +130,19 @@ const BanPickSimulator = () => {
     }
   };
 
-  const handleTimeOut = () => {
-    if (leftTime < 0) {
-      if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
-        handleSelectBtn();
-        setLeftTime(30);
-      }
-    }
-  };
-
   const postBanPickList = () => {
-    fetch(`http://localhost:8080/banpick/${gameID}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        banPickList: banPickList,
-      }),
-    })
+    fetch(
+      `http://localhost:8080/banpick/${sessionStorage.getItem('GAME_ID')}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          banPickList: banPickList,
+        }),
+      }
+    )
       .then(res => res.json())
       .then(() =>
         setTimeout(() => {
@@ -148,8 +151,22 @@ const BanPickSimulator = () => {
       );
   };
 
+  const handleTimeOut = () => {
+    if (leftTime < 0) {
+      if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
+        handleSelectBtn();
+        postBanPickList();
+        setLeftTime(30);
+      }
+
+      if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase) {
+        postBanPickList();
+      }
+    }
+  };
+
   const getBanPickListData = () => {
-    fetch(`http://localhost:8080/banpick/${gameID}`)
+    fetch(`http://localhost:8080/banpick/${sessionStorage.getItem('GAME_ID')}`)
       .then(res => res.json())
       .then(res => setBanpickData(res));
   };
@@ -167,6 +184,7 @@ const BanPickSimulator = () => {
     handleTimeOut();
   });
 
+  //init turn data
   useEffect(() => {
     setTurnData({
       turn: [
@@ -193,6 +211,41 @@ const BanPickSimulator = () => {
     });
   }, []);
 
+  //링크는 게임 아이디로
+  //게임 아이디 내의 인게임 아이디를 통해 밴픽 정보 불러오기, 저장하기
+
+  //초대링크로 접속시
+  useEffect(() => {
+    if (params.id) {
+      sessionStorage.setItem('GAME_ID', params.id);
+      fetch(`http://localhost:8080/start/invite/${params.id}${location.search}`)
+        .then(res => res.json())
+        .then(res => {
+          setSimulatorFormData({
+            blue: '',
+            red: '',
+            mode: res.mode,
+            time: '',
+          });
+          setTimeout(() => {
+            simulatorFormData.mode !== 2
+              ? setUserData({
+                  side: res.side,
+                  name: '',
+                  role: 'null',
+                })
+              : setUserData({
+                  side: res.side,
+                  name: '',
+                  role: '',
+                });
+          }, 100);
+        });
+
+      setIsFormReady(true);
+    }
+  }, [location.search, params.id, simulatorFormData.mode]);
+
   const getPhaseTitle = () => {
     if (phaseCounter === CONSTDATA.PHASEDATA.banPhase1) {
       return '1st BAN PHASE';
@@ -206,15 +259,16 @@ const BanPickSimulator = () => {
       return 'SWAP PHASE';
     }
   };
-  //솔로일때 대기방을 생략해야한다.
-  //멀티일때 대기방에 들어가면 isFormReady가 false가 되어야한다.
+
   return !isFormReady ? (
     <SimulatorForm
       simulatorFormData={simulatorFormData}
       setSimulatorFormData={setSimulatorFormData}
       setIsFormReady={setIsFormReady}
       setIsPlayersReady={setIsPlayersReady}
-      setGameID={setGameID}
+      userData={userData}
+      setUserData={setUserData}
+      setGameId={setGameId}
     />
   ) : (
     <BanPickLayout>
@@ -230,7 +284,14 @@ const BanPickSimulator = () => {
         isPlayersReady={isPlayersReady}
       />
       {!isPlayersReady ? (
-        <WatingRoom mode={simulatorFormData.mode} gameID={gameID} />
+        <WatingRoom
+          mode={simulatorFormData.mode}
+          userData={userData}
+          setUserData={setUserData}
+          playerList={playerList}
+          setPlayerList={setPlayerList}
+          gameId={gameId}
+        />
       ) : (
         <ListLayout>
           <PickList
@@ -241,6 +302,8 @@ const BanPickSimulator = () => {
             phaseCounter={phaseCounter}
             turn={turn}
             banpickData={banpickData}
+            leftTime={leftTime}
+            postBanPickList={postBanPickList}
           />
           <ChampionList
             setBanPickList={setBanPickList}
@@ -261,6 +324,8 @@ const BanPickSimulator = () => {
             phaseCounter={phaseCounter}
             turn={turn}
             banpickData={banpickData}
+            leftTime={leftTime}
+            postBanPickList={postBanPickList}
           />
         </ListLayout>
       )}

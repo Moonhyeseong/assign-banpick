@@ -3,15 +3,7 @@ import styled from 'styled-components';
 import { CONSTDATA } from '../BanPick/CONSTDATA';
 import WatingPlayer from './WatingPlayer';
 
-const WatingList = ({ mode, side, gameID, userData }) => {
-  const [playerList, setPlayerList] = useState();
-
-  useEffect(() => {
-    mode === CONSTDATA.MODEDATA.oneOnOne
-      ? setPlayerList([''])
-      : setPlayerList(['', '', '', '', '']);
-  }, [mode]);
-
+const WatingList = ({ mode, side, userData, isPlayerReady, playerList }) => {
   return (
     <WatingListLayout>
       {playerList?.map((playerData, idx) => {
@@ -22,6 +14,7 @@ const WatingList = ({ mode, side, gameID, userData }) => {
             mode={mode}
             userData={userData}
             side={side}
+            playerData={playerData}
           />
         );
       })}
