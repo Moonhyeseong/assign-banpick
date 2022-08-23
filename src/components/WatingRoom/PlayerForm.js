@@ -35,14 +35,14 @@ const PlayerForm = ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        game_id: sessionStorage.getItem('game_id'),
+        game_id: sessionStorage.getItem('GAME_ID'),
         name: name,
         side: side,
         role: role,
       }),
     })
       .then(res => res.json())
-      .then(res => console.log(res));
+      .then(res => setCreatedUserData(res));
 
     setPlayerList({ ...playerList, [side]: [createdUserData] });
   };

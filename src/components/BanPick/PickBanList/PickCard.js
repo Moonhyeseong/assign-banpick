@@ -15,7 +15,6 @@ const PickCard = ({
   setSwapItems,
   phaseCounter,
   leftTime,
-  postBanPickList,
 }) => {
   const [isSelecting, setIsSelecting] = useState(false);
 

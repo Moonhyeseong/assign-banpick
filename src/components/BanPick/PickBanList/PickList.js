@@ -35,7 +35,10 @@ const PickList = ({
   }, [pickList, side, swapItems.currentIndex, swapItems.replaceIndex]);
 
   useEffect(() => {
-    swapItems.replaceIndex !== '' && swapListItem();
+    if (swapItems.replaceIndex !== '') {
+      swapListItem();
+      postBanPickList();
+    }
   });
 
   return (
@@ -57,7 +60,6 @@ const PickList = ({
               setSwapItems={setSwapItems}
               phaseCounter={phaseCounter}
               leftTime={leftTime}
-              postBanPickList={postBanPickList}
             />
           );
         })}

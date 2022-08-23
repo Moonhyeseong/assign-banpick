@@ -19,15 +19,15 @@ const WatingRoom = ({
   setPlayerList,
   gameId,
 }) => {
-  // const socket = io.connect('http://localhost:8080', {
-  //   path: '/socket.io',
-  //   transports: ['websocket'],
-  // });
+  const socket = io.connect('http://localhost:8080', {
+    path: '/socket.io',
+    transports: ['websocket'],
+  });
 
-  // socket.emit('news', '서버야 안녕');
-  // socket.on('reply', payload => {
-  //   console.log(payload);
-  // });
+  socket.emit('news', '서버야 안녕');
+  socket.on('reply', payload => {
+    console.log(payload);
+  });
 
   useEffect(() => {
     parseInt(mode) !== parseInt(CONSTDATA.MODEDATA.oneOnOne)

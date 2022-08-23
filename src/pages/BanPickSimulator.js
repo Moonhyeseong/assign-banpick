@@ -90,6 +90,7 @@ const BanPickSimulator = () => {
       }
     };
 
+    //페이즈정보 턴정보 인덱스 정보 - 선택된 챔피언 정보
     banPickList[phaseInfo][turn][index] = selectedChampion
       ? selectedChampion
       : getTimeOutItem();
@@ -155,12 +156,7 @@ const BanPickSimulator = () => {
     if (leftTime < 0) {
       if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
         handleSelectBtn();
-        postBanPickList();
         setLeftTime(30);
-      }
-
-      if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase) {
-        postBanPickList();
       }
     }
   };
