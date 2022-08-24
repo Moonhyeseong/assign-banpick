@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CONSTDATA } from '../BanPick/CONSTDATA';
+import { useLocation } from 'react-router-dom';
 
 const PlayerForm = ({
   setUserData,
@@ -9,9 +10,9 @@ const PlayerForm = ({
   mode,
   playerList,
   setPlayerList,
-  gameId,
+  sendReadyEvent,
 }) => {
-  const [createdUserData, setCreatedUserData] = useState();
+  const location = useLocation();
 
   const handleNameInput = e => {
     setUserData({ ...userData, name: e.target.value });
@@ -42,54 +43,61 @@ const PlayerForm = ({
       }),
     })
       .then(res => res.json())
-      .then(res => setCreatedUserData(res));
-
-    setPlayerList({ ...playerList, [side]: [createdUserData] });
+      .then(res => {
+        sendReadyEvent({ ...playerList, [side]: [res] });
+        setPlayerList(prev => (prev = { ...playerList, [side]: [res] }));
+      });
   };
-
-  useEffect(() => {
-    createdUserData && sessionStorage.setItem('USER_ID', createdUserData._id);
-  });
-
+  // console.log(sessionStorage.getItem('GAME_ID'));
   return (
     <PlayerFormLayout>
       <Caution>✓ 모든 플레이어의 준비가 완료되면 밴픽을 시작합니다.</Caution>
       <Caution>✓ 링크를 복사해 상대방을 초대하세요.</Caution>
       {sessionStorage.getItem('GAME_ID') && (
         <LinkContainer>
-          <InviteLink>
-            {`http://localhost:3000/${gameId}?side=blue`}
+          {location.search !== '?side=red' && (
+            <InviteLink>
+              {`http://localhost:3000/${sessionStorage.getItem(
+                'GAME_ID'
+              )}?side=blue`}
 
-            <CopyToClipboard text={`http://localhost:3000/${gameId}?side=blue`}>
-              <CopyBtn
-                side="blue"
-                onClick={() => {
-                  alert('링크가 복사되었습니다.');
-                }}
+              <CopyToClipboard
+                text={`http://localhost:3000/${sessionStorage.getItem(
+                  'GAME_ID'
+                )}?side=blue`}
               >
-                블루팀 초대링크 복사
-              </CopyBtn>
-            </CopyToClipboard>
-          </InviteLink>
-          <InviteLink>
-            {`http://localhost:3000/${sessionStorage.getItem(
-              'GAME_ID'
-            )}?side=red`}
-            <CopyToClipboard
-              text={`http://localhost:3000/${sessionStorage.getItem(
+                <CopyBtn
+                  side="blue"
+                  onClick={() => {
+                    alert('링크가 복사되었습니다.');
+                  }}
+                >
+                  블루팀 초대링크 복사
+                </CopyBtn>
+              </CopyToClipboard>
+            </InviteLink>
+          )}
+          {location.search !== '?side=blue' && (
+            <InviteLink>
+              {`http://localhost:3000/${sessionStorage.getItem(
                 'GAME_ID'
               )}?side=red`}
-            >
-              <CopyBtn
-                side="red"
-                onClick={() => {
-                  alert('링크가 복사되었습니다.');
-                }}
+              <CopyToClipboard
+                text={`http://localhost:3000/${sessionStorage.getItem(
+                  'GAME_ID'
+                )}?side=red`}
               >
-                레드팀 초대링크 복사
-              </CopyBtn>
-            </CopyToClipboard>
-          </InviteLink>
+                <CopyBtn
+                  side="red"
+                  onClick={() => {
+                    alert('링크가 복사되었습니다.');
+                  }}
+                >
+                  레드팀 초대링크 복사
+                </CopyBtn>
+              </CopyToClipboard>
+            </InviteLink>
+          )}
         </LinkContainer>
       )}
 
@@ -137,7 +145,7 @@ const PlayerForm = ({
 export default PlayerForm;
 
 const PlayerFormLayout = styled.div`
-  width: 600px;
+  width: 620px;
   height: auto;
   text-align: center;
 `;

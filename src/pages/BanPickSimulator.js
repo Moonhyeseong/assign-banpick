@@ -13,6 +13,7 @@ const BanPickSimulator = () => {
   const [isFormReady, setIsFormReady] = useState(false);
   const [isPlayersReady, setIsPlayersReady] = useState(false);
   const [gameId, setGameId] = useState();
+
   const params = useParams();
   const location = useLocation();
   // const [isFinish, setIsFinish] = useState(false);
@@ -207,6 +208,22 @@ const BanPickSimulator = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (
+      parseInt(simulatorFormData.mode) === parseInt(CONSTDATA.MODEDATA.oneOnOne)
+    ) {
+      setPlayerList({ blue: [''], red: [''] });
+    } else if (
+      parseInt(simulatorFormData.mode) ===
+      parseInt(CONSTDATA.MODEDATA.fiveOnfive)
+    ) {
+      setPlayerList({
+        blue: ['', '', '', '', ''],
+        red: ['', '', '', '', ''],
+      });
+    }
+  }, [simulatorFormData.mode]);
+
   //링크는 게임 아이디로
   //게임 아이디 내의 인게임 아이디를 통해 밴픽 정보 불러오기, 저장하기
 
@@ -221,7 +238,7 @@ const BanPickSimulator = () => {
             blue: '',
             red: '',
             mode: res.mode,
-            time: '',
+            time: true,
           });
           setTimeout(() => {
             simulatorFormData.mode !== 2
@@ -278,6 +295,7 @@ const BanPickSimulator = () => {
         leftTime={leftTime}
         setLeftTime={setLeftTime}
         isPlayersReady={isPlayersReady}
+        playerList={playerList}
       />
       {!isPlayersReady ? (
         <WatingRoom
@@ -286,7 +304,7 @@ const BanPickSimulator = () => {
           setUserData={setUserData}
           playerList={playerList}
           setPlayerList={setPlayerList}
-          gameId={gameId}
+          setIsPlayersReady={setIsPlayersReady}
         />
       ) : (
         <ListLayout>

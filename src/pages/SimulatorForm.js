@@ -1,11 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { CONSTDATA } from '../components/BanPick/CONSTDATA';
-
-// 어드민 유저에게만 편집 권한
-// 어드민 유저를 갈아주기
-
-// 스왑때마다 업데이트
 
 const SimulatorForm = ({
   simulatorFormData,
@@ -32,6 +27,11 @@ const SimulatorForm = ({
     setUserData({ ...userData, side: option });
   };
 
+  const storeGameId = respnse => {
+    setGameId(respnse);
+    sessionStorage.setItem('GAME_ID', respnse);
+  };
+
   const formValidator = () => {
     const formValues = Object.values(simulatorFormData);
     return formValues.includes('');
@@ -53,8 +53,7 @@ const SimulatorForm = ({
     })
       .then(res => res.json())
       .then(res => {
-        setGameId(res._id);
-        sessionStorage.setItem('GAME_ID', res._id);
+        storeGameId(res._id);
       });
   };
 

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { CONSTDATA } from '../BanPick/CONSTDATA';
+
 import WatingPlayer from './WatingPlayer';
 
-const WatingList = ({ mode, side, userData, isPlayerReady, playerList }) => {
+const WatingList = ({ mode, side, userData, playerList }) => {
   return (
     <WatingListLayout>
       {playerList?.map((playerData, idx) => {

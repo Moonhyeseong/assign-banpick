@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-const Nav = () => {
-  const navigate = useNavigate();
 
+const Nav = () => {
   return (
     <NavLayout>
       <Title>BanPick Simulator</Title>

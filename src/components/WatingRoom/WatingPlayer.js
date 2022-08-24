@@ -4,19 +4,23 @@ import { CONSTDATA } from '../BanPick/CONSTDATA';
 
 const WatingPlayer = ({ side, role, mode, userData, playerData }) => {
   const playerRoleData = userData.role === role;
-  const playerSideData = userData.side === side;
+  const playerSideData = playerData.side || userData.side === side;
+
   const isOneOneOneMode = CONSTDATA.MODEDATA.oneOnOne === mode;
 
   const isPlayerReady = playerData !== '';
+
   return (
     <PlayerCard role={role}>
       {playerRoleData && playerSideData ? (
-        <PlayerName side={side}>{userData.name}</PlayerName>
+        <PlayerName side={side}>
+          {playerData.name ? playerData.name : userData.name}
+        </PlayerName>
       ) : (
         playerSideData &&
         isOneOneOneMode && (
           <PlayerName side={side} isPlayerReady={isPlayerReady}>
-            {userData.name}
+            {playerData.name ? playerData.name : userData.name}
           </PlayerName>
         )
       )}

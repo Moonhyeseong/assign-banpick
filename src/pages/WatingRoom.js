@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import WatingList from '../components/WatingRoom/WatingList';
 import PlayerForm from '../components/WatingRoom/PlayerForm';
@@ -17,23 +17,28 @@ const WatingRoom = ({
   userData,
   playerList,
   setPlayerList,
-  gameId,
+  setIsPlayersReady,
 }) => {
   const socket = io.connect('http://localhost:8080', {
     path: '/socket.io',
     transports: ['websocket'],
   });
 
-  socket.emit('news', '서버야 안녕');
-  socket.on('reply', payload => {
-    console.log(payload);
-  });
+  const sendReadyEvent = playerList => {
+    socket.emit('ready', playerList);
+  };
 
   useEffect(() => {
-    parseInt(mode) !== parseInt(CONSTDATA.MODEDATA.oneOnOne)
-      ? setPlayerList({ blue: ['', '', '', '', ''], red: ['', '', '', '', ''] })
-      : setPlayerList({ blue: [''], red: [''] });
-  }, [mode, setPlayerList]);
+    playerList?.red.indexOf('') === -1 &&
+      playerList?.blue.indexOf('') === -1 &&
+      setIsPlayersReady(prev => !prev);
+  }, [playerList, setIsPlayersReady]);
+
+  useEffect(() => {
+    socket.on('ready', payload => {
+      setPlayerList(payload);
+    });
+  }, [setPlayerList, playerList, socket]);
 
   useEffect(() => {
     if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
@@ -58,7 +63,7 @@ const WatingRoom = ({
         userData={userData}
         playerList={playerList}
         setPlayerList={setPlayerList}
-        gameId={gameId}
+        sendReadyEvent={sendReadyEvent}
       />
       <WatingList
         mode={mode}

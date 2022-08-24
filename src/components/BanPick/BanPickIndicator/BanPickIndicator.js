@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import Timer from './Timer';
+import { useParams } from 'react-router-dom';
 
 const BanPickIndicator = ({
   simulatorFormData: { blue, red, mode, time },
@@ -8,13 +9,35 @@ const BanPickIndicator = ({
   leftTime,
   setLeftTime,
   isPlayersReady,
+  playerList,
 }) => {
+  const [gameInfo, setGameInfo] = useState();
+  const params = useParams();
+
+  const notReadyPlayers = side => {
+    const teamSide = side;
+    return (
+      playerList &&
+      playerList[teamSide].length -
+        playerList[teamSide].filter(element => '' === element).length
+    );
+  };
+
+  useEffect(() => {
+    sessionStorage.getItem('GAME_ID') &&
+      fetch(`http://localhost:8080/game/info/${params.id}`)
+        .then(res => res.json())
+        .then(res => setGameInfo(res));
+  }, [params.id]);
+
   return (
     <IndicatorLayout>
       <TeamInfo side="blue">
         <TeamName side="blue">
           <TeamSide>BLUE</TeamSide>
-          {blue === '' ? 'BLUE TEAM' : blue}
+          {params.id ? gameInfo?.blueTeam : blue}{' '}
+          {isPlayersReady ||
+            `(${notReadyPlayers('blue')}/${playerList?.blue.length})`}
         </TeamName>
       </TeamInfo>
       {isPlayersReady && (
@@ -35,7 +58,9 @@ const BanPickIndicator = ({
       <TeamInfo side="red">
         <TeamName side="blue">
           <TeamSide>RED</TeamSide>
-          {red === '' ? 'RED TEAM' : red}
+          {isPlayersReady ||
+            `(${notReadyPlayers('red')}/${playerList?.red.length})`}{' '}
+          {params.id ? gameInfo?.redTeam : red}
         </TeamName>
       </TeamInfo>
     </IndicatorLayout>
