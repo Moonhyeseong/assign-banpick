@@ -16,7 +16,9 @@ const SimulatorForm = ({
   };
 
   const handleMode = option => {
-    setSimulatorFormData({ ...simulatorFormData, mode: option });
+    option >= 1
+      ? setSimulatorFormData({ ...simulatorFormData, mode: option, time: true })
+      : setSimulatorFormData({ ...simulatorFormData, mode: option });
   };
 
   const handleTime = option => {
@@ -34,27 +36,33 @@ const SimulatorForm = ({
 
   const formValidator = () => {
     const formValues = Object.values(simulatorFormData);
-    return formValues.includes('');
+
+    if (simulatorFormData.mode === CONSTDATA.MODEDATA.solo) {
+      return formValues.includes('');
+    } else {
+      return userData.side === '' || formValues.includes('');
+    }
   };
 
   const startSimulator = () => {
     const { blue, red, mode, time } = simulatorFormData;
-    fetch('http://localhost:8080/start', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        blueTeam: blue,
-        redTeam: red,
-        mode: mode,
-        timer: time,
-      }),
-    })
-      .then(res => res.json())
-      .then(res => {
-        storeGameId(res._id);
-      });
+    !formValidator() &&
+      fetch('http://localhost:8080/start', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          blueTeam: blue,
+          redTeam: red,
+          mode: mode,
+          timer: time,
+        }),
+      })
+        .then(res => res.json())
+        .then(res => {
+          storeGameId(res._id);
+        });
   };
 
   useEffect(() => {

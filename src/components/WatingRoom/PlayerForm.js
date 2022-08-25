@@ -44,7 +44,10 @@ const PlayerForm = ({
     })
       .then(res => res.json())
       .then(res => {
-        sendReadyEvent({ ...playerList, [side]: [res] });
+        sendReadyEvent(
+          { ...playerList, [side]: [res] },
+          sessionStorage.getItem('GAME_ID')
+        );
         setPlayerList(prev => (prev = { ...playerList, [side]: [res] }));
       });
   };

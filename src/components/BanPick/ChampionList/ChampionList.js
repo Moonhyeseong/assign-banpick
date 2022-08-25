@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import ChampionCard from './ChampionCard';
 import ChampionFilter from './ChampionFilter';
 import { CONSTDATA } from '../CONSTDATA';
+import { SocketContext } from '../../../context/socket';
 
 const ChampionList = ({
   championData,
@@ -12,6 +13,11 @@ const ChampionList = ({
   handleSelectBtn,
   phaseCounter,
   postBanPickList,
+  banPickList,
+  setBanPickList,
+  turn,
+  setTurn,
+  getBanPickListData,
 }) => {
   const [search, setSearch] = useState('');
   const championList = Object.values(championData);
@@ -22,6 +28,18 @@ const ChampionList = ({
       champion.name.includes(search) ||
       champion.id.toLowerCase().includes(search.toLowerCase())
     );
+  });
+
+  const socket = useContext(SocketContext);
+
+  socket.on('banpick', payload => {
+    console.log(payload);
+    setBanPickList(payload);
+  });
+
+  socket.on('updateTurn', payload => {
+    console.log(payload);
+    // setTurn(payload);
   });
 
   return (

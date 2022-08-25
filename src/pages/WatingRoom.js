@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import WatingList from '../components/WatingRoom/WatingList';
 import PlayerForm from '../components/WatingRoom/PlayerForm';
 import { CONSTDATA } from '../components/BanPick/CONSTDATA';
-import { io } from 'socket.io-client';
+import { SocketContext } from '../context/socket';
 
 //#######################
 //전부 대기실 입장
@@ -19,26 +19,35 @@ const WatingRoom = ({
   setPlayerList,
   setIsPlayersReady,
 }) => {
-  const socket = io.connect('http://localhost:8080', {
-    path: '/socket.io',
-    transports: ['websocket'],
+  const socket = useContext(SocketContext);
+
+  socket.emit('news', '유저 입장');
+
+  socket.emit('joinRoom', sessionStorage.getItem('GAME_ID'));
+
+  socket.on('join', payload => {
+    console.log(payload);
   });
 
-  const sendReadyEvent = playerList => {
-    socket.emit('ready', playerList);
-  };
+  socket.on('news', payload => {
+    console.log(payload);
+  });
 
-  useEffect(() => {
-    playerList?.red.indexOf('') === -1 &&
-      playerList?.blue.indexOf('') === -1 &&
-      setIsPlayersReady(prev => !prev);
-  }, [playerList, setIsPlayersReady]);
+  const sendReadyEvent = (playerList, gameId) => {
+    socket.emit('ready', playerList, gameId);
+  };
 
   useEffect(() => {
     socket.on('ready', payload => {
       setPlayerList(payload);
     });
   }, [setPlayerList, playerList, socket]);
+
+  useEffect(() => {
+    playerList?.red.indexOf('') === -1 &&
+      playerList?.blue.indexOf('') === -1 &&
+      setIsPlayersReady(prev => !prev);
+  }, [playerList, setIsPlayersReady]);
 
   useEffect(() => {
     if (mode === CONSTDATA.MODEDATA.fiveOnfive) {

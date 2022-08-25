@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import Simulator from './Simulator';
 import ChampionList from '../components/BanPick/ChampionList/ChampionList';
 import PickList from '../components/BanPick/PickBanList/PickList';
 import BanPickIndicator from '../components/BanPick/BanPickIndicator/BanPickIndicator';
 import SimulatorForm from './SimulatorForm';
 import WatingRoom from './WatingRoom';
 import { CONSTDATA } from '../components/BanPick/CONSTDATA';
+import { SocketContext } from '../context/socket';
 
 const BanPickSimulator = () => {
   const [isFormReady, setIsFormReady] = useState(false);
   const [isPlayersReady, setIsPlayersReady] = useState(false);
   const [gameId, setGameId] = useState();
-
+  const socket = useContext(SocketContext);
   const params = useParams();
   const location = useLocation();
   // const [isFinish, setIsFinish] = useState(false);
@@ -22,7 +24,7 @@ const BanPickSimulator = () => {
     blue: '',
     red: '',
     mode: '',
-    time: true,
+    time: '',
   });
 
   const [championData, setChampionData] = useState([]);
@@ -59,7 +61,10 @@ const BanPickSimulator = () => {
 
   const handleTurn = () => {
     setTurn(turnData.turn.shift());
+    // return turnData.turn.shift();
   };
+  // 밴픽 버튼을 클릭한 유저의 브라우저에서만 턴 정보가 변경됨
+  // 그렇다면 밴픽 버튼을 클릭할 때가 아닌 상황에서도 handleTurn함수가 실행 되어야 한다.
 
   const selectedChampions = [
     ...banPickList.banList.red,
@@ -95,8 +100,8 @@ const BanPickSimulator = () => {
     banPickList[phaseInfo][turn][index] = selectedChampion
       ? selectedChampion
       : getTimeOutItem();
-
     handleTurn();
+    socket.emit('updateTurn', sessionStorage.getItem('GAME_ID'), turn);
     setSelectedChampion('');
     setLeftTime(30);
   };
@@ -151,6 +156,8 @@ const BanPickSimulator = () => {
           getBanPickListData();
         }, 100)
       );
+
+    socket.emit('banpick', sessionStorage.getItem('GAME_ID'), banPickList);
   };
 
   const handleTimeOut = () => {
@@ -284,66 +291,76 @@ const BanPickSimulator = () => {
       setGameId={setGameId}
     />
   ) : (
-    <BanPickLayout>
-      <BanPickIndicator
-        simulatorFormData={simulatorFormData}
-        phaseTitle={getPhaseTitle}
-        handleSelectBtn={handleSelectBtn}
-        setSelectedChampion={setSelectedChampion}
-        phaseInfo={phaseInfo}
-        selectedChampion={selectedChampion}
-        leftTime={leftTime}
-        setLeftTime={setLeftTime}
-        isPlayersReady={isPlayersReady}
-        playerList={playerList}
-      />
-      {!isPlayersReady ? (
-        <WatingRoom
-          mode={simulatorFormData.mode}
-          userData={userData}
-          setUserData={setUserData}
+    <Simulator
+      gameId={gameId}
+      isFormReady={isFormReady}
+      isPlayersReady={isPlayersReady}
+    >
+      <BanPickLayout>
+        <BanPickIndicator
+          simulatorFormData={simulatorFormData}
+          phaseTitle={getPhaseTitle}
+          handleSelectBtn={handleSelectBtn}
+          setSelectedChampion={setSelectedChampion}
+          phaseInfo={phaseInfo}
+          selectedChampion={selectedChampion}
+          leftTime={leftTime}
+          setLeftTime={setLeftTime}
+          isPlayersReady={isPlayersReady}
           playerList={playerList}
-          setPlayerList={setPlayerList}
-          setIsPlayersReady={setIsPlayersReady}
+          gameId={gameId}
+          setGameId={setGameId}
         />
-      ) : (
-        <ListLayout>
-          <PickList
-            side="blue"
-            banPickList={banPickList}
-            selectedChampion={selectedChampion}
-            phaseInfo={phaseInfo}
-            phaseCounter={phaseCounter}
-            turn={turn}
-            banpickData={banpickData}
-            leftTime={leftTime}
-            postBanPickList={postBanPickList}
+        {!isPlayersReady ? (
+          <WatingRoom
+            mode={simulatorFormData.mode}
+            userData={userData}
+            setUserData={setUserData}
+            playerList={playerList}
+            setPlayerList={setPlayerList}
+            setIsPlayersReady={setIsPlayersReady}
           />
-          <ChampionList
-            setBanPickList={setBanPickList}
-            championData={championData}
-            selectedChampion={selectedChampion}
-            setSelectedChampion={setSelectedChampion}
-            handleSelectBtn={handleSelectBtn}
-            phaseCounter={phaseCounter}
-            selectedChampions={selectedChampions}
-            postBanPickList={postBanPickList}
-            isPlayersReady={isPlayersReady}
-          />
-          <PickList
-            side="red"
-            banPickList={banPickList}
-            selectedChampion={selectedChampion}
-            phaseInfo={phaseInfo}
-            phaseCounter={phaseCounter}
-            turn={turn}
-            banpickData={banpickData}
-            leftTime={leftTime}
-            postBanPickList={postBanPickList}
-          />
-        </ListLayout>
-      )}
-    </BanPickLayout>
+        ) : (
+          <ListLayout>
+            <PickList
+              side="blue"
+              banPickList={banPickList}
+              selectedChampion={selectedChampion}
+              phaseInfo={phaseInfo}
+              phaseCounter={phaseCounter}
+              turn={turn}
+              leftTime={leftTime}
+              postBanPickList={postBanPickList}
+            />
+            <ChampionList
+              setBanPickList={setBanPickList}
+              banPickList={banPickList}
+              championData={championData}
+              selectedChampion={selectedChampion}
+              setSelectedChampion={setSelectedChampion}
+              handleSelectBtn={handleSelectBtn}
+              phaseCounter={phaseCounter}
+              selectedChampions={selectedChampions}
+              postBanPickList={postBanPickList}
+              isPlayersReady={isPlayersReady}
+              turn={turn}
+              setTurn={setTurn}
+              getBanPickListData={getBanPickListData}
+            />
+            <PickList
+              side="red"
+              banPickList={banPickList}
+              selectedChampion={selectedChampion}
+              phaseInfo={phaseInfo}
+              phaseCounter={phaseCounter}
+              turn={turn}
+              leftTime={leftTime}
+              postBanPickList={postBanPickList}
+            />
+          </ListLayout>
+        )}
+      </BanPickLayout>
+    </Simulator>
   );
 };
 

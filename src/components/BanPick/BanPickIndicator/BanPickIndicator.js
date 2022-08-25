@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import Timer from './Timer';
 import { useParams } from 'react-router-dom';
+import { SocketContext } from '../../../context/socket';
 
 const BanPickIndicator = ({
   simulatorFormData: { blue, red, mode, time },
@@ -10,8 +11,11 @@ const BanPickIndicator = ({
   setLeftTime,
   isPlayersReady,
   playerList,
+  gameId,
 }) => {
   const [gameInfo, setGameInfo] = useState();
+  const socket = useContext(SocketContext);
+
   const params = useParams();
 
   const notReadyPlayers = side => {
@@ -23,12 +27,17 @@ const BanPickIndicator = ({
     );
   };
 
+  socket.on('gmaeID', payload => {
+    console.log(payload);
+    sessionStorage.setItem('GAME_ID', payload);
+  });
+
   useEffect(() => {
-    sessionStorage.getItem('GAME_ID') &&
-      fetch(`http://localhost:8080/game/info/${params.id}`)
+    gameId &&
+      fetch(`http://localhost:8080/game/info/${gameId}`)
         .then(res => res.json())
         .then(res => setGameInfo(res));
-  }, [params.id]);
+  }, [gameId]);
 
   return (
     <IndicatorLayout>
@@ -44,7 +53,7 @@ const BanPickIndicator = ({
         <TimerContainer>
           <PatchVersion> Patch 12.5.1</PatchVersion>
           <LeftTime>
-            {time ? (
+            {gameInfo?.timer ? (
               <Timer leftTime={leftTime} setLeftTime={setLeftTime} />
             ) : (
               ':∞'
