@@ -8,16 +8,17 @@ const ChampionCard = ({
   selectedChampions,
   setSelectedChampion,
   phaseCounter,
+  isEditable,
 }) => {
   const [isSelected, setIsSelected] = useState(false);
 
   useEffect(() => {
-    if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase) {
+    if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase || !isEditable) {
       setIsSelected(true);
     } else {
       setIsSelected(selectedChampions.includes(champion));
     }
-  }, [champion, phaseCounter, selectedChampions]);
+  }, [champion, isEditable, phaseCounter, selectedChampions]);
 
   return (
     <ChampionCardLayout

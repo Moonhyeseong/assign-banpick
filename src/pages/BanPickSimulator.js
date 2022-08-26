@@ -10,11 +10,13 @@ import SimulatorForm from './SimulatorForm';
 import WatingRoom from './WatingRoom';
 import { CONSTDATA } from '../components/BanPick/CONSTDATA';
 import { SocketContext } from '../context/socket';
+import { SERVER_URL } from '../config';
 
 const BanPickSimulator = () => {
   const [isFormReady, setIsFormReady] = useState(false);
   const [isPlayersReady, setIsPlayersReady] = useState(false);
   const [gameId, setGameId] = useState();
+
   const socket = useContext(SocketContext);
   const params = useParams();
   const location = useLocation();
@@ -44,6 +46,7 @@ const BanPickSimulator = () => {
       red: ['', '', '', '', ''],
     },
   });
+
   const [playerList, setPlayerList] = useState();
   const [userData, setUserData] = useState({
     side: '',
@@ -51,7 +54,7 @@ const BanPickSimulator = () => {
     role: '',
   });
 
-  const [banpickData, setBanpickData] = useState();
+  // const [banpickData, setBanpickData] = useState();
 
   const [leftTime, setLeftTime] = useState(30);
   const [turn, setTurn] = useState('blue');
@@ -60,8 +63,9 @@ const BanPickSimulator = () => {
   });
 
   const handleTurn = () => {
-    setTurn(turnData.turn.shift());
-    // return turnData.turn.shift();
+    const nextTurn = turnData.turn.shift();
+    setTurn(nextTurn);
+    return nextTurn;
   };
   // 밴픽 버튼을 클릭한 유저의 브라우저에서만 턴 정보가 변경됨
   // 그렇다면 밴픽 버튼을 클릭할 때가 아닌 상황에서도 handleTurn함수가 실행 되어야 한다.
@@ -100,8 +104,7 @@ const BanPickSimulator = () => {
     banPickList[phaseInfo][turn][index] = selectedChampion
       ? selectedChampion
       : getTimeOutItem();
-    handleTurn();
-    socket.emit('updateTurn', sessionStorage.getItem('GAME_ID'), turn);
+
     setSelectedChampion('');
     setLeftTime(30);
   };
@@ -138,18 +141,15 @@ const BanPickSimulator = () => {
   };
 
   const postBanPickList = () => {
-    fetch(
-      `http://localhost:8080/banpick/${sessionStorage.getItem('GAME_ID')}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          banPickList: banPickList,
-        }),
-      }
-    )
+    fetch(`${SERVER_URL}/banpick/${sessionStorage.getItem('GAME_ID')}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        banPickList: banPickList,
+      }),
+    })
       .then(res => res.json())
       .then(() =>
         setTimeout(() => {
@@ -157,7 +157,10 @@ const BanPickSimulator = () => {
         }, 100)
       );
 
-    socket.emit('banpick', sessionStorage.getItem('GAME_ID'), banPickList);
+    socket.emit('banpick', sessionStorage.getItem('GAME_ID'), banPickList, {
+      nextTurn: handleTurn(),
+      nextTurnData: turnData,
+    });
   };
 
   const handleTimeOut = () => {
@@ -170,9 +173,9 @@ const BanPickSimulator = () => {
   };
 
   const getBanPickListData = () => {
-    fetch(`http://localhost:8080/banpick/${sessionStorage.getItem('GAME_ID')}`)
-      .then(res => res.json())
-      .then(res => setBanpickData(res));
+    // fetch(`http://192.168.0.117:8080/banpick/${sessionStorage.getItem('GAME_ID')}`)
+    //   .then(res => res.json())
+    //   .then(res => setBanpickData(res));
   };
 
   useEffect(() => {
@@ -238,7 +241,11 @@ const BanPickSimulator = () => {
   useEffect(() => {
     if (params.id) {
       sessionStorage.setItem('GAME_ID', params.id);
-      fetch(`http://localhost:8080/start/invite/${params.id}${location.search}`)
+      setGameId(params.id);
+
+      fetch(
+        `http://192.168.0.117:8080/start/invite/${params.id}${location.search}`
+      )
         .then(res => res.json())
         .then(res => {
           setSimulatorFormData({
@@ -334,7 +341,6 @@ const BanPickSimulator = () => {
             />
             <ChampionList
               setBanPickList={setBanPickList}
-              banPickList={banPickList}
               championData={championData}
               selectedChampion={selectedChampion}
               setSelectedChampion={setSelectedChampion}
@@ -342,10 +348,11 @@ const BanPickSimulator = () => {
               phaseCounter={phaseCounter}
               selectedChampions={selectedChampions}
               postBanPickList={postBanPickList}
-              isPlayersReady={isPlayersReady}
               turn={turn}
               setTurn={setTurn}
-              getBanPickListData={getBanPickListData}
+              setTurnData={setTurnData}
+              userData={userData}
+              setLeftTime={setLeftTime}
             />
             <PickList
               side="red"

@@ -30,7 +30,7 @@ const PlayerForm = ({
   const postAddUser = () => {
     const { name, side, role } = userData;
 
-    fetch('http://localhost:8080/add/user', {
+    fetch('http://192.168.0.117:8080/add/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -60,12 +60,12 @@ const PlayerForm = ({
         <LinkContainer>
           {location.search !== '?side=red' && (
             <InviteLink>
-              {`http://localhost:3000/${sessionStorage.getItem(
+              {`http://192.168.0.117:3000/${sessionStorage.getItem(
                 'GAME_ID'
               )}?side=blue`}
 
               <CopyToClipboard
-                text={`http://localhost:3000/${sessionStorage.getItem(
+                text={`http://192.168.0.117:3000/${sessionStorage.getItem(
                   'GAME_ID'
                 )}?side=blue`}
               >
@@ -82,11 +82,11 @@ const PlayerForm = ({
           )}
           {location.search !== '?side=blue' && (
             <InviteLink>
-              {`http://localhost:3000/${sessionStorage.getItem(
+              {`http://192.168.0.117:3000/${sessionStorage.getItem(
                 'GAME_ID'
               )}?side=red`}
               <CopyToClipboard
-                text={`http://localhost:3000/${sessionStorage.getItem(
+                text={`http://192.168.0.117:3000/${sessionStorage.getItem(
                   'GAME_ID'
                 )}?side=red`}
               >

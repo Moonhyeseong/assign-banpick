@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 
 const Simulator = ({ children, gameId }) => {
   useEffect(() => {
-    const game = io.connect('http://localhost:8080/game', {
+    const game = io.connect('http://192.168.0.117:8080/game', {
       path: '/socket.io',
       transports: ['websocket'],
     });

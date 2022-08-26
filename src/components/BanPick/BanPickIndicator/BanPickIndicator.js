@@ -34,7 +34,7 @@ const BanPickIndicator = ({
 
   useEffect(() => {
     gameId &&
-      fetch(`http://localhost:8080/game/info/${gameId}`)
+      fetch(`http://192.168.0.117:8080/game/info/${gameId}`)
         .then(res => res.json())
         .then(res => setGameInfo(res));
   }, [gameId]);

@@ -47,7 +47,7 @@ const SimulatorForm = ({
   const startSimulator = () => {
     const { blue, red, mode, time } = simulatorFormData;
     !formValidator() &&
-      fetch('http://localhost:8080/start', {
+      fetch('http://192.168.0.117:8080/start', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

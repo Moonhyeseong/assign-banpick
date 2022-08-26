@@ -5,12 +5,6 @@ import PlayerForm from '../components/WatingRoom/PlayerForm';
 import { CONSTDATA } from '../components/BanPick/CONSTDATA';
 import { SocketContext } from '../context/socket';
 
-//#######################
-//전부 대기실 입장
-//입장시 소환사명 입력
-//준비 버튼 클릭시 팀 사이드와 유저이름, 인게임 아이디 를 가진 도큐먼드 생성 or 유저정보 ingame 스키마에 추가
-
-//identifier
 const WatingRoom = ({
   mode,
   setUserData,

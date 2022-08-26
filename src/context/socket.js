@@ -1,7 +1,7 @@
 import React from 'react';
 import { io } from 'socket.io-client';
 
-export const socket = io.connect('http://localhost:8080/room', {
+export const socket = io.connect('http://192.168.0.117:8080/room', {
   path: '/socket.io',
   transports: ['websocket'],
 });

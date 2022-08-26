@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import ChampionCard from './ChampionCard';
 import ChampionFilter from './ChampionFilter';
@@ -6,6 +6,7 @@ import { CONSTDATA } from '../CONSTDATA';
 import { SocketContext } from '../../../context/socket';
 
 const ChampionList = ({
+  setBanPickList,
   championData,
   selectedChampion,
   setSelectedChampion,
@@ -13,13 +14,15 @@ const ChampionList = ({
   handleSelectBtn,
   phaseCounter,
   postBanPickList,
-  banPickList,
-  setBanPickList,
-  turn,
   setTurn,
-  getBanPickListData,
+  setTurnData,
+  userData,
+  turn,
+  setLeftTime,
 }) => {
   const [search, setSearch] = useState('');
+  const [isEditable, setIsEditable] = useState(false);
+
   const championList = Object.values(championData);
   championList.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -33,14 +36,22 @@ const ChampionList = ({
   const socket = useContext(SocketContext);
 
   socket.on('banpick', payload => {
-    console.log(payload);
     setBanPickList(payload);
+    console.log(phaseCounter !== 4);
+    //페이즈 정보애따라 setLeftTime 여부 확인
+    phaseCounter !== 4 && setLeftTime(30);
   });
 
-  socket.on('updateTurn', payload => {
-    console.log(payload);
-    // setTurn(payload);
+  socket.on('updateTurn', turnData => {
+    setTurn(turnData.nextTurn);
+    setTurnData(turnData.nextTurnData);
   });
+
+  useEffect(() => {
+    userData.side !== ''
+      ? setIsEditable(userData.side === turn)
+      : setIsEditable(true);
+  }, [turn, userData.role, userData.side]);
 
   return (
     <ChampionListLayout>
@@ -55,6 +66,7 @@ const ChampionList = ({
               phaseCounter={phaseCounter}
               selectedChampions={selectedChampions}
               setSelectedChampion={setSelectedChampion}
+              isEditable={isEditable}
             />
           );
         })}
