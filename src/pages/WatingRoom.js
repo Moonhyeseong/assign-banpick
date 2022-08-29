@@ -15,15 +15,9 @@ const WatingRoom = ({
 }) => {
   const socket = useContext(SocketContext);
 
-  socket.emit('news', '유저 입장');
-
   socket.emit('joinRoom', sessionStorage.getItem('GAME_ID'));
 
   socket.on('join', payload => {
-    console.log(payload);
-  });
-
-  socket.on('news', payload => {
     console.log(payload);
   });
 

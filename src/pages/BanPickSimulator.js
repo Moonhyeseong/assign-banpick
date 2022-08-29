@@ -48,19 +48,21 @@ const BanPickSimulator = () => {
   });
 
   const [playerList, setPlayerList] = useState();
+
   const [userData, setUserData] = useState({
     side: '',
     name: '',
     role: '',
   });
 
-  // const [banpickData, setBanpickData] = useState();
-
   const [leftTime, setLeftTime] = useState(30);
+
   const [turn, setTurn] = useState('blue');
   const [turnData, setTurnData] = useState({
     turn: [],
   });
+
+  const [isEditable, setIsEditable] = useState(false);
 
   const handleTurn = () => {
     const nextTurn = turnData.turn.shift();
@@ -84,21 +86,26 @@ const BanPickSimulator = () => {
       ? 'banList'
       : 'pickList';
 
+  const getTimeOutItem = () => {
+    const championList = Object.values(championData);
+    const randomIndex = Math.floor(Math.random() * championList.length);
+
+    if (phaseInfo === 'banList') {
+      return 'NO DATA';
+    } else if (phaseInfo === 'pickList') {
+      if (selectedChampions.indexOf(championList[randomIndex]) === -1) {
+        socket.emit('timeout', championList[randomIndex].id);
+        return championList[randomIndex].id;
+      }
+    }
+  };
+
   const handleSelectBtn = () => {
     const index = banPickList[phaseInfo][turn].indexOf('');
 
-    const getTimeOutItem = () => {
-      const championList = Object.values(championData);
-      const randomIndex = Math.floor(Math.random() * championList.length);
-
-      if (phaseInfo === 'banList') {
-        return 'NO DATA';
-      } else if (phaseInfo === 'pickList') {
-        if (selectedChampions.indexOf(championList[randomIndex]) === -1) {
-          return championList[randomIndex].id;
-        }
-      }
-    };
+    // 타임아웃 랜덤 선택 로직
+    // 각 클라이언트에서 함수가 실행되 서로다른 챔피언 선택
+    // - 현재 턴이 진행되는 클라이언트에서 보낸 챔피언을 selectedChampion으로
 
     //페이즈정보 턴정보 인덱스 정보 - 선택된 챔피언 정보
     banPickList[phaseInfo][turn][index] = selectedChampion
@@ -106,7 +113,10 @@ const BanPickSimulator = () => {
       : getTimeOutItem();
 
     setSelectedChampion('');
-    setLeftTime(30);
+
+    if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
+      setLeftTime(30);
+    }
   };
 
   //phaseCounter 업데이트
@@ -157,16 +167,24 @@ const BanPickSimulator = () => {
         }, 100)
       );
 
-    socket.emit('banpick', sessionStorage.getItem('GAME_ID'), banPickList, {
-      nextTurn: handleTurn(),
-      nextTurnData: turnData,
-    });
+    socket.emit(
+      'banpick',
+      sessionStorage.getItem('GAME_ID'),
+      banPickList,
+      {
+        nextTurn: handleTurn(),
+        nextTurnData: turnData,
+      },
+      phaseCounter
+    );
+    setSelectedChampion('');
   };
 
   const handleTimeOut = () => {
     if (leftTime < 0) {
       if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
         handleSelectBtn();
+        postBanPickList();
         setLeftTime(30);
       }
     }
@@ -176,6 +194,20 @@ const BanPickSimulator = () => {
     // fetch(`http://192.168.0.117:8080/banpick/${sessionStorage.getItem('GAME_ID')}`)
     //   .then(res => res.json())
     //   .then(res => setBanpickData(res));
+  };
+
+  const getPhaseTitle = () => {
+    if (phaseCounter === CONSTDATA.PHASEDATA.banPhase1) {
+      return '1st BAN PHASE';
+    } else if (phaseCounter === CONSTDATA.PHASEDATA.pickPhase1) {
+      return '1st PICK PHASE';
+    } else if (phaseCounter === CONSTDATA.PHASEDATA.banPhase2) {
+      return '2nd BAN PHASE';
+    } else if (phaseCounter === CONSTDATA.PHASEDATA.pickPhase2) {
+      return '2nd PICK PHASE';
+    } else if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase) {
+      return 'SWAP PHASE';
+    }
   };
 
   useEffect(() => {
@@ -218,6 +250,7 @@ const BanPickSimulator = () => {
     });
   }, []);
 
+  //player List 초기화
   useEffect(() => {
     if (
       parseInt(simulatorFormData.mode) === parseInt(CONSTDATA.MODEDATA.oneOnOne)
@@ -234,8 +267,25 @@ const BanPickSimulator = () => {
     }
   }, [simulatorFormData.mode]);
 
-  //링크는 게임 아이디로
-  //게임 아이디 내의 인게임 아이디를 통해 밴픽 정보 불러오기, 저장하기
+  useEffect(() => {
+    if (simulatorFormData.mode === CONSTDATA.MODEDATA.oneOnOne) {
+      userData.side !== ''
+        ? setIsEditable(userData.side === turn)
+        : setIsEditable(true);
+    } else if (simulatorFormData.mode === CONSTDATA.MODEDATA.fiveOnfive) {
+      const index = banPickList[phaseInfo][turn].indexOf('');
+      setIsEditable(
+        userData.side === turn && index === CONSTDATA.ROLEDATA[userData.role]
+      );
+    }
+  }, [
+    banPickList,
+    phaseInfo,
+    simulatorFormData.mode,
+    turn,
+    userData.role,
+    userData.side,
+  ]);
 
   //초대링크로 접속시
   useEffect(() => {
@@ -272,20 +322,6 @@ const BanPickSimulator = () => {
       setIsFormReady(true);
     }
   }, [location.search, params.id, simulatorFormData.mode]);
-
-  const getPhaseTitle = () => {
-    if (phaseCounter === CONSTDATA.PHASEDATA.banPhase1) {
-      return '1st BAN PHASE';
-    } else if (phaseCounter === CONSTDATA.PHASEDATA.pickPhase1) {
-      return '1st PICK PHASE';
-    } else if (phaseCounter === CONSTDATA.PHASEDATA.banPhase2) {
-      return '2nd BAN PHASE';
-    } else if (phaseCounter === CONSTDATA.PHASEDATA.pickPhase2) {
-      return '2nd PICK PHASE';
-    } else if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase) {
-      return 'SWAP PHASE';
-    }
-  };
 
   return !isFormReady ? (
     <SimulatorForm
@@ -338,6 +374,7 @@ const BanPickSimulator = () => {
               turn={turn}
               leftTime={leftTime}
               postBanPickList={postBanPickList}
+              userData={userData}
             />
             <ChampionList
               setBanPickList={setBanPickList}
@@ -348,11 +385,10 @@ const BanPickSimulator = () => {
               phaseCounter={phaseCounter}
               selectedChampions={selectedChampions}
               postBanPickList={postBanPickList}
-              turn={turn}
               setTurn={setTurn}
               setTurnData={setTurnData}
-              userData={userData}
               setLeftTime={setLeftTime}
+              isEditable={isEditable}
             />
             <PickList
               side="red"
@@ -363,6 +399,7 @@ const BanPickSimulator = () => {
               turn={turn}
               leftTime={leftTime}
               postBanPickList={postBanPickList}
+              userData={userData}
             />
           </ListLayout>
         )}

@@ -28,7 +28,6 @@ const BanPickIndicator = ({
   };
 
   socket.on('gmaeID', payload => {
-    console.log(payload);
     sessionStorage.setItem('GAME_ID', payload);
   });
 

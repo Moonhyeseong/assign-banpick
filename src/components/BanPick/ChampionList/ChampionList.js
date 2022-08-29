@@ -16,12 +16,10 @@ const ChampionList = ({
   postBanPickList,
   setTurn,
   setTurnData,
-  userData,
-  turn,
   setLeftTime,
+  isEditable,
 }) => {
   const [search, setSearch] = useState('');
-  const [isEditable, setIsEditable] = useState(false);
 
   const championList = Object.values(championData);
   championList.sort((a, b) => a.name.localeCompare(b.name));
@@ -35,23 +33,25 @@ const ChampionList = ({
 
   const socket = useContext(SocketContext);
 
-  socket.on('banpick', payload => {
-    setBanPickList(payload);
-    console.log(phaseCounter !== 4);
-    //페이즈 정보애따라 setLeftTime 여부 확인
-    phaseCounter !== 4 && setLeftTime(30);
+  socket.on('banpick', banPickList => {
+    setBanPickList(banPickList);
+    setSelectedChampion('');
+  });
+
+  socket.on('phase', phase => {
+    if (phase !== CONSTDATA.PHASEDATA.swapPhase) {
+      setLeftTime(30);
+    }
+  });
+
+  socket.on('selectChampion', champion => {
+    setSelectedChampion(champion);
   });
 
   socket.on('updateTurn', turnData => {
     setTurn(turnData.nextTurn);
     setTurnData(turnData.nextTurnData);
   });
-
-  useEffect(() => {
-    userData.side !== ''
-      ? setIsEditable(userData.side === turn)
-      : setIsEditable(true);
-  }, [turn, userData.role, userData.side]);
 
   return (
     <ChampionListLayout>
@@ -76,7 +76,8 @@ const ChampionList = ({
         selectedChampion={selectedChampion}
         disabled={
           phaseCounter === CONSTDATA.PHASEDATA.swapPhase ||
-          selectedChampion === ''
+          selectedChampion === '' ||
+          !isEditable
         }
         onClick={() => {
           handleSelectBtn();

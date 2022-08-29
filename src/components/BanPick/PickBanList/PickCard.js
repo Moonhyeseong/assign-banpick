@@ -15,6 +15,7 @@ const PickCard = ({
   setSwapItems,
   phaseCounter,
   leftTime,
+  userData,
 }) => {
   const [isSelecting, setIsSelecting] = useState(false);
 
@@ -28,10 +29,12 @@ const PickCard = ({
       `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${selectedChampion}_0.jpg`;
 
   const handleSwapItems = () => {
-    if (swapItems.currentIndex === '') {
-      setSwapItems({ ...swapItems, side: side, currentIndex: index });
-    } else {
-      setSwapItems({ ...swapItems, replaceIndex: index });
+    if (userData?.side === side) {
+      if (swapItems.currentIndex === '') {
+        setSwapItems({ ...swapItems, side: side, currentIndex: index });
+      } else {
+        setSwapItems({ ...swapItems, replaceIndex: index });
+      }
     }
   };
 
@@ -49,7 +52,10 @@ const PickCard = ({
         isSwapPhase && handleSwapItems();
       }}
     >
-      <PlayerName sidxe={side}>{` `}</PlayerName>
+      {userData?.role === role && (
+        <PlayerName side={side}>{userData?.name}</PlayerName>
+      )}
+
       <PlayerRole side={side}>{role}</PlayerRole>
       <ChampionName side={side}>
         {champion ? champion : isSelecting && selectedChampion}

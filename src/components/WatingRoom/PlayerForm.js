@@ -27,6 +27,17 @@ const PlayerForm = ({
     return formValues.includes('');
   };
 
+  const updatePlayerList = (res, side, role) => {
+    if (mode === CONSTDATA.MODEDATA.oneOnOne) {
+      return { ...playerList, [side]: [res] };
+    } else if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
+      const index = CONSTDATA.ROLEDATA[role];
+      playerList[side][index] = res;
+
+      return { ...playerList, [side]: playerList[side] };
+    }
+  };
+
   const postAddUser = () => {
     const { name, side, role } = userData;
 
@@ -45,10 +56,10 @@ const PlayerForm = ({
       .then(res => res.json())
       .then(res => {
         sendReadyEvent(
-          { ...playerList, [side]: [res] },
+          updatePlayerList(res, side, role),
           sessionStorage.getItem('GAME_ID')
         );
-        setPlayerList(prev => (prev = { ...playerList, [side]: [res] }));
+        setPlayerList(prev => (prev = updatePlayerList(res, side, role)));
       });
   };
   // console.log(sessionStorage.getItem('GAME_ID'));
@@ -148,7 +159,7 @@ const PlayerForm = ({
 export default PlayerForm;
 
 const PlayerFormLayout = styled.div`
-  width: 620px;
+  width: 630px;
   height: auto;
   text-align: center;
 `;

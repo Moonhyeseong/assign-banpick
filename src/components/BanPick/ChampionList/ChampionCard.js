@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import { CONSTDATA } from '../CONSTDATA';
+import { SocketContext } from '../../../context/socket';
 
 const ChampionCard = ({
   champion,
@@ -11,6 +12,7 @@ const ChampionCard = ({
   isEditable,
 }) => {
   const [isSelected, setIsSelected] = useState(false);
+  const socket = useContext(SocketContext);
 
   useEffect(() => {
     if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase || !isEditable) {
@@ -26,6 +28,11 @@ const ChampionCard = ({
       disabled={isSelected || phaseCounter === CONSTDATA.PHASEDATA.swapPhase}
       onClick={() => {
         setSelectedChampion(champion);
+        socket.emit(
+          'selectChampion',
+          sessionStorage.getItem('GAME_ID'),
+          champion
+        );
       }}
     >
       <ChampionIcon
