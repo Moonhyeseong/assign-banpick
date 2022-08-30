@@ -12,7 +12,7 @@ const PickList = ({
   phaseCounter,
   leftTime,
   postBanPickList,
-  userData,
+  playerList,
 }) => {
   const [swapItems, setSwapItems] = useState({
     side: '',
@@ -61,7 +61,7 @@ const PickList = ({
               setSwapItems={setSwapItems}
               phaseCounter={phaseCounter}
               leftTime={leftTime}
-              userData={userData}
+              playerData={playerList && playerList[idx]}
             />
           );
         })}

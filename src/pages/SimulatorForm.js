@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { CONSTDATA } from '../components/BanPick/CONSTDATA';
+import { BASE_URL } from '../config';
 
 const SimulatorForm = ({
   simulatorFormData,
@@ -47,7 +48,7 @@ const SimulatorForm = ({
   const startSimulator = () => {
     const { blue, red, mode, time } = simulatorFormData;
     !formValidator() &&
-      fetch('http://192.168.0.117:8080/start', {
+      fetch(`${BASE_URL}:8080/start`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,7 +68,7 @@ const SimulatorForm = ({
 
   useEffect(() => {
     sessionStorage.removeItem('GAME_ID');
-    sessionStorage.removeItem('USER_ID');
+    // localStorage.removeItem('USER_ID');
   }, []);
 
   return (

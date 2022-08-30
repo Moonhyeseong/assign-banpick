@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { CONSTDATA } from '../CONSTDATA';
-
+import { BASE_URL } from '../../../config';
 const PickCard = ({
   side,
   champion,
@@ -15,10 +15,11 @@ const PickCard = ({
   setSwapItems,
   phaseCounter,
   leftTime,
-  userData,
+  playerData,
 }) => {
   const [isSelecting, setIsSelecting] = useState(false);
-
+  const [playerInfo, setPlayerInfo] = useState();
+  // console.log(playerData);
   const currentIndex = pickList.indexOf('');
   const isSwapPhase =
     phaseCounter === CONSTDATA.PHASEDATA.swapPhase && leftTime > 0;
@@ -29,11 +30,12 @@ const PickCard = ({
       `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${selectedChampion}_0.jpg`;
 
   const handleSwapItems = () => {
-    if (userData?.side === side) {
+    // console.log(swapItems);
+    if (playerInfo.side === side) {
       if (swapItems.currentIndex === '') {
         setSwapItems({ ...swapItems, side: side, currentIndex: index });
       } else {
-        setSwapItems({ ...swapItems, replaceIndex: index });
+        setSwapItems({ ...swapItems, side: side, replaceIndex: index });
       }
     }
   };
@@ -45,6 +47,12 @@ const PickCard = ({
     }
   }, [currentIndex, index, phaseInfo, side, turn]);
 
+  useEffect(() => {
+    fetch(`${BASE_URL}:8080/user/${localStorage.getItem('USER_ID')}`)
+      .then(res => res.json())
+      .then(res => setPlayerInfo(res));
+  }, []);
+
   return (
     <PickCardLayout
       isSwapPhase={isSwapPhase}
@@ -52,8 +60,8 @@ const PickCard = ({
         isSwapPhase && handleSwapItems();
       }}
     >
-      {userData?.role === role && (
-        <PlayerName side={side}>{userData?.name}</PlayerName>
+      {playerData?.role === role && (
+        <PlayerName side={side}>{playerData?.name}</PlayerName>
       )}
 
       <PlayerRole side={side}>{role}</PlayerRole>

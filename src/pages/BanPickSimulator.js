@@ -10,7 +10,7 @@ import SimulatorForm from './SimulatorForm';
 import WatingRoom from './WatingRoom';
 import { CONSTDATA } from '../components/BanPick/CONSTDATA';
 import { SocketContext } from '../context/socket';
-import { SERVER_URL } from '../config';
+import { BASE_URL } from '../config';
 
 const BanPickSimulator = () => {
   const [isFormReady, setIsFormReady] = useState(false);
@@ -151,7 +151,7 @@ const BanPickSimulator = () => {
   };
 
   const postBanPickList = () => {
-    fetch(`${SERVER_URL}/banpick/${sessionStorage.getItem('GAME_ID')}`, {
+    fetch(`${BASE_URL}:8080/banpick/${sessionStorage.getItem('GAME_ID')}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -163,7 +163,7 @@ const BanPickSimulator = () => {
       .then(res => res.json())
       .then(() =>
         setTimeout(() => {
-          getBanPickListData();
+          // getBanPickListData();
         }, 100)
       );
 
@@ -181,7 +181,7 @@ const BanPickSimulator = () => {
   };
 
   const handleTimeOut = () => {
-    if (leftTime < 0) {
+    if (leftTime < 0 && isEditable) {
       if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
         handleSelectBtn();
         postBanPickList();
@@ -190,11 +190,31 @@ const BanPickSimulator = () => {
     }
   };
 
-  const getBanPickListData = () => {
-    // fetch(`http://192.168.0.117:8080/banpick/${sessionStorage.getItem('GAME_ID')}`)
-    //   .then(res => res.json())
-    //   .then(res => setBanpickData(res));
-  };
+  useEffect(() => {
+    params.id &&
+      fetch(`${BASE_URL}:8080/list/banpick/${params.id}`)
+        .then(res => res.json())
+        .then(res => setBanPickList(res));
+  }, [params.id]);
+
+  useEffect(() => {
+    console.log('턴정보 가저오기');
+    params.id &&
+      isFormReady &&
+      fetch(`${BASE_URL}:8080/list/turn/${params.id}`)
+        .then(res => res.json())
+        .then(res => {
+          setTurn(res?.turnData.nextTurn);
+          setTurnData(res?.turnData.nextTurnData);
+        });
+  }, [isFormReady, params.id]);
+
+  useEffect(() => {
+    sessionStorage.getItem('GAME_ID') &&
+      fetch(`${BASE_URL}:8080/list/player/${sessionStorage.getItem('GAME_ID')}`)
+        .then(res => res.json())
+        .then(res => setPlayerList(res));
+  }, [params.id, setPlayerList]);
 
   const getPhaseTitle = () => {
     if (phaseCounter === CONSTDATA.PHASEDATA.banPhase1) {
@@ -274,9 +294,12 @@ const BanPickSimulator = () => {
         : setIsEditable(true);
     } else if (simulatorFormData.mode === CONSTDATA.MODEDATA.fiveOnfive) {
       const index = banPickList[phaseInfo][turn].indexOf('');
-      setIsEditable(
-        userData.side === turn && index === CONSTDATA.ROLEDATA[userData.role]
-      );
+      const turnInfo = userData.side === turn;
+      const indexInfo = index === CONSTDATA.ROLEDATA[userData.role];
+
+      setIsEditable(indexInfo && turnInfo);
+    } else if (simulatorFormData.mode === CONSTDATA.MODEDATA.solo) {
+      setIsEditable(true);
     }
   }, [
     banPickList,
@@ -293,9 +316,7 @@ const BanPickSimulator = () => {
       sessionStorage.setItem('GAME_ID', params.id);
       setGameId(params.id);
 
-      fetch(
-        `http://192.168.0.117:8080/start/invite/${params.id}${location.search}`
-      )
+      fetch(`${BASE_URL}:8080/start/invite/${params.id}${location.search}`)
         .then(res => res.json())
         .then(res => {
           setSimulatorFormData({
@@ -374,7 +395,7 @@ const BanPickSimulator = () => {
               turn={turn}
               leftTime={leftTime}
               postBanPickList={postBanPickList}
-              userData={userData}
+              playerList={playerList?.blue}
             />
             <ChampionList
               setBanPickList={setBanPickList}
@@ -399,7 +420,7 @@ const BanPickSimulator = () => {
               turn={turn}
               leftTime={leftTime}
               postBanPickList={postBanPickList}
-              userData={userData}
+              playerList={playerList?.red}
             />
           </ListLayout>
         )}

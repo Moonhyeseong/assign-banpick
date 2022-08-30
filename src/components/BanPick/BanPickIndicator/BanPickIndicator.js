@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import Timer from './Timer';
 import { useParams } from 'react-router-dom';
 import { SocketContext } from '../../../context/socket';
+import { BASE_URL } from '../../../config';
 
 const BanPickIndicator = ({
   simulatorFormData: { blue, red, mode, time },
@@ -33,7 +34,7 @@ const BanPickIndicator = ({
 
   useEffect(() => {
     gameId &&
-      fetch(`http://192.168.0.117:8080/game/info/${gameId}`)
+      fetch(`${BASE_URL}:8080/game/info/${gameId}`)
         .then(res => res.json())
         .then(res => setGameInfo(res));
   }, [gameId]);

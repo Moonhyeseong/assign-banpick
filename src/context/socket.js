@@ -1,7 +1,8 @@
 import React from 'react';
 import { io } from 'socket.io-client';
+import { BASE_URL } from '../config';
 
-export const socket = io.connect('http://192.168.0.117:8080/room', {
+export const socket = io.connect(`${BASE_URL}:8080/room`, {
   path: '/socket.io',
   transports: ['websocket'],
 });

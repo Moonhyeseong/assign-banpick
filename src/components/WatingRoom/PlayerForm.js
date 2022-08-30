@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CONSTDATA } from '../BanPick/CONSTDATA';
 import { useLocation } from 'react-router-dom';
+import { BASE_URL } from '../../config';
 
 const PlayerForm = ({
   setUserData,
@@ -23,8 +24,9 @@ const PlayerForm = ({
   };
 
   const formValidator = () => {
-    const formValues = Object.values(userData);
-    return formValues.includes('');
+    const isFormValuesPassed = Object.values(userData).includes('');
+
+    return isFormValuesPassed;
   };
 
   const updatePlayerList = (res, side, role) => {
@@ -41,7 +43,7 @@ const PlayerForm = ({
   const postAddUser = () => {
     const { name, side, role } = userData;
 
-    fetch('http://192.168.0.117:8080/add/user', {
+    fetch(`${BASE_URL}:8080/add/user`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,6 +57,7 @@ const PlayerForm = ({
     })
       .then(res => res.json())
       .then(res => {
+        localStorage.setItem('USER_ID', res._id);
         sendReadyEvent(
           updatePlayerList(res, side, role),
           sessionStorage.getItem('GAME_ID')
@@ -71,12 +74,12 @@ const PlayerForm = ({
         <LinkContainer>
           {location.search !== '?side=red' && (
             <InviteLink>
-              {`http://192.168.0.117:3000/${sessionStorage.getItem(
+              {`${BASE_URL}:3000/${sessionStorage.getItem(
                 'GAME_ID'
               )}?side=blue`}
 
               <CopyToClipboard
-                text={`http://192.168.0.117:3000/${sessionStorage.getItem(
+                text={`${BASE_URL}:3000/${sessionStorage.getItem(
                   'GAME_ID'
                 )}?side=blue`}
               >
@@ -93,11 +96,9 @@ const PlayerForm = ({
           )}
           {location.search !== '?side=blue' && (
             <InviteLink>
-              {`http://192.168.0.117:3000/${sessionStorage.getItem(
-                'GAME_ID'
-              )}?side=red`}
+              {`${BASE_URL}:3000/${sessionStorage.getItem('GAME_ID')}?side=red`}
               <CopyToClipboard
-                text={`http://192.168.0.117:3000/${sessionStorage.getItem(
+                text={`${BASE_URL}:3000/${sessionStorage.getItem(
                   'GAME_ID'
                 )}?side=red`}
               >
@@ -159,7 +160,7 @@ const PlayerForm = ({
 export default PlayerForm;
 
 const PlayerFormLayout = styled.div`
-  width: 630px;
+  width: 640px;
   height: auto;
   text-align: center;
 `;

@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { io } from 'socket.io-client';
+import { BASE_URL } from '../config';
 
 const Simulator = ({ children, gameId }) => {
   useEffect(() => {
-    const game = io.connect('http://192.168.0.117:8080/game', {
+    const game = io.connect(`${BASE_URL}:8080/game`, {
       path: '/socket.io',
       transports: ['websocket'],
     });

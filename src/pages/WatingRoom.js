@@ -1,9 +1,11 @@
 import React, { useEffect, useContext } from 'react';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
 import WatingList from '../components/WatingRoom/WatingList';
 import PlayerForm from '../components/WatingRoom/PlayerForm';
 import { CONSTDATA } from '../components/BanPick/CONSTDATA';
 import { SocketContext } from '../context/socket';
+import { BASE_URL } from '../config';
 
 const WatingRoom = ({
   mode,
@@ -14,11 +16,12 @@ const WatingRoom = ({
   setIsPlayersReady,
 }) => {
   const socket = useContext(SocketContext);
+  const params = useParams();
 
   socket.emit('joinRoom', sessionStorage.getItem('GAME_ID'));
 
   socket.on('join', payload => {
-    console.log(payload);
+    // alert('참자가자 ');
   });
 
   const sendReadyEvent = (playerList, gameId) => {
@@ -45,6 +48,18 @@ const WatingRoom = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  //선수들이 준비를 하고 있는 상태애서 입장할때
+  useEffect(() => {
+    sessionStorage.getItem('GAME_ID') &&
+      fetch(`${BASE_URL}:8080/list/player/${params.id}`)
+        .then(res => res.json())
+        .then(res => {
+          setTimeout(() => {
+            setPlayerList(res);
+          }, 10);
+        });
+  }, [params.id, setPlayerList]);
 
   return (
     <WatingListLayout>
