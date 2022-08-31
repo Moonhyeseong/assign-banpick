@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styled, { css } from 'styled-components';
-
 import ChampionCard from './ChampionCard';
 import ChampionFilter from './ChampionFilter';
 import { CONSTDATA } from '../CONSTDATA';

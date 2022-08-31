@@ -2,7 +2,9 @@ import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Simulator from './Simulator';
+import DisconnectAlert from '../components/DisconnectAlert';
 import ChampionList from '../components/BanPick/ChampionList/ChampionList';
 import PickList from '../components/BanPick/PickBanList/PickList';
 import BanPickIndicator from '../components/BanPick/BanPickIndicator/BanPickIndicator';
@@ -16,12 +18,13 @@ const BanPickSimulator = () => {
   const [isFormReady, setIsFormReady] = useState(false);
   const [isPlayersReady, setIsPlayersReady] = useState(false);
   const [gameId, setGameId] = useState();
-
+  const [isModalActive, setIsModalActive] = useState(false);
   const socket = useContext(SocketContext);
   const params = useParams();
   const location = useLocation();
   const [isFinish, setIsFinish] = useState(false);
   // console.log(banPickList);
+
   const [simulatorFormData, setSimulatorFormData] = useState({
     blue: '',
     red: '',
@@ -190,26 +193,38 @@ const BanPickSimulator = () => {
       }
     }
   };
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    params.id &&
-      fetch(`${BASE_URL}:8080/list/banpick/${params.id}`)
-        .then(res => res.json())
-        .then(res => setBanPickList(res));
-  }, [params.id]);
+  const disconnectEvent = () => {
+    window.location = '/';
+    setIsFormReady(false);
+    setIsPlayersReady(false);
+  };
 
-  useEffect(() => {
-    console.log('턴정보 가저오기');
-    params.id &&
-      isFormReady &&
-      isPlayersReady &&
-      fetch(`${BASE_URL}:8080/list/turn/${params.id}`)
-        .then(res => res.json())
-        .then(res => {
-          setTurn(res?.turnData.nextTurn);
-          setTurnData(res?.turnData.nextTurnData);
-        });
-  }, [isFormReady, isPlayersReady, params.id]);
+  socket.once('user-disconnected', () => {
+    if (isPlayersReady) {
+      setIsModalActive(true);
+    }
+  });
+
+  // useEffect(() => {
+  //   params.id &&
+  //     fetch(`${BASE_URL}:8080/list/banpick/${params.id}`)
+  //       .then(res => res.json())
+  //       .then(res => setBanPickList(res));
+  // }, [params.id]);
+
+  // useEffect(() => {
+  //   params.id &&
+  //     isFormReady &&
+  //     isPlayersReady &&
+  //     fetch(`${BASE_URL}:8080/list/turn/${params.id}`)
+  //       .then(res => res.json())
+  //       .then(res => {
+  //         setTurn(res?.turnData.nextTurn);
+  //         setTurnData(res?.turnData.nextTurnData);
+  //       });
+  // }, [isFormReady, isPlayersReady, params.id]);
 
   useEffect(() => {
     sessionStorage.getItem('GAME_ID') &&
@@ -271,7 +286,7 @@ const BanPickSimulator = () => {
       ],
     });
   }, []);
-  console.log(userData);
+
   //player List 초기화
   useEffect(() => {
     if (
@@ -289,30 +304,26 @@ const BanPickSimulator = () => {
     }
   }, [simulatorFormData.mode]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (simulatorFormData.mode === CONSTDATA.MODEDATA.oneOnOne) {
-      userData.side !== ''
-        ? setIsEditable(userData.side === turn)
-        : setIsEditable(true);
+      if (userData?.side === turn) {
+        setIsEditable(true);
+      }
     } else if (simulatorFormData.mode === CONSTDATA.MODEDATA.fiveOnfive) {
       const index = banPickList[phaseInfo][turn]?.indexOf('');
       const turnInfo = userData.side === turn;
       const indexInfo = index === CONSTDATA.ROLEDATA[userData.role];
 
       if (indexInfo && turnInfo) {
-        setIsEditable(true);
+        setTimeout(() => {
+          setIsEditable(true);
+        }, 10);
       }
     } else if (simulatorFormData.mode === CONSTDATA.MODEDATA.solo) {
       setIsEditable(true);
     }
-  }, [
-    simulatorFormData.mode,
-    userData.side,
-    userData.role,
-    turn,
-    banPickList,
-    phaseInfo,
-  ]);
+  });
 
   //초대링크로 접속시
   useEffect(() => {
@@ -364,6 +375,12 @@ const BanPickSimulator = () => {
       isFormReady={isFormReady}
       isPlayersReady={isPlayersReady}
     >
+      {isModalActive && (
+        <DisconnectAlert
+          setIsModalActive={setIsModalActive}
+          disconnectEvent={disconnectEvent}
+        />
+      )}
       <BanPickLayout>
         <BanPickIndicator
           simulatorFormData={simulatorFormData}

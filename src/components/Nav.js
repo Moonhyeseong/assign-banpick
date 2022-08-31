@@ -12,7 +12,7 @@ const Nav = () => {
             sessionStorage.removeItem('INGAME_ID');
           }}
         >
-          <a href="/">Simulator</a>
+          <a href="/">시작페이지로 돌아가기</a>
         </GoToBanPick>
       </MenuList>
     </NavLayout>
