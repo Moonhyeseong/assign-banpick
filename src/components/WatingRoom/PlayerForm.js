@@ -71,6 +71,7 @@ const PlayerForm = ({
       .then(res => res.json())
       .then(res => {
         localStorage.setItem('USER_ID', res._id);
+        sessionStorage.setItem('USER_ID', res._id);
         sendReadyEvent(
           updatePlayerList(res, side, role),
           sessionStorage.getItem('GAME_ID')

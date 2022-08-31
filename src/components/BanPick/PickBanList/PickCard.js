@@ -16,10 +16,11 @@ const PickCard = ({
   phaseCounter,
   leftTime,
   playerData,
+  userData,
 }) => {
   const [isSelecting, setIsSelecting] = useState(false);
   const [playerInfo, setPlayerInfo] = useState();
-
+  console.log(playerInfo);
   const currentIndex = pickList.indexOf('');
   const isSwapPhase =
     phaseCounter === CONSTDATA.PHASEDATA.swapPhase && leftTime > 0;
@@ -30,7 +31,7 @@ const PickCard = ({
       `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${selectedChampion}_0.jpg`;
 
   const handleSwapItems = () => {
-    if (playerInfo.side === side) {
+    if (userData.side === side) {
       if (swapItems.currentIndex === '') {
         setSwapItems({ ...swapItems, side: side, currentIndex: index });
       } else {

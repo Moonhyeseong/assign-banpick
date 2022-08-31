@@ -17,12 +17,13 @@ import { BASE_URL } from '../config';
 const BanPickSimulator = () => {
   const [isFormReady, setIsFormReady] = useState(false);
   const [isPlayersReady, setIsPlayersReady] = useState(false);
+  const [isFinish, setIsFinish] = useState(false);
   const [gameId, setGameId] = useState();
   const [isModalActive, setIsModalActive] = useState(false);
   const socket = useContext(SocketContext);
   const params = useParams();
   const location = useLocation();
-  const [isFinish, setIsFinish] = useState(false);
+
   // console.log(banPickList);
 
   const [simulatorFormData, setSimulatorFormData] = useState({
@@ -205,14 +206,15 @@ const BanPickSimulator = () => {
     if (isPlayersReady) {
       setIsModalActive(true);
     }
+    socket.emit('finish', isFinish);
   });
 
-  // useEffect(() => {
-  //   params.id &&
-  //     fetch(`${BASE_URL}:8080/list/banpick/${params.id}`)
-  //       .then(res => res.json())
-  //       .then(res => setBanPickList(res));
-  // }, [params.id]);
+  useEffect(() => {
+    params.id &&
+      fetch(`${BASE_URL}:8080/list/banpick/${params.id}`)
+        .then(res => res.json())
+        .then(res => setBanPickList(res));
+  }, [params.id]);
 
   // useEffect(() => {
   //   params.id &&
@@ -314,17 +316,26 @@ const BanPickSimulator = () => {
       const index = banPickList[phaseInfo][turn]?.indexOf('');
       const turnInfo = userData.side === turn;
       const indexInfo = index === CONSTDATA.ROLEDATA[userData.role];
+      console.log(userData);
+      console.log(userData.side);
+      console.log(index);
+      console.log(CONSTDATA.ROLEDATA[userData.role]);
 
       if (indexInfo && turnInfo) {
-        setTimeout(() => {
-          setIsEditable(true);
-        }, 10);
+        setIsEditable(true);
+      } else {
+        setIsEditable(false);
       }
     } else if (simulatorFormData.mode === CONSTDATA.MODEDATA.solo) {
       setIsEditable(true);
     }
   });
 
+  useEffect(() => {
+    if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase && leftTime === 0) {
+      setIsFinish(true);
+    }
+  }, [leftTime, phaseCounter]);
   //초대링크로 접속시
   useEffect(() => {
     if (params.id) {
@@ -412,6 +423,7 @@ const BanPickSimulator = () => {
               leftTime={leftTime}
               postBanPickList={postBanPickList}
               playerList={playerList?.blue}
+              userData={userData}
             />
             <ChampionList
               setBanPickList={setBanPickList}
@@ -438,6 +450,7 @@ const BanPickSimulator = () => {
               leftTime={leftTime}
               postBanPickList={postBanPickList}
               playerList={playerList?.red}
+              userData={userData}
             />
           </ListLayout>
         )}

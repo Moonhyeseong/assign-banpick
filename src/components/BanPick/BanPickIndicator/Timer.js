@@ -11,6 +11,7 @@ const Timer = ({ leftTime, setLeftTime }) => {
     timer = setInterval(() => {
       setLeftTime(Number(leftTime) - 1);
     }, 1000);
+    leftTime === -1 && clearInterval(timer);
     return () => clearInterval(timer);
   }, [leftTime, setLeftTime]);
 
