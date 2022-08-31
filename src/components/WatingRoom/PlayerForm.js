@@ -20,8 +20,21 @@ const PlayerForm = ({
   };
 
   const handleRoleBtn = option => {
-    setUserData({ ...userData, role: option });
+    if (playerList[userData.side][CONSTDATA.ROLEDATA[option]] !== '') {
+      alert('이미 선택된 포지션 입니다. 다른 포지션을 선택해 주세요');
+      setUserData({ ...userData, role: '' });
+    } else {
+      setUserData({ ...userData, role: option });
+    }
   };
+
+  // const roleValidator = () => {
+  //   if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
+  //     if (playerList[userData.side][CONSTDATA.ROLEDATA[userData.role]] !== '') {
+  //       return false;
+  //     }
+  //   }
+  // };
 
   const formValidator = () => {
     const isFormValuesPassed = Object.values(userData).includes('');

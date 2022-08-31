@@ -5,6 +5,7 @@ const ChampionFilter = ({ search, setSearch }) => {
   const onChange = e => {
     setSearch(e.target.value);
   };
+
   return (
     <FilterLayout>
       <SearchFilter>
@@ -55,7 +56,7 @@ const SearchInput = styled.input`
 
   &::placeholder {
     color: ${props => props.theme.white.white80};
-    font-size: 12px;
+    font-size: 14px;
   }
 
   &:focus-visible {

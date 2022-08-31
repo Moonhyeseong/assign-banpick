@@ -5,6 +5,7 @@ import ChampionCard from './ChampionCard';
 import ChampionFilter from './ChampionFilter';
 import { CONSTDATA } from '../CONSTDATA';
 import { SocketContext } from '../../../context/socket';
+import { BASE_URL } from '../../../config';
 
 const ChampionList = ({
   setBanPickList,
@@ -19,6 +20,7 @@ const ChampionList = ({
   setTurnData,
   setLeftTime,
   isEditable,
+  setUserData,
 }) => {
   const [search, setSearch] = useState('');
 
@@ -53,6 +55,12 @@ const ChampionList = ({
     setTurn(turnData.nextTurn);
     setTurnData(turnData.nextTurnData);
   });
+
+  // useEffect(() => {
+  //   fetch(`${BASE_URL}:8080/user/${localStorage.getItem('USER_ID')}`)
+  //     .then(res => res.json())
+  //     .then(res => console.log(res));
+  // }, []);
 
   return (
     <ChampionListLayout>

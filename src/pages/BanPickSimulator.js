@@ -20,8 +20,8 @@ const BanPickSimulator = () => {
   const socket = useContext(SocketContext);
   const params = useParams();
   const location = useLocation();
-  // const [isFinish, setIsFinish] = useState(false);
-
+  const [isFinish, setIsFinish] = useState(false);
+  // console.log(banPickList);
   const [simulatorFormData, setSimulatorFormData] = useState({
     blue: '',
     red: '',
@@ -178,6 +178,7 @@ const BanPickSimulator = () => {
       phaseCounter
     );
     setSelectedChampion('');
+    setIsEditable(false);
   };
 
   const handleTimeOut = () => {
@@ -201,13 +202,14 @@ const BanPickSimulator = () => {
     console.log('턴정보 가저오기');
     params.id &&
       isFormReady &&
+      isPlayersReady &&
       fetch(`${BASE_URL}:8080/list/turn/${params.id}`)
         .then(res => res.json())
         .then(res => {
           setTurn(res?.turnData.nextTurn);
           setTurnData(res?.turnData.nextTurnData);
         });
-  }, [isFormReady, params.id]);
+  }, [isFormReady, isPlayersReady, params.id]);
 
   useEffect(() => {
     sessionStorage.getItem('GAME_ID') &&
@@ -269,7 +271,7 @@ const BanPickSimulator = () => {
       ],
     });
   }, []);
-
+  console.log(userData);
   //player List 초기화
   useEffect(() => {
     if (
@@ -293,21 +295,23 @@ const BanPickSimulator = () => {
         ? setIsEditable(userData.side === turn)
         : setIsEditable(true);
     } else if (simulatorFormData.mode === CONSTDATA.MODEDATA.fiveOnfive) {
-      const index = banPickList[phaseInfo][turn].indexOf('');
+      const index = banPickList[phaseInfo][turn]?.indexOf('');
       const turnInfo = userData.side === turn;
       const indexInfo = index === CONSTDATA.ROLEDATA[userData.role];
 
-      setIsEditable(indexInfo && turnInfo);
+      if (indexInfo && turnInfo) {
+        setIsEditable(true);
+      }
     } else if (simulatorFormData.mode === CONSTDATA.MODEDATA.solo) {
       setIsEditable(true);
     }
   }, [
+    simulatorFormData.mode,
+    userData.side,
+    userData.role,
+    turn,
     banPickList,
     phaseInfo,
-    simulatorFormData.mode,
-    turn,
-    userData.role,
-    userData.side,
   ]);
 
   //초대링크로 접속시
@@ -364,16 +368,11 @@ const BanPickSimulator = () => {
         <BanPickIndicator
           simulatorFormData={simulatorFormData}
           phaseTitle={getPhaseTitle}
-          handleSelectBtn={handleSelectBtn}
-          setSelectedChampion={setSelectedChampion}
-          phaseInfo={phaseInfo}
-          selectedChampion={selectedChampion}
           leftTime={leftTime}
           setLeftTime={setLeftTime}
           isPlayersReady={isPlayersReady}
           playerList={playerList}
           gameId={gameId}
-          setGameId={setGameId}
         />
         {!isPlayersReady ? (
           <WatingRoom
@@ -410,6 +409,7 @@ const BanPickSimulator = () => {
               setTurnData={setTurnData}
               setLeftTime={setLeftTime}
               isEditable={isEditable}
+              setUserData={setUserData}
             />
             <PickList
               side="red"
