@@ -2,20 +2,19 @@ import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+
 import Simulator from './Simulator';
 import DisconnectAlert from '../components/DisconnectAlert';
 import ChampionList from '../components/BanPick/ChampionList/ChampionList';
 import PickList from '../components/BanPick/PickBanList/PickList';
 import BanPickIndicator from '../components/BanPick/BanPickIndicator/BanPickIndicator';
-import SimulatorForm from './SimulatorForm';
+
 import WatingRoom from './WatingRoom';
 import { CONSTDATA } from '../components/BanPick/CONSTDATA';
 import { SocketContext } from '../context/socket';
 import { BASE_URL } from '../config';
 
 const BanPickSimulator = () => {
-  const [isFormReady, setIsFormReady] = useState(false);
   const [isPlayersReady, setIsPlayersReady] = useState(false);
   const [isFinish, setIsFinish] = useState(false);
   const [gameId, setGameId] = useState();
@@ -155,6 +154,7 @@ const BanPickSimulator = () => {
   };
 
   const postBanPickList = () => {
+    //@TODO - emit을 활용해 서버내에서 DB 업데이트
     fetch(`${BASE_URL}:8080/banpick/${sessionStorage.getItem('GAME_ID')}`, {
       method: 'POST',
       headers: {
@@ -198,7 +198,7 @@ const BanPickSimulator = () => {
 
   const disconnectEvent = () => {
     window.location = '/';
-    setIsFormReady(false);
+
     setIsPlayersReady(false);
   };
 
@@ -361,33 +361,11 @@ const BanPickSimulator = () => {
                 });
           }, 100);
         });
-
-      setIsFormReady(true);
     }
   }, [location.search, params.id, simulatorFormData.mode]);
 
-  useEffect(() => {
-    if (isFormReady && isPlayersReady) {
-      // console.log(!game);
-    }
-  });
-
-  return !isFormReady ? (
-    <SimulatorForm
-      simulatorFormData={simulatorFormData}
-      setSimulatorFormData={setSimulatorFormData}
-      setIsFormReady={setIsFormReady}
-      setIsPlayersReady={setIsPlayersReady}
-      userData={userData}
-      setUserData={setUserData}
-      setGameId={setGameId}
-    />
-  ) : (
-    <Simulator
-      gameId={gameId}
-      isFormReady={isFormReady}
-      isPlayersReady={isPlayersReady}
-    >
+  return (
+    <Simulator gameId={gameId} isPlayersReady={isPlayersReady}>
       {isModalActive && (
         <DisconnectAlert
           setIsModalActive={setIsModalActive}

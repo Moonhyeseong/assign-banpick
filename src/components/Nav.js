@@ -6,14 +6,8 @@ const Nav = () => {
     <NavLayout>
       <Title>BanPick Simulator</Title>
       <MenuList>
-        <GoToBanPick
-          onClick={() => {
-            sessionStorage.removeItem('GAME_ID');
-            sessionStorage.removeItem('INGAME_ID');
-          }}
-        >
-          <a href="/">시작페이지로 돌아가기</a>
-        </GoToBanPick>
+        <NavItem>방만들기</NavItem>
+        <NavItem>혼자하기</NavItem>
       </MenuList>
     </NavLayout>
   );
@@ -33,10 +27,12 @@ const NavLayout = styled.div`
 `;
 
 const MenuList = styled.div`
+  display: flex;
+  gap: 24px;
   height: 80%;
 `;
 
-const GoToBanPick = styled.div`
+const NavItem = styled.div`
   display: flex;
   align-items: center;
   height: 80%;
