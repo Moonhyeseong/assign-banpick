@@ -20,7 +20,7 @@ const PickCard = ({
 }) => {
   const [isSelecting, setIsSelecting] = useState(false);
   const [playerInfo, setPlayerInfo] = useState();
-  console.log(playerInfo);
+
   const currentIndex = pickList.indexOf('');
   const isSwapPhase =
     phaseCounter === CONSTDATA.PHASEDATA.swapPhase && leftTime > 0;

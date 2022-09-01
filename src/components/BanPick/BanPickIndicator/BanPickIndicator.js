@@ -13,6 +13,7 @@ const BanPickIndicator = ({
   isPlayersReady,
   playerList,
   gameId,
+  setIsModalActive,
 }) => {
   const [gameInfo, setGameInfo] = useState();
   const socket = useContext(SocketContext);
@@ -38,6 +39,12 @@ const BanPickIndicator = ({
         .then(res => res.json())
         .then(res => setGameInfo(res));
   }, [gameId]);
+
+  useEffect(() => {
+    if (gameInfo?.isProceeding === false) {
+      isPlayersReady && setIsModalActive(true);
+    }
+  }, [gameInfo?.isProceeding, isPlayersReady, setIsModalActive]);
 
   return (
     <IndicatorLayout>

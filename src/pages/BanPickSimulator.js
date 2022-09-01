@@ -316,10 +316,6 @@ const BanPickSimulator = () => {
       const index = banPickList[phaseInfo][turn]?.indexOf('');
       const turnInfo = userData.side === turn;
       const indexInfo = index === CONSTDATA.ROLEDATA[userData.role];
-      console.log(userData);
-      console.log(userData.side);
-      console.log(index);
-      console.log(CONSTDATA.ROLEDATA[userData.role]);
 
       if (indexInfo && turnInfo) {
         setIsEditable(true);
@@ -370,6 +366,12 @@ const BanPickSimulator = () => {
     }
   }, [location.search, params.id, simulatorFormData.mode]);
 
+  useEffect(() => {
+    if (isFormReady && isPlayersReady) {
+      // console.log(!game);
+    }
+  });
+
   return !isFormReady ? (
     <SimulatorForm
       simulatorFormData={simulatorFormData}
@@ -401,6 +403,7 @@ const BanPickSimulator = () => {
           isPlayersReady={isPlayersReady}
           playerList={playerList}
           gameId={gameId}
+          setIsModalActive={setIsModalActive}
         />
         {!isPlayersReady ? (
           <WatingRoom

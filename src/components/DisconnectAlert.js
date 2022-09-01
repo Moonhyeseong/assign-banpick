@@ -5,7 +5,10 @@ const DisconnectAlert = ({ setIsModalActive, disconnectEvent }) => {
   return (
     <ModalBackGround>
       <Modal>
-        <ModalText>상대방이 밴픽을 종료했습니다.</ModalText>
+        <ModalTextContainer>
+          <ModalText>상대방이 밴픽을 종료했거나,</ModalText>
+          <ModalText>이미 종료된 밴픽 입니다.</ModalText>
+        </ModalTextContainer>
         <ModalBtn
           onClick={() => {
             setIsModalActive(false);
@@ -49,6 +52,13 @@ const Modal = styled.div`
   background-color: black;
   border: 1px solid ${props => props.theme.white.white20};
   border-radius: 20px;
+`;
+
+const ModalTextContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
 
 const ModalText = styled.p`

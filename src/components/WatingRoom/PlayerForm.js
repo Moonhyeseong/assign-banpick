@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CONSTDATA } from '../BanPick/CONSTDATA';
@@ -13,6 +13,7 @@ const PlayerForm = ({
   setPlayerList,
   sendReadyEvent,
 }) => {
+  const [isReady, setIsReady] = useState(false);
   const location = useLocation();
 
   const handleNameInput = e => {
@@ -72,14 +73,31 @@ const PlayerForm = ({
       .then(res => {
         localStorage.setItem('USER_ID', res._id);
         sessionStorage.setItem('USER_ID', res._id);
+        // setUserData({ ...userData, user_id: res._id });
         sendReadyEvent(
           updatePlayerList(res, side, role),
           sessionStorage.getItem('GAME_ID')
         );
         setPlayerList(prev => (prev = updatePlayerList(res, side, role)));
       });
+
+    setIsReady(true);
   };
-  // console.log(sessionStorage.getItem('GAME_ID'));
+
+  // useEffect(() => {
+  //   return () => {
+  //     fetch(`${BASE_URL}:8080/delete/user`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         game_id: sessionStorage.getItem('GAME_ID'),
+  //         user_id: userData.user_id,
+  //       }),
+  //     });
+  //   };
+  // }, []);
   return (
     <PlayerFormLayout>
       <Caution>✓ 모든 플레이어의 준비가 완료되면 밴픽을 시작합니다.</Caution>
@@ -134,14 +152,20 @@ const PlayerForm = ({
         <FormContainer>
           <NameInputContainer>
             대표 소환사명을 입력해 주세요.
-            <PlayerNameInput onChange={e => handleNameInput(e)} />
+            <PlayerNameInput
+              onChange={e => handleNameInput(e)}
+              readOnly={isReady}
+            />
           </NameInputContainer>
         </FormContainer>
       ) : (
         <FormContainer>
           <NameInputContainer>
             소환사명을 입력해 주세요.
-            <PlayerNameInput onChange={e => handleNameInput(e)} />
+            <PlayerNameInput
+              onChange={e => handleNameInput(e)}
+              readOnly={isReady}
+            />
           </NameInputContainer>
           <BtnContainer>
             포지션을 선택해 주세요.
@@ -149,7 +173,7 @@ const PlayerForm = ({
               return (
                 <PlayerRoleBtn
                   key={idx}
-                  onClick={() => handleRoleBtn(role)}
+                  onClick={() => !isReady && handleRoleBtn(role)}
                   isSelected={role === userData.role}
                 >
                   {role}
@@ -162,7 +186,7 @@ const PlayerForm = ({
       <ReadyBtn
         disabled={formValidator()}
         onClick={() => {
-          !formValidator() && postAddUser();
+          !isReady && !formValidator() && postAddUser();
         }}
       >
         Ready
