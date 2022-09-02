@@ -14,7 +14,6 @@ const theme = {
     black85: '#353532',
     black80: '#40403D',
     black70: '#565654',
-    blackB90OPA25: 'rgba(41, 41, 39, 0.25)',
   },
 
   red: {
