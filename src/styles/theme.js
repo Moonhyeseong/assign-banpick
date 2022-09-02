@@ -50,6 +50,23 @@ const theme = {
     blueOPA60: 'rgba(49, 115, 193, 0.6)',
     blueOPA80: 'rgba(49, 115, 193, 0.8)',
   },
+
+  green: {
+    greenB40: '#4C6025',
+    greenB50: '#5A7329',
+    greenB60: '#69872E',
+    greenB70: '#779A34',
+    greenB80: '#86AE39',
+    greenMain: '#A2D443',
+    greenW80: '#B2DA66',
+    greenW60: '#C2E089',
+    greenW40: '#D3E7AD',
+    greenW20: '#E3EDD0',
+    greenOPA20: 'rgba(162, 212, 67, 0.2)',
+    greenOPA40: 'rgba(162, 212, 67, 0.4)',
+    greenOPA60: 'rgba(162, 212, 67, 0.6)',
+    greenOPA80: 'rgba(162, 212, 67, 0.8)',
+  },
 };
 
 export default theme;
