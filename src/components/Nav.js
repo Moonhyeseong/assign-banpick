@@ -6,7 +6,6 @@ const Nav = () => {
     <NavLayout>
       <Title>BanPick Simulator</Title>
       <MenuList>
-        <NavItem>방만들기</NavItem>
         <NavItem>혼자하기</NavItem>
       </MenuList>
     </NavLayout>

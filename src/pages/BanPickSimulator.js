@@ -2,13 +2,11 @@ import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-
 import Simulator from './Simulator';
-import DisconnectAlert from '../components/DisconnectAlert';
+import DisconnectAlert from '../components/Modal/DisconnectAlert';
 import ChampionList from '../components/BanPick/ChampionList/ChampionList';
 import PickList from '../components/BanPick/PickBanList/PickList';
 import BanPickIndicator from '../components/BanPick/BanPickIndicator/BanPickIndicator';
-
 import WatingRoom from './WatingRoom';
 import { CONSTDATA } from '../components/BanPick/CONSTDATA';
 import { SocketContext } from '../context/socket';

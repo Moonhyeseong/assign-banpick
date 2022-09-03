@@ -3,9 +3,12 @@ import styled from 'styled-components';
 import { HiRefresh } from 'react-icons/hi';
 import { BsCheck } from 'react-icons/bs';
 
-const ListFillter = () => {
+const ListFilter = ({ setIsModalActive }) => {
+  const showModal = () => {
+    setIsModalActive(true);
+  };
   return (
-    <ListFillterLayout>
+    <ListFilterLayout>
       <Title>BanPick Simulator 멀티플레이 로비</Title>
       <FilterContainer>
         <RefreshBtn>
@@ -26,14 +29,31 @@ const ListFillter = () => {
           </CheckBox>{' '}
           5:5
         </CheckBoxContainer>
+        <MakeGameBtnContainer>
+          <MakeGameBtn
+            onClick={() => {
+              showModal();
+            }}
+          >
+            방만들기
+          </MakeGameBtn>
+          <MakeGameBtn
+            onClick={() => {
+              showModal();
+            }}
+          >
+            혼자하기
+          </MakeGameBtn>
+        </MakeGameBtnContainer>
       </FilterContainer>
-    </ListFillterLayout>
+    </ListFilterLayout>
   );
 };
 
-export default ListFillter;
+export default ListFilter;
 
-const ListFillterLayout = styled.div`
+const ListFilterLayout = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -114,4 +134,26 @@ const CheckBox = styled.div`
   height: 100%;
   border: 1px solid gray;
   cursor: pointer;
+`;
+
+const MakeGameBtn = styled.button`
+  display: flex;
+  align-items: center;
+  right: 8px;
+  font-size: 24px;
+  font-weight: 900;
+  border-bottom: 2px solid gray;
+  color: white;
+  cursor: pointer;
+  opacity: 0.7;
+  :hover {
+    opacity: 1;
+  }
+`;
+
+const MakeGameBtnContainer = styled.div`
+  position: absolute;
+  display: flex;
+  gap: 16px;
+  right: 16px;
 `;

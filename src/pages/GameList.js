@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import ListFillter from '../components/GameList/ListFillter';
+import ListFillter from '../components/GameList/ListFilter';
 import GameRoom from '../components/GameList/GameRoom';
-
+import GameListModal from '../components/Modal/GameListModal';
 const GameList = () => {
+  const [isModalActive, setIsModalActive] = useState(false);
+
   return (
     <GameListLayout>
-      <ListFillter />
+      {isModalActive && <GameListModal setIsModalActive={setIsModalActive} />}
+      <ListFillter setIsModalActive={setIsModalActive} />
       <GameRoomsLayout>
         <GameRoomContainer>
-          <GameRoom />
-          <GameRoom />
+          <GameRoom mode={1} setIsModalActive={setIsModalActive} />
+          <GameRoom mode={2} />
           <GameRoom />
           <GameRoom />
           <GameRoom />
@@ -35,7 +38,7 @@ const GameListLayout = styled.div`
 const GameRoomsLayout = styled.div`
   text-align: center;
   width: 100%;
-  height: 800px;
+  height: 80vh;
 
   overflow-y: scroll;
 
