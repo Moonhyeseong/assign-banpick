@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import WatingList from '../components/WatingRoom/WatingList';
-import PlayerForm from '../components/WatingRoom/PlayerForm';
+
 import { CONSTDATA } from '../components/BanPick/CONSTDATA';
 import { SocketContext } from '../context/socket';
 import { BASE_URL } from '../config';
@@ -69,14 +69,7 @@ const WatingRoom = ({
         userData={userData}
         playerList={playerList?.blue}
       />
-      <PlayerForm
-        mode={mode}
-        setUserData={setUserData}
-        userData={userData}
-        playerList={playerList}
-        setPlayerList={setPlayerList}
-        sendReadyEvent={sendReadyEvent}
-      />
+
       <WatingList
         mode={mode}
         side="red"

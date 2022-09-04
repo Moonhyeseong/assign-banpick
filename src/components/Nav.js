@@ -6,7 +6,9 @@ const Nav = () => {
     <NavLayout>
       <Title>BanPick Simulator</Title>
       <MenuList>
-        <NavItem>혼자하기</NavItem>
+        <NavItem>
+          <a href="/">Go To Lobby</a>
+        </NavItem>
       </MenuList>
     </NavLayout>
   );

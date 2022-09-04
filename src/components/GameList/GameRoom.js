@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { CONSTDATA } from '../BanPick/CONSTDATA';
 
-const GameRoom = ({ mode, setIsModalActive }) => {
+const GameRoom = ({ mode, showModal }) => {
   const roles = Object.keys(CONSTDATA.ROLEDATA);
 
   return (
@@ -11,7 +11,7 @@ const GameRoom = ({ mode, setIsModalActive }) => {
       <GameIndicator>참여가능</GameIndicator>
       <JoinBtn
         onClick={() => {
-          setIsModalActive(true);
+          showModal('playerForm', mode);
         }}
       >
         JOIN

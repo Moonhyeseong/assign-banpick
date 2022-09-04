@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 import Simulator from './Simulator';
 import DisconnectAlert from '../components/Modal/DisconnectAlert';
 import ChampionList from '../components/BanPick/ChampionList/ChampionList';
@@ -19,16 +19,9 @@ const BanPickSimulator = () => {
   const [isModalActive, setIsModalActive] = useState(false);
   const socket = useContext(SocketContext);
   const params = useParams();
-  const location = useLocation();
+  // const location = useLocation();
 
   // console.log(banPickList);
-
-  const [simulatorFormData, setSimulatorFormData] = useState({
-    blue: '',
-    red: '',
-    mode: '',
-    time: '',
-  });
 
   const [championData, setChampionData] = useState([]);
   const [selectedChampion, setSelectedChampion] = useState('');
@@ -49,12 +42,6 @@ const BanPickSimulator = () => {
   });
 
   const [playerList, setPlayerList] = useState();
-
-  const [userData, setUserData] = useState({
-    side: '',
-    name: '',
-    role: '',
-  });
 
   const [leftTime, setLeftTime] = useState(30);
 
@@ -288,42 +275,43 @@ const BanPickSimulator = () => {
   }, []);
 
   //player List 초기화
-  useEffect(() => {
-    if (
-      parseInt(simulatorFormData.mode) === parseInt(CONSTDATA.MODEDATA.oneOnOne)
-    ) {
-      setPlayerList({ blue: [''], red: [''] });
-    } else if (
-      parseInt(simulatorFormData.mode) ===
-      parseInt(CONSTDATA.MODEDATA.fiveOnfive)
-    ) {
-      setPlayerList({
-        blue: ['', '', '', '', ''],
-        red: ['', '', '', '', ''],
-      });
-    }
-  }, [simulatorFormData.mode]);
+  // useEffect(() => {
+  //   if (
+  //     parseInt(simulatorFormData.mode) === parseInt(CONSTDATA.MODEDATA.oneOnOne)
+  //   ) {
+  //     setPlayerList({ blue: [''], red: [''] });
+  //   } else if (
+  //     parseInt(simulatorFormData.mode) ===
+  //     parseInt(CONSTDATA.MODEDATA.fiveOnfive)
+  //   ) {
+  //     setPlayerList({
+  //       blue: ['', '', '', '', ''],
+  //       red: ['', '', '', '', ''],
+  //     });
+  //   }
+  // }, [simulatorFormData.mode]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    if (simulatorFormData.mode === CONSTDATA.MODEDATA.oneOnOne) {
-      if (userData?.side === turn) {
-        setIsEditable(true);
-      }
-    } else if (simulatorFormData.mode === CONSTDATA.MODEDATA.fiveOnfive) {
-      const index = banPickList[phaseInfo][turn]?.indexOf('');
-      const turnInfo = userData.side === turn;
-      const indexInfo = index === CONSTDATA.ROLEDATA[userData.role];
+  // 편집권한 설정 함수
+  // useEffect(() => {
+  //   if (simulatorFormData.mode === CONSTDATA.MODEDATA.oneOnOne) {
+  //     if (userData?.side === turn) {
+  //       setIsEditable(true);
+  //     }
+  //   } else if (simulatorFormData.mode === CONSTDATA.MODEDATA.fiveOnfive) {
+  //     const index = banPickList[phaseInfo][turn]?.indexOf('');
+  //     const turnInfo = userData.side === turn;
+  //     const indexInfo = index === CONSTDATA.ROLEDATA[userData.role];
 
-      if (indexInfo && turnInfo) {
-        setIsEditable(true);
-      } else {
-        setIsEditable(false);
-      }
-    } else if (simulatorFormData.mode === CONSTDATA.MODEDATA.solo) {
-      setIsEditable(true);
-    }
-  });
+  //     if (indexInfo && turnInfo) {
+  //       setIsEditable(true);
+  //     } else {
+  //       setIsEditable(false);
+  //     }
+  //   } else if (simulatorFormData.mode === CONSTDATA.MODEDATA.solo) {
+  //     setIsEditable(true);
+  //   }
+  // });
 
   useEffect(() => {
     if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase && leftTime === 0) {
@@ -331,36 +319,36 @@ const BanPickSimulator = () => {
     }
   }, [leftTime, phaseCounter]);
   //초대링크로 접속시
-  useEffect(() => {
-    if (params.id) {
-      sessionStorage.setItem('GAME_ID', params.id);
-      setGameId(params.id);
+  // useEffect(() => {
+  //   if (params.id) {
+  //     sessionStorage.setItem('GAME_ID', params.id);
+  //     setGameId(params.id);
 
-      fetch(`${BASE_URL}:8080/start/invite/${params.id}${location.search}`)
-        .then(res => res.json())
-        .then(res => {
-          setSimulatorFormData({
-            blue: '',
-            red: '',
-            mode: res.mode,
-            time: true,
-          });
-          setTimeout(() => {
-            simulatorFormData.mode !== 2
-              ? setUserData({
-                  side: res.side,
-                  name: '',
-                  role: 'null',
-                })
-              : setUserData({
-                  side: res.side,
-                  name: '',
-                  role: '',
-                });
-          }, 100);
-        });
-    }
-  }, [location.search, params.id, simulatorFormData.mode]);
+  //     fetch(`${BASE_URL}:8080/start/invite/${params.id}${location.search}`)
+  //       .then(res => res.json())
+  //       .then(res => {
+  //         setSimulatorFormData({
+  //           blue: '',
+  //           red: '',
+  //           mode: res.mode,
+  //           time: true,
+  //         });
+  //         setTimeout(() => {
+  //           simulatorFormData.mode !== 2
+  //             ? setUserData({
+  //                 side: res.side,
+  //                 name: '',
+  //                 role: 'null',
+  //               })
+  //             : setUserData({
+  //                 side: res.side,
+  //                 name: '',
+  //                 role: '',
+  //               });
+  //         }, 100);
+  //       });
+  //   }
+  // }, [location.search, params.id, simulatorFormData.mode]);
 
   return (
     <Simulator gameId={gameId} isPlayersReady={isPlayersReady}>
@@ -372,7 +360,7 @@ const BanPickSimulator = () => {
       )}
       <BanPickLayout>
         <BanPickIndicator
-          simulatorFormData={simulatorFormData}
+          // simulatorFormData={simulatorFormData}
           phaseTitle={getPhaseTitle}
           leftTime={leftTime}
           setLeftTime={setLeftTime}
@@ -383,9 +371,8 @@ const BanPickSimulator = () => {
         />
         {!isPlayersReady ? (
           <WatingRoom
-            mode={simulatorFormData.mode}
-            userData={userData}
-            setUserData={setUserData}
+            // mode={simulatorFormData.mode}
+
             playerList={playerList}
             setPlayerList={setPlayerList}
             setIsPlayersReady={setIsPlayersReady}
@@ -402,7 +389,7 @@ const BanPickSimulator = () => {
               leftTime={leftTime}
               postBanPickList={postBanPickList}
               playerList={playerList?.blue}
-              userData={userData}
+              // userData={userData}
             />
             <ChampionList
               setBanPickList={setBanPickList}
@@ -417,7 +404,7 @@ const BanPickSimulator = () => {
               setTurnData={setTurnData}
               setLeftTime={setLeftTime}
               isEditable={isEditable}
-              setUserData={setUserData}
+              // setUserData={setUserData}
             />
             <PickList
               side="red"
@@ -429,7 +416,7 @@ const BanPickSimulator = () => {
               leftTime={leftTime}
               postBanPickList={postBanPickList}
               playerList={playerList?.red}
-              userData={userData}
+              // userData={userData}
             />
           </ListLayout>
         )}

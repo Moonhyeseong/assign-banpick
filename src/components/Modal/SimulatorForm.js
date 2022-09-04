@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { CONSTDATA } from '../components/BanPick/CONSTDATA';
-import { BASE_URL } from '../config';
+import { CONSTDATA } from '../BanPick/CONSTDATA';
+import { BASE_URL } from '../../config';
+import { CgClose } from 'react-icons/cg';
 
 const SimulatorForm = ({
   simulatorFormData,
   setSimulatorFormData,
-  setIsFormReady,
-  setIsPlayersReady,
   userData,
   setUserData,
   setGameId,
+  initModalState,
 }) => {
   const handleTeamName = (e, team) => {
     setSimulatorFormData({ ...simulatorFormData, [team]: e.target.value });
@@ -35,36 +35,36 @@ const SimulatorForm = ({
     sessionStorage.setItem('GAME_ID', respnse);
   };
 
-  const formValidator = () => {
-    const formValues = Object.values(simulatorFormData);
+  // const formValidator = () => {
+  //   const formValues = Object.values(simulatorFormData);
 
-    if (simulatorFormData.mode === CONSTDATA.MODEDATA.solo) {
-      return formValues.includes('');
-    } else {
-      return userData.side === '' || formValues.includes('');
-    }
-  };
+  //   if (simulatorFormData.mode === CONSTDATA.MODEDATA.solo) {
+  //     return formValues.includes('');
+  //   } else {
+  //     return userData.side === '' || formValues.includes('');
+  //   }
+  // };
 
-  const startSimulator = () => {
-    const { blue, red, mode, time } = simulatorFormData;
-    !formValidator() &&
-      fetch(`${BASE_URL}:8080/start`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          blueTeam: blue,
-          redTeam: red,
-          mode: mode,
-          timer: time,
-        }),
-      })
-        .then(res => res.json())
-        .then(res => {
-          storeGameId(res._id);
-        });
-  };
+  // const startSimulator = () => {
+  //   const { blue, red, mode, time } = simulatorFormData;
+  //   !formValidator() &&
+  //     fetch(`${BASE_URL}:8080/start`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         blueTeam: blue,
+  //         redTeam: red,
+  //         mode: mode,
+  //         timer: time,
+  //       }),
+  //     })
+  //       .then(res => res.json())
+  //       .then(res => {
+  //         storeGameId(res._id);
+  //       });
+  // };
 
   useEffect(() => {
     sessionStorage.removeItem('GAME_ID');
@@ -73,44 +73,56 @@ const SimulatorForm = ({
 
   return (
     <LandingLayout>
-      <Title>League of Legend 밴픽 시뮬레이터</Title>
-      <TeamNameForm>
+      <CgClose
+        style={{
+          position: 'absolute',
+          right: '20',
+          top: '20',
+          cursor: 'pointer',
+        }}
+        size={32}
+        onClick={initModalState}
+      />
+      <Title>방 만들기 </Title>
+      <NameInputContainer>
+        방 제목을 입력해주세요.
+        <NameInput
+          side="blue"
+          // value={simulatorFormData.blue}
+          onChange={e => {
+            handleTeamName(e, 'blue');
+          }}
+          style={{ marginTop: 16 }}
+        />
+      </NameInputContainer>
+      <NameInputContainer>
         진영별 팀 이름을 입력해주세요.
-        <>
+        <TeamNameInputContainer style={{ marginTop: 16 }}>
           <TeamNameLabel side="blue">BLUE</TeamNameLabel>
-          <TeamNameInput
+          <NameInput
             side="blue"
-            value={simulatorFormData.blue}
+            // value={simulatorFormData.blue}
             onChange={e => {
               handleTeamName(e, 'blue');
             }}
           />
-        </>
-        <>
+        </TeamNameInputContainer>
+        <TeamNameInputContainer>
           <TeamNameLabel side="red">RED</TeamNameLabel>
-          <TeamNameInput
+          <NameInput
             side="red"
-            value={simulatorFormData.red}
+            // value={simulatorFormData.red}
             onChange={e => {
               handleTeamName(e, 'red');
             }}
           />
-        </>
-      </TeamNameForm>
+        </TeamNameInputContainer>
+      </NameInputContainer>
       <ModeForm>
         참가 인원을 선택해 주세요.
         <ModeList>
           <ModeItem
-            selectedOption={simulatorFormData.mode}
-            onClick={() => {
-              handleMode(0);
-            }}
-            itemID={0}
-          >
-            SOLO
-          </ModeItem>
-          <ModeItem
-            selectedOption={simulatorFormData.mode}
+            // selectedOption={simulatorFormData.mode}
             onClick={() => {
               handleMode(1);
             }}
@@ -119,7 +131,7 @@ const SimulatorForm = ({
             1 : 1
           </ModeItem>
           <ModeItem
-            selectedOption={simulatorFormData.mode}
+            // selectedOption={simulatorFormData.mode}
             onClick={() => {
               handleMode(2);
             }}
@@ -129,69 +141,19 @@ const SimulatorForm = ({
           </ModeItem>
         </ModeList>
       </ModeForm>
-      {simulatorFormData.mode !== '' &&
-      simulatorFormData.mode !== CONSTDATA.MODEDATA.solo ? (
-        <ModeForm>
-          진영을 선택해주세요.
-          <ModeList>
-            <ModeItem
-              selectedOption={userData.side}
-              onClick={() => {
-                handleUserData('blue');
-              }}
-              side="blue"
-            >
-              BLUE
-            </ModeItem>
-            <ModeItem
-              selectedOption={userData.side}
-              onClick={() => {
-                handleUserData('red');
-              }}
-              side="red"
-            >
-              RED
-            </ModeItem>
-          </ModeList>
-        </ModeForm>
-      ) : (
-        <ModeForm>
-          시간제한 옵션을 선택해 주세요.
-          <ModeList>
-            <ModeItem
-              selectedOption={simulatorFormData.time}
-              onClick={() => {
-                handleTime(true);
-              }}
-              isTrue={true}
-            >
-              ON
-            </ModeItem>
-            <ModeItem
-              selectedOption={simulatorFormData.time}
-              onClick={() => {
-                handleTime(false);
-              }}
-              isTrue={false}
-            >
-              OFF
-            </ModeItem>
-          </ModeList>
-        </ModeForm>
-      )}
 
       <StartBtn
-        // disabled={formValidator()}
-        isDisabled={formValidator()}
-        onClick={() => {
-          !formValidator() && setIsFormReady(prev => !prev);
-          formValidator() && alert('모든 항목을 입력, 선택해주세요');
-          startSimulator();
-          simulatorFormData.mode === CONSTDATA.MODEDATA.solo &&
-            setIsPlayersReady(true);
-        }}
+      // // disabled={formValidator()}
+      // isDisabled={formValidator()}
+      // onClick={() => {
+      //   !formValidator() && setIsFormReady(prev => !prev);
+      //   formValidator() && alert('모든 항목을 입력, 선택해주세요');
+      //   startSimulator();
+      //   simulatorFormData.mode === CONSTDATA.MODEDATA.solo &&
+      //     setIsPlayersReady(true);
+      // }}
       >
-        START
+        CREATE
       </StartBtn>
     </LandingLayout>
   );
@@ -200,28 +162,41 @@ const SimulatorForm = ({
 export default SimulatorForm;
 
 const LandingLayout = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 32px;
-  margin-top: 32px;
+  gap: 48px;
+  padding: 64px;
+
+  border: 1px solid whitesmoke;
+  border-radius: 30px;
+  background-color: ${props => props.theme.black.black93};
 `;
 
 const Title = styled.p`
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 600;
 `;
 
-const TeamNameForm = styled.div`
+const NameInputContainer = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 600px;
   font-size: 20px;
   font-weight: 600;
 `;
 
 const TeamNameLabel = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 60px;
+  line-height: 1;
+  padding-left: 4px;
   ${props =>
     props.side === 'blue'
       ? css`
@@ -230,15 +205,12 @@ const TeamNameLabel = styled.div`
       : css`
           border-left: 4px solid ${props => props.theme.red.redB70};
         `};
-  padding-left: 4px;
-  margin-top: 32px;
-  margin-left: 16px;
 `;
 
-const TeamNameInput = styled.input`
-  width: 80%;
-  height: 40px;
-  margin: 16px 40px;
+const NameInput = styled.input`
+  width: 300px;
+  height: 30px;
+  margin: 8px 20px;
   font-size: 24px;
   background-color: white;
   &:focus-visible {
@@ -246,9 +218,19 @@ const TeamNameInput = styled.input`
   }
 `;
 
+const TeamNameInputContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px;
+`;
+
 const ModeForm = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   width: 600px;
   font-size: 20px;
   font-weight: 600;
@@ -258,6 +240,7 @@ const ModeForm = styled.div`
 const ModeList = styled.div`
   display: flex;
   justify-content: space-evenly;
+  gap: 100px;
   margin-top: 32px;
 `;
 

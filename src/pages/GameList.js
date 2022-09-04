@@ -3,24 +3,38 @@ import styled from 'styled-components';
 import ListFillter from '../components/GameList/ListFilter';
 import GameRoom from '../components/GameList/GameRoom';
 import GameListModal from '../components/Modal/GameListModal';
+
 const GameList = () => {
   const [isModalActive, setIsModalActive] = useState(false);
+  const [modalType, setModalType] = useState('');
+
+  const showModal = (type, mode) => {
+    setIsModalActive(true);
+    setModalType({ type: type, gameMode: mode });
+  };
+
+  const initModalState = () => {
+    setIsModalActive(false);
+    setModalType('');
+  };
 
   return (
     <GameListLayout>
-      {isModalActive && <GameListModal setIsModalActive={setIsModalActive} />}
-      <ListFillter setIsModalActive={setIsModalActive} />
+      <ListFillter showModal={showModal} />
+      {isModalActive && (
+        <GameListModal initModalState={initModalState} modalType={modalType} />
+      )}
       <GameRoomsLayout>
         <GameRoomContainer>
-          <GameRoom mode={1} setIsModalActive={setIsModalActive} />
-          <GameRoom mode={2} />
-          <GameRoom />
-          <GameRoom />
-          <GameRoom />
-          <GameRoom />
-          <GameRoom />
-          <GameRoom />
-          <GameRoom />
+          <GameRoom mode={1} showModal={showModal}></GameRoom>
+          <GameRoom mode={2} showModal={showModal} />
+          <GameRoom mode={2} showModal={showModal} />
+          <GameRoom mode={2} showModal={showModal} />
+          <GameRoom mode={2} showModal={showModal} />
+          <GameRoom mode={1} showModal={showModal} />
+          <GameRoom mode={1} showModal={showModal} />
+          <GameRoom mode={1} showModal={showModal} />
+          <GameRoom mode={1} showModal={showModal} />
         </GameRoomContainer>
       </GameRoomsLayout>
     </GameListLayout>

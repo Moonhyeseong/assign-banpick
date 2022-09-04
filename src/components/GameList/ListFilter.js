@@ -3,10 +3,7 @@ import styled from 'styled-components';
 import { HiRefresh } from 'react-icons/hi';
 import { BsCheck } from 'react-icons/bs';
 
-const ListFilter = ({ setIsModalActive }) => {
-  const showModal = () => {
-    setIsModalActive(true);
-  };
+const ListFilter = ({ showModal }) => {
   return (
     <ListFilterLayout>
       <Title>BanPick Simulator 멀티플레이 로비</Title>
@@ -32,14 +29,14 @@ const ListFilter = ({ setIsModalActive }) => {
         <MakeGameBtnContainer>
           <MakeGameBtn
             onClick={() => {
-              showModal();
+              showModal('simulatorForm');
             }}
           >
             방만들기
           </MakeGameBtn>
           <MakeGameBtn
             onClick={() => {
-              showModal();
+              showModal('simulatorForm');
             }}
           >
             혼자하기
