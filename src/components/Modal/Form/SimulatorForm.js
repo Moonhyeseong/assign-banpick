@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { CONSTDATA } from '../BanPick/CONSTDATA';
-import { BASE_URL } from '../../config';
+import { BASE_URL } from '../../../config';
 import { CgClose } from 'react-icons/cg';
 
 const SimulatorForm = ({
@@ -22,18 +21,18 @@ const SimulatorForm = ({
       : setSimulatorFormData({ ...simulatorFormData, mode: option });
   };
 
-  const handleTime = option => {
-    setSimulatorFormData({ ...simulatorFormData, time: option });
-  };
+  // const handleTime = option => {
+  //   setSimulatorFormData({ ...simulatorFormData, time: option });
+  // };
 
-  const handleUserData = option => {
-    setUserData({ ...userData, side: option });
-  };
+  // const handleUserData = option => {
+  //   setUserData({ ...userData, side: option });
+  // };
 
-  const storeGameId = respnse => {
-    setGameId(respnse);
-    sessionStorage.setItem('GAME_ID', respnse);
-  };
+  // const storeGameId = respnse => {
+  //   setGameId(respnse);
+  //   sessionStorage.setItem('GAME_ID', respnse);
+  // };
 
   // const formValidator = () => {
   //   const formValues = Object.values(simulatorFormData);

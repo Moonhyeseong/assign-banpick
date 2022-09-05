@@ -10,6 +10,7 @@ const Router = () => {
       <ContentsWrapper>
         <Routes>
           <Route path="/" element={<GameList />} />
+          {/* 비밀방 auth */}
           <Route path="/:id" element={<BanPickSimulator />} />
         </Routes>
       </ContentsWrapper>

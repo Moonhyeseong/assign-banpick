@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
-import PlayerForm from './PlayerForm';
-import SimulatorForm from './SimulatorForm';
+import PlayerForm from './Form/PlayerForm';
+import SimulatorForm from './Form/SimulatorForm';
 
 const GameListModal = ({ initModalState, modalType: { type, gameMode } }) => {
   const [simulatorFormData, setSimulatorFormData] = useState({

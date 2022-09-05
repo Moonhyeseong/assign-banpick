@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { CONSTDATA } from '../BanPick/CONSTDATA';
+import { CONSTDATA } from '../CONSTDATA';
 
 const WatingPlayer = ({ side, role, mode, userData, playerData }) => {
   const playerRoleData = userData.role === role || playerData.role === role;

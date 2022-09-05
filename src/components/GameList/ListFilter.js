@@ -2,8 +2,44 @@ import React from 'react';
 import styled from 'styled-components';
 import { HiRefresh } from 'react-icons/hi';
 import { BsCheck } from 'react-icons/bs';
+import { CONSTDATA } from '../CONSTDATA';
 
-const ListFilter = ({ showModal }) => {
+const ListFilter = ({ showModal, setFilterData, filterData }) => {
+  const handleSearchInput = event => {
+    setFilterData({ ...filterData, searchFilter: event.target.value });
+  };
+
+  const handleModeCheckBox = option => {
+    if (option === CONSTDATA.MODEDATA.oneOnOne) {
+      if (filterData.checkBoxFilter.one === '') {
+        setFilterData({
+          ...filterData,
+          checkBoxFilter: { one: option, five: filterData.checkBoxFilter.five },
+        });
+      } else {
+        setFilterData({
+          ...filterData,
+          checkBoxFilter: { one: '', five: filterData.checkBoxFilter.five },
+        });
+      }
+    } else if (option === CONSTDATA.MODEDATA.fiveOnfive) {
+      if (filterData.checkBoxFilter.five === '') {
+        setFilterData({
+          ...filterData,
+          checkBoxFilter: { one: filterData.checkBoxFilter.one, five: option },
+        });
+      } else {
+        setFilterData({
+          ...filterData,
+          checkBoxFilter: {
+            one: filterData.checkBoxFilter.one,
+            five: '',
+          },
+        });
+      }
+    }
+  };
+
   return (
     <ListFilterLayout>
       <Title>BanPick Simulator 멀티플레이 로비</Title>
@@ -12,17 +48,25 @@ const ListFilter = ({ showModal }) => {
           <HiRefresh size="26" color="#fff" />
         </RefreshBtn>
         <SearchInputContainer>
-          <SearchInput placeholder="방 이름 또는 코드를 입력하세요" />
+          <SearchInput
+            placeholder="방 이름 또는 코드를 입력하세요"
+            onChange={event => {
+              handleSearchInput(event);
+            }}
+          />
         </SearchInputContainer>
         <CheckBoxContainer>
-          <CheckBox>
-            <BsCheck size="26" />
+          <CheckBox onClick={() => handleModeCheckBox(1)}>
+            {filterData.checkBoxFilter.one === CONSTDATA.MODEDATA.oneOnOne && (
+              <BsCheck size="30" />
+            )}
           </CheckBox>{' '}
           1:1
         </CheckBoxContainer>
         <CheckBoxContainer>
-          <CheckBox>
-            <BsCheck size="26" />
+          <CheckBox onClick={() => handleModeCheckBox(2)}>
+            {filterData.checkBoxFilter.five ===
+              CONSTDATA.MODEDATA.fiveOnfive && <BsCheck size="30" />}
           </CheckBox>{' '}
           5:5
         </CheckBoxContainer>
@@ -116,7 +160,7 @@ const SearchInput = styled.input`
 const CheckBoxContainer = styled.div`
   display: flex;
   align-items: center;
-  width: 60px;
+
   height: 30px;
   font-size: 20px;
   font-weight: 700;
@@ -128,7 +172,7 @@ const CheckBox = styled.div`
   justify-content: center;
   margin-right: 8px;
   width: 30px;
-  height: 100%;
+  height: 30px;
   border: 1px solid gray;
   cursor: pointer;
 `;

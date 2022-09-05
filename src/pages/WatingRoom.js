@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import WatingList from '../components/WatingRoom/WatingList';
 
-import { CONSTDATA } from '../components/BanPick/CONSTDATA';
+import { CONSTDATA } from '../components/CONSTDATA';
 import { SocketContext } from '../context/socket';
 import { BASE_URL } from '../config';
 

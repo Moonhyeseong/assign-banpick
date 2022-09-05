@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import ChampionCard from './ChampionCard';
 import ChampionFilter from './ChampionFilter';
-import { CONSTDATA } from '../CONSTDATA';
+import { CONSTDATA } from '../../CONSTDATA';
 import { SocketContext } from '../../../context/socket';
 import { BASE_URL } from '../../../config';
 

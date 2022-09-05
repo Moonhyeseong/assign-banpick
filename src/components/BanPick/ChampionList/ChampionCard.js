@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styled, { css } from 'styled-components';
-import { CONSTDATA } from '../CONSTDATA';
+import { CONSTDATA } from '../../CONSTDATA';
 import { SocketContext } from '../../../context/socket';
 
 const ChampionCard = ({

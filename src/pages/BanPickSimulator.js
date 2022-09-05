@@ -8,7 +8,7 @@ import ChampionList from '../components/BanPick/ChampionList/ChampionList';
 import PickList from '../components/BanPick/PickBanList/PickList';
 import BanPickIndicator from '../components/BanPick/BanPickIndicator/BanPickIndicator';
 import WatingRoom from './WatingRoom';
-import { CONSTDATA } from '../components/BanPick/CONSTDATA';
+import { CONSTDATA } from '../components/CONSTDATA';
 import { SocketContext } from '../context/socket';
 import { BASE_URL } from '../config';
 

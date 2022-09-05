@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
-
-import { CONSTDATA } from '../BanPick/CONSTDATA';
-
+import { CONSTDATA } from '../../CONSTDATA';
 import { CgClose } from 'react-icons/cg';
-import { BASE_URL } from '../../config';
+import { BASE_URL } from '../../../config';
 
 const PlayerForm = ({
   gameMode,
@@ -13,8 +11,6 @@ const PlayerForm = ({
   setPlayerList,
   sendReadyEvent,
 }) => {
-  const [isReady, setIsReady] = useState(false);
-
   const [userData, setUserData] = useState({
     name: '',
     side: '',
@@ -63,7 +59,6 @@ const PlayerForm = ({
   //     return { ...playerList, [side]: playerList[side] };
   //   }
   // };
-
   //유저정보 추가 함수
   // const postAddUser = () => {
   //   const { name, side, role } = userData;
@@ -111,10 +106,7 @@ const PlayerForm = ({
         <FormContainer>
           <NameInputContainer>
             대표 소환사명을 입력해 주세요.
-            <PlayerNameInput
-              onChange={e => handleNameInput(e)}
-              readOnly={isReady}
-            />
+            <PlayerNameInput onChange={e => handleNameInput(e)} />
           </NameInputContainer>
           <BtnContainer>
             진영을 선택해 주세요.
@@ -136,10 +128,7 @@ const PlayerForm = ({
         <FormContainer>
           <NameInputContainer>
             소환사명을 입력해 주세요.
-            <PlayerNameInput
-              onChange={e => handleNameInput(e)}
-              readOnly={isReady}
-            />
+            <PlayerNameInput onChange={e => handleNameInput(e)} />
           </NameInputContainer>
           <BtnContainer>
             진영을 선택해 주세요.

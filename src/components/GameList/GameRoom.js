@@ -1,13 +1,22 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { CONSTDATA } from '../BanPick/CONSTDATA';
+import { CONSTDATA } from '../CONSTDATA';
 
-const GameRoom = ({ mode, showModal }) => {
+const GameRoom = ({ showModal, gameData: { title, mode, userList } }) => {
   const roles = Object.keys(CONSTDATA.ROLEDATA);
 
+  const getJoiningPlayerCount = playerList => {
+    const joiningPlayerCount = playerList.reduce(
+      (cnt, player) => cnt + ('' === player),
+      0
+    );
+    return joiningPlayerCount;
+  };
+  console.log(userList.blue[0]);
+  console.log(userList.red[0]);
   return (
     <GameRoomLayout>
-      <GameTitle>방 제목: 빠른 협곡 1:1 초보만</GameTitle>
+      <GameTitle>방 제목: {title}</GameTitle>
       <GameIndicator>참여가능</GameIndicator>
       <JoinBtn
         onClick={() => {
@@ -18,36 +27,64 @@ const GameRoom = ({ mode, showModal }) => {
       </JoinBtn>
       <GameMode>
         <span style={{ color: '#9f9f9f' }}>MODE</span>{' '}
-        {mode === 1 ? `1 : 1` : `5 : 5`}
+        {mode === CONSTDATA.MODEDATA.oneOnOne ? `1 : 1` : `5 : 5`}
       </GameMode>
       <CurruntRoomInfo>
         <TeamInfo>
-          <TeamTitle side="blue">BLUE (1/{`${mode === 1 ? 1 : 5}`})</TeamTitle>
-          <TeamRoleIconContainer>
-            {roles.map((role, idx) => {
-              return (
-                <RoleIcon
-                  mode={mode}
-                  key={idx}
-                  src={`/images/ROLE/${role}.png`}
-                />
-              );
-            })}
-          </TeamRoleIconContainer>
+          <TeamTitle side="blue">
+            BLUE ({userList.blue.length - getJoiningPlayerCount(userList.blue)}/
+            {`${userList.blue.length}`})
+          </TeamTitle>
+          {mode === CONSTDATA.MODEDATA.oneOnOne ? (
+            <TeamRoleIconContainer>
+              <RoleIcon
+                mode={mode}
+                src={`/images/ROLE/solo.png`}
+                isEmpty={userList.blue[0] !== ''}
+              />
+            </TeamRoleIconContainer>
+          ) : (
+            <TeamRoleIconContainer>
+              {roles.map((role, idx) => {
+                return (
+                  <RoleIcon
+                    mode={mode}
+                    key={idx}
+                    src={`/images/ROLE/${role}.png`}
+                    isEmpty={userList.blue[idx] !== ''}
+                  />
+                );
+              })}
+            </TeamRoleIconContainer>
+          )}
         </TeamInfo>
         <TeamInfo>
-          <TeamTitle side="red">RED (0/{`${mode === 1 ? 1 : 5}`})</TeamTitle>
-          <TeamRoleIconContainer>
-            {roles.map((role, idx) => {
-              return (
-                <RoleIcon
-                  mode={mode}
-                  key={idx}
-                  src={`/images/ROLE/${role}.png`}
-                />
-              );
-            })}
-          </TeamRoleIconContainer>
+          <TeamTitle side="red">
+            RED ({userList.red.length - getJoiningPlayerCount(userList.red)}/
+            {`${userList.red.length}`})
+          </TeamTitle>
+          {mode === CONSTDATA.MODEDATA.oneOnOne ? (
+            <TeamRoleIconContainer>
+              <RoleIcon
+                mode={mode}
+                src={`/images/ROLE/solo.png`}
+                isEmpty={userList.red[0] !== ''}
+              />
+            </TeamRoleIconContainer>
+          ) : (
+            <TeamRoleIconContainer>
+              {roles.map((role, idx) => {
+                return (
+                  <RoleIcon
+                    mode={mode}
+                    key={idx}
+                    src={`/images/ROLE/${role}.png`}
+                    isEmpty={userList.blue[idx] !== ''}
+                  />
+                );
+              })}
+            </TeamRoleIconContainer>
+          )}
         </TeamInfo>
       </CurruntRoomInfo>
     </GameRoomLayout>
@@ -130,10 +167,12 @@ const TeamRoleIconContainer = styled.div`
 const RoleIcon = styled.img`
   width: 36px;
   height: 36px;
+  opacity: 0.3;
+
   ${props =>
-    props.mode === 1 &&
+    props.isEmpty &&
     css`
-      opacity: 0.3;
+      opacity: 1;
     `}
 `;
 
@@ -159,6 +198,4 @@ const GameMode = styled.div`
   top: 16px;
   right: 16px;
   color: whitesmoke;
-  /* text-shadow: -2px 0 whitesmoke, 0 2px whitesmoke, 2px 0 whitesmoke,
-    0 -2px whitesmoke; */
 `;

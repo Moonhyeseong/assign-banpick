@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { CONSTDATA } from '../CONSTDATA';
+import { CONSTDATA } from '../../CONSTDATA';
 import { BASE_URL } from '../../../config';
 const PickCard = ({
   side,
