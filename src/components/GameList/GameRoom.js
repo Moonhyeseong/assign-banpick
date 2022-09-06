@@ -12,12 +12,17 @@ const GameRoom = ({ showModal, gameData: { title, mode, userList } }) => {
     );
     return joiningPlayerCount;
   };
-  console.log(userList.blue[0]);
-  console.log(userList.red[0]);
+
+  const isFull = () => {
+    return userList.blue.indexOf('') === -1 && userList.red.indexOf('') === -1;
+  };
+
   return (
     <GameRoomLayout>
       <GameTitle>방 제목: {title}</GameTitle>
-      <GameIndicator>참여가능</GameIndicator>
+      <GameIndicator isFull={isFull()}>
+        {isFull() ? `참여불가` : `참여가능`}
+      </GameIndicator>
       <JoinBtn
         onClick={() => {
           showModal('playerForm', mode);
@@ -79,7 +84,7 @@ const GameRoom = ({ showModal, gameData: { title, mode, userList } }) => {
                     mode={mode}
                     key={idx}
                     src={`/images/ROLE/${role}.png`}
-                    isEmpty={userList.blue[idx] !== ''}
+                    isEmpty={userList.red[idx] !== ''}
                   />
                 );
               })}
@@ -113,7 +118,15 @@ const GameIndicator = styled.span`
   font-weight: 700;
   left: 16px;
   bottom: 8px;
-  color: ${props => props.theme.green.greenMain};
+
+  ${props =>
+    props.isFull
+      ? css`
+          color: ${props => props.theme.red.redMain};
+        `
+      : css`
+          color: ${props => props.theme.green.greenMain};
+        `}
 `;
 
 const GameTitle = styled.p`
