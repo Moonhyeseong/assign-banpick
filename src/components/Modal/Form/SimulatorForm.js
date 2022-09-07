@@ -2,73 +2,66 @@ import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { BASE_URL } from '../../../config';
 import { CgClose } from 'react-icons/cg';
+import { useSelector } from 'react-redux';
 
 const SimulatorForm = ({
   simulatorFormData,
   setSimulatorFormData,
-  userData,
-  setUserData,
-  setGameId,
+
   initModalState,
+  showModal,
 }) => {
-  const handleTeamName = (e, team) => {
-    setSimulatorFormData({ ...simulatorFormData, [team]: e.target.value });
+  const userFormData = useSelector(state => state.userFormData);
+
+  const handleTitle = e => {
+    setSimulatorFormData({ ...simulatorFormData, title: e.target.value });
+  };
+
+  const handleTeamName = (e, side) => {
+    setSimulatorFormData({
+      ...simulatorFormData,
+      [`${side}TeamName`]: e.target.value,
+    });
   };
 
   const handleMode = option => {
-    option >= 1
-      ? setSimulatorFormData({ ...simulatorFormData, mode: option, time: true })
-      : setSimulatorFormData({ ...simulatorFormData, mode: option });
+    setSimulatorFormData({ ...simulatorFormData, mode: option });
   };
 
-  // const handleTime = option => {
-  //   setSimulatorFormData({ ...simulatorFormData, time: option });
-  // };
+  const isFormReady = () => {
+    const formValues = Object.values(simulatorFormData);
 
-  // const handleUserData = option => {
-  //   setUserData({ ...userData, side: option });
-  // };
+    return formValues.indexOf('') === -1;
+  };
 
-  // const storeGameId = respnse => {
-  //   setGameId(respnse);
-  //   sessionStorage.setItem('GAME_ID', respnse);
-  // };
+  //게임생성 -> 게임아이디 세션 스토리지 저장 -> 유저데이터 당연히 없음 -> 유저데이터 입력 -> 유저데이터 입력시 게임 아이디를 통한 게임 대기방 입장
 
-  // const formValidator = () => {
-  //   const formValues = Object.values(simulatorFormData);
+  //참여 -> 참여버튼 클릭시 게임 아이디 세션 스토리지 저장 -> 유저데이터 입력 -> 게임아이디를 통한 게임 대기방 입장
+  const createGame = () => {
+    const { title, blueTeamName, redTeamName, mode } = simulatorFormData;
 
-  //   if (simulatorFormData.mode === CONSTDATA.MODEDATA.solo) {
-  //     return formValues.includes('');
-  //   } else {
-  //     return userData.side === '' || formValues.includes('');
-  //   }
-  // };
+    fetch(`${BASE_URL}:8080/start`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: title,
+        blueTeamName: blueTeamName,
+        redTeamName: redTeamName,
+        mode: mode,
+      }),
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        sessionStorage.setItem('GAME_ID', res._id);
+      });
 
-  // const startSimulator = () => {
-  //   const { blue, red, mode, time } = simulatorFormData;
-  //   !formValidator() &&
-  //     fetch(`${BASE_URL}:8080/start`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         blueTeam: blue,
-  //         redTeam: red,
-  //         mode: mode,
-  //         timer: time,
-  //       }),
-  //     })
-  //       .then(res => res.json())
-  //       .then(res => {
-  //         storeGameId(res._id);
-  //       });
-  // };
-
-  useEffect(() => {
-    sessionStorage.removeItem('GAME_ID');
-    // localStorage.removeItem('USER_ID');
-  }, []);
+    if (Object.values(userFormData.userData).indexOf !== -1) {
+      showModal('playerForm', simulatorFormData.mode);
+    }
+  };
 
   return (
     <LandingLayout>
@@ -87,9 +80,9 @@ const SimulatorForm = ({
         방 제목을 입력해주세요.
         <NameInput
           side="blue"
-          // value={simulatorFormData.blue}
+          value={simulatorFormData.title}
           onChange={e => {
-            handleTeamName(e, 'blue');
+            handleTitle(e);
           }}
           style={{ marginTop: 16 }}
         />
@@ -100,7 +93,7 @@ const SimulatorForm = ({
           <TeamNameLabel side="blue">BLUE</TeamNameLabel>
           <NameInput
             side="blue"
-            // value={simulatorFormData.blue}
+            value={simulatorFormData.blueTeamName}
             onChange={e => {
               handleTeamName(e, 'blue');
             }}
@@ -110,7 +103,7 @@ const SimulatorForm = ({
           <TeamNameLabel side="red">RED</TeamNameLabel>
           <NameInput
             side="red"
-            // value={simulatorFormData.red}
+            value={simulatorFormData.redTeamName}
             onChange={e => {
               handleTeamName(e, 'red');
             }}
@@ -121,7 +114,7 @@ const SimulatorForm = ({
         참가 인원을 선택해 주세요.
         <ModeList>
           <ModeItem
-            // selectedOption={simulatorFormData.mode}
+            selectedOption={simulatorFormData.mode}
             onClick={() => {
               handleMode(1);
             }}
@@ -130,7 +123,7 @@ const SimulatorForm = ({
             1 : 1
           </ModeItem>
           <ModeItem
-            // selectedOption={simulatorFormData.mode}
+            selectedOption={simulatorFormData.mode}
             onClick={() => {
               handleMode(2);
             }}
@@ -142,15 +135,11 @@ const SimulatorForm = ({
       </ModeForm>
 
       <StartBtn
-      // // disabled={formValidator()}
-      // isDisabled={formValidator()}
-      // onClick={() => {
-      //   !formValidator() && setIsFormReady(prev => !prev);
-      //   formValidator() && alert('모든 항목을 입력, 선택해주세요');
-      //   startSimulator();
-      //   simulatorFormData.mode === CONSTDATA.MODEDATA.solo &&
-      //     setIsPlayersReady(true);
-      // }}
+        disabled={!isFormReady()}
+        onClick={() => {
+          !isFormReady() && alert('모든 항목을 입력, 선택해주세요');
+          createGame();
+        }}
       >
         CREATE
       </StartBtn>
@@ -280,9 +269,10 @@ const StartBtn = styled.button`
   color: white;
   font-size: 20px;
   cursor: pointer;
+  opacity: 1;
 
   ${props =>
-    props.isDisabled &&
+    props.disabled &&
     css`
       opacity: 0.3;
     `}

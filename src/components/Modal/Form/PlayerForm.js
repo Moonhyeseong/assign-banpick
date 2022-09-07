@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { CONSTDATA } from '../../CONSTDATA';
 import { CgClose } from 'react-icons/cg';
 import { BASE_URL } from '../../../config';
+import { updateUserData } from './userDataSlice';
 
 const PlayerForm = ({
   gameMode,
@@ -11,44 +15,16 @@ const PlayerForm = ({
   setPlayerList,
   sendReadyEvent,
 }) => {
-  const [userData, setUserData] = useState({
-    name: '',
-    side: '',
-    role: '',
-  });
+  const userFormData = useSelector(state => state.userFormData);
+  console.log(userFormData.userData);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isFormReady = () => {
+    const formValues = Object.values(userFormData.userData);
 
-  const handleNameInput = e => {
-    setUserData({ ...userData, name: e.target.value });
+    return formValues.indexOf('') === -1;
   };
-
-  const handleRoleBtn = option => {
-    // if (playerList[userData.side][CONSTDATA.ROLEDATA[option]] !== '') {
-    //   alert('이미 선택된 포지션 입니다. 다른 포지션을 선택해 주세요');
-    //   setUserData({ ...userData, role: '' });
-    // } else {
-    //   setUserData({ ...userData, role: option });
-    // }
-    setUserData({ ...userData, role: option });
-  };
-
-  const handleSideBtn = option => {
-    setUserData({ ...userData, side: option });
-  };
-
-  // const roleValidator = () => {
-  //   if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
-  //     if (playerList[userData.side][CONSTDATA.ROLEDATA[userData.role]] !== '') {
-  //       return false;
-  //     }
-  //   }
-  // };
-
-  const formValidator = () => {
-    const isFormValuesPassed = Object.values(userData).includes('');
-
-    return isFormValuesPassed;
-  };
-
+  console.log(isFormReady());
   // const updatePlayerList = (res, side, role) => {
   //   if (mode === CONSTDATA.MODEDATA.oneOnOne) {
   //     return { ...playerList, [side]: [res] };
@@ -59,36 +35,46 @@ const PlayerForm = ({
   //     return { ...playerList, [side]: playerList[side] };
   //   }
   // };
-  //유저정보 추가 함수
-  // const postAddUser = () => {
-  //   const { name, side, role } = userData;
+  // 유저정보 추가 함수
 
-  //   fetch(`${BASE_URL}:8080/add/user`, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       game_id: sessionStorage.getItem('GAME_ID'),
-  //       name: name,
-  //       side: side,
-  //       role: role,
-  //     }),
-  //   })
-  //     .then(res => res.json())
-  //     .then(res => {
-  //       localStorage.setItem('USER_ID', res._id);
-  //       sessionStorage.setItem('USER_ID', res._id);
-  //       // setUserData({ ...userData, user_id: res._id });
-  //       sendReadyEvent(
-  //         updatePlayerList(res, side, role),
-  //         sessionStorage.getItem('GAME_ID')
-  //       );
-  //       setPlayerList(prev => (prev = updatePlayerList(res, side, role)));
-  //     });
-
-  //   setIsReady(true);
-  // };
+  const postAddJoin = () => {
+    if (gameMode === CONSTDATA.MODEDATA.oneOnOne) {
+      fetch(`${BASE_URL}:8080/user/join`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          game_id: sessionStorage.getItem('GAME_ID'),
+          name: userFormData.userData.name,
+          side: userFormData.userData.side,
+          mode: gameMode,
+        }),
+      })
+        .then(res => res.json())
+        .then(res => {});
+    } else if (gameMode === CONSTDATA.MODEDATA.fiveOnfive) {
+      fetch(`${BASE_URL}:8080/user/join`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          game_id: sessionStorage.getItem('GAME_ID'),
+          name: userFormData.userData.name,
+          side: userFormData.userData.side,
+          role: userFormData.userData.role,
+          roleIndex: CONSTDATA.ROLEDATA[userFormData.userData.role],
+          mode: gameMode,
+        }),
+      })
+        .then(res => res.json())
+        .then(res => {
+          console.log(res);
+        });
+    }
+    navigate(sessionStorage.getItem('GAME_ID'));
+  };
 
   return (
     <PlayerFormLayout>
@@ -106,19 +92,29 @@ const PlayerForm = ({
         <FormContainer>
           <NameInputContainer>
             대표 소환사명을 입력해 주세요.
-            <PlayerNameInput onChange={e => handleNameInput(e)} />
+            <PlayerNameInput
+              onChange={e =>
+                dispatch(
+                  updateUserData({ type: 'name', value: e.target.value })
+                )
+              }
+            />
           </NameInputContainer>
           <BtnContainer>
             진영을 선택해 주세요.
             <FormOptionBtn
-              onClick={() => handleSideBtn('blue')}
-              isSelected={userData.side === 'blue'}
+              onClick={() =>
+                dispatch(updateUserData({ type: 'side', value: 'blue' }))
+              }
+              isSelected={userFormData.userData.side === 'blue'}
             >
               BLUE
             </FormOptionBtn>
             <FormOptionBtn
-              onClick={() => handleSideBtn('red')}
-              isSelected={userData.side === 'red'}
+              onClick={() =>
+                dispatch(updateUserData({ type: 'side', value: 'red' }))
+              }
+              isSelected={userFormData.userData.side === 'red'}
             >
               RED
             </FormOptionBtn>
@@ -128,19 +124,29 @@ const PlayerForm = ({
         <FormContainer>
           <NameInputContainer>
             소환사명을 입력해 주세요.
-            <PlayerNameInput onChange={e => handleNameInput(e)} />
+            <PlayerNameInput
+              onChange={e =>
+                dispatch(
+                  updateUserData({ type: 'name', value: e.target.value })
+                )
+              }
+            />
           </NameInputContainer>
           <BtnContainer>
             진영을 선택해 주세요.
             <FormOptionBtn
-              onClick={() => handleSideBtn('blue')}
-              isSelected={userData.side === 'blue'}
+              onClick={() =>
+                dispatch(updateUserData({ type: 'side', value: 'blue' }))
+              }
+              isSelected={userFormData.userData.side === 'blue'}
             >
               BLUE
             </FormOptionBtn>
             <FormOptionBtn
-              onClick={() => handleSideBtn('red')}
-              isSelected={userData.side === 'red'}
+              onClick={() =>
+                dispatch(updateUserData({ type: 'side', value: 'red' }))
+              }
+              isSelected={userFormData.userData.side === 'red'}
             >
               RED
             </FormOptionBtn>
@@ -151,8 +157,10 @@ const PlayerForm = ({
               return (
                 <FormOptionBtn
                   key={idx}
-                  onClick={() => handleRoleBtn(role)}
-                  isSelected={role === userData.role}
+                  onClick={() =>
+                    dispatch(updateUserData({ type: 'role', value: `${role}` }))
+                  }
+                  isSelected={role === userFormData.userData.role}
                 >
                   {role}
                 </FormOptionBtn>
@@ -162,9 +170,9 @@ const PlayerForm = ({
         </FormContainer>
       )}
       <ReadyBtn
-        disabled={formValidator()}
+        disabled={!isFormReady()}
         onClick={() => {
-          // !isReady && !formValidator() && postAddUser();
+          isFormReady() && postAddJoin();
         }}
       >
         JOIN

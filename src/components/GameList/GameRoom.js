@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { CONSTDATA } from '../CONSTDATA';
 
-const GameRoom = ({ showModal, gameData: { title, mode, userList } }) => {
+const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
   const roles = Object.keys(CONSTDATA.ROLEDATA);
 
   const getJoiningPlayerCount = playerList => {
@@ -21,11 +21,15 @@ const GameRoom = ({ showModal, gameData: { title, mode, userList } }) => {
     <GameRoomLayout>
       <GameTitle>방 제목: {title}</GameTitle>
       <GameIndicator isFull={isFull()}>
-        {isFull() ? `참여불가` : `참여가능`}
+        {isFull() ? `입장불가` : `입장가능`}
       </GameIndicator>
       <JoinBtn
         onClick={() => {
-          showModal('playerForm', mode);
+          if (!isFull()) {
+            showModal('playerForm', mode);
+            sessionStorage.setItem('GAME_ID', _id);
+          }
+          isFull() && alert('입장이 불가한 게임입니다.');
         }}
       >
         JOIN

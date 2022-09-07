@@ -7,7 +7,7 @@ import { CONSTDATA } from '../components/CONSTDATA';
 
 const GameList = () => {
   const [isModalActive, setIsModalActive] = useState(false);
-  const [modalType, setModalType] = useState('');
+  const [selectedGameData, setSelectedGameData] = useState('');
   const [games, setGames] = useState();
 
   const [filterData, setFilterData] = useState({
@@ -44,18 +44,24 @@ const GameList = () => {
     }
   };
 
-  const showModal = (type, mode) => {
+  const showModal = (type, mode, _id) => {
     setIsModalActive(true);
-    setModalType({ type: type, gameMode: mode });
+    setSelectedGameData({ type: type, gameMode: mode });
   };
 
   const initModalState = () => {
     setIsModalActive(false);
-    setModalType('');
+    setSelectedGameData('');
   };
 
+  // useEffect(() => {
+  //   fetch('http://localhost:3000/data/gameData.json')
+  //     .then(res => res.json())
+  //     .then(res => setGames(res));
+  // }, []);
+
   useEffect(() => {
-    fetch('http://localhost:3000/data/gameData.json')
+    fetch('http://localhost:8080/list')
       .then(res => res.json())
       .then(res => setGames(res));
   }, []);
@@ -68,7 +74,11 @@ const GameList = () => {
         filterData={filterData}
       />
       {isModalActive && (
-        <GameListModal initModalState={initModalState} modalType={modalType} />
+        <GameListModal
+          initModalState={initModalState}
+          selectedGameData={selectedGameData}
+          showModal={showModal}
+        />
       )}
       <GameRoomsLayout>
         <GameRoomContainer>

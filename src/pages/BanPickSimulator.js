@@ -17,6 +17,8 @@ const BanPickSimulator = () => {
   const [isFinish, setIsFinish] = useState(false);
   const [gameId, setGameId] = useState();
   const [isModalActive, setIsModalActive] = useState(false);
+  const [gameData, setGameData] = useState(null);
+  console.log(gameData);
   const socket = useContext(SocketContext);
   const params = useParams();
   // const location = useLocation();
@@ -195,11 +197,22 @@ const BanPickSimulator = () => {
   });
 
   useEffect(() => {
-    params.id &&
-      fetch(`${BASE_URL}:8080/list/banpick/${params.id}`)
+    setTimeout(() => {
+      fetch(`${BASE_URL}:8080/gameData/${params.id}`)
         .then(res => res.json())
-        .then(res => setBanPickList(res));
+        .then(res => setGameData(res));
+    }, 50);
+    // fetch(`${BASE_URL}:8080/gameData/${params.id}`)
+    //   .then(res => res.json())
+    //   .then(res => setGameData(res));
   }, [params.id]);
+
+  // useEffect(() => {
+  //   params.id &&
+  //     fetch(`${BASE_URL}:8080/list/banpick/${params.id}`)
+  //       .then(res => res.json())
+  //       .then(res => setBanPickList(res));
+  // }, [params.id]);
 
   // useEffect(() => {
   //   params.id &&
@@ -352,7 +365,7 @@ const BanPickSimulator = () => {
 
   return (
     <Simulator gameId={gameId} isPlayersReady={isPlayersReady}>
-      {isModalActive && (
+      {/* {isModalActive && (
         <DisconnectAlert
           setIsModalActive={setIsModalActive}
           disconnectEvent={disconnectEvent}
@@ -420,7 +433,7 @@ const BanPickSimulator = () => {
             />
           </ListLayout>
         )}
-      </BanPickLayout>
+      </BanPickLayout> */}
     </Simulator>
   );
 };

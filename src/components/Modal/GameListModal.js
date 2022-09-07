@@ -1,14 +1,21 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
 import PlayerForm from './Form/PlayerForm';
 import SimulatorForm from './Form/SimulatorForm';
+import { initUserData } from './Form/userDataSlice';
 
-const GameListModal = ({ initModalState, modalType: { type, gameMode } }) => {
+const GameListModal = ({
+  initModalState,
+  showModal,
+  selectedGameData: { type, gameMode },
+}) => {
+  const dispatch = useDispatch();
   const [simulatorFormData, setSimulatorFormData] = useState({
-    blue: '',
-    red: '',
+    title: '',
+    blueTeamName: '',
+    redTeamName: '',
     mode: '',
-    time: '',
   });
 
   const modalBackgroundRef = useRef();
@@ -16,13 +23,18 @@ const GameListModal = ({ initModalState, modalType: { type, gameMode } }) => {
   const closeModal = e => {
     if (e.target === modalBackgroundRef.current) {
       initModalState();
+      sessionStorage.removeItem('GAME_ID');
+      if (type === 'simulatorForm') {
+        setSimulatorFormData({
+          title: '',
+          blueTeamName: '',
+          redTeamName: '',
+          mode: '',
+        });
+      } else if (type === 'playerForm') {
+        dispatch(initUserData());
+      }
     }
-    setSimulatorFormData({
-      blue: '',
-      red: '',
-      mode: '',
-      time: '',
-    });
   };
 
   return (
@@ -35,6 +47,7 @@ const GameListModal = ({ initModalState, modalType: { type, gameMode } }) => {
           initModalState={initModalState}
           simulatorFormData={simulatorFormData}
           setSimulatorFormData={setSimulatorFormData}
+          showModal={showModal}
         />
       )}
     </ModalBackGround>
