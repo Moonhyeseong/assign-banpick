@@ -80,7 +80,7 @@ const ListFilter = ({ showModal, setFilterData, filterData }) => {
           </MakeGameBtn>
           <MakeGameBtn
             onClick={() => {
-              showModal('simulatorForm');
+              showModal('soloModeForm');
             }}
           >
             혼자하기

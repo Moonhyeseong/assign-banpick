@@ -3,10 +3,10 @@ import styled from 'styled-components';
 
 import WatingPlayer from './WatingPlayer';
 
-const WatingList = ({ mode, side, userData, playerList }) => {
+const WatingList = ({ mode, side, userData, userList }) => {
   return (
     <WatingListLayout>
-      {playerList?.map((playerData, idx) => {
+      {userList?.map((playerData, idx) => {
         return (
           <WatingPlayer
             key={idx}

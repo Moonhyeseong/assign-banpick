@@ -6,75 +6,62 @@ import WatingList from '../components/WatingRoom/WatingList';
 import { CONSTDATA } from '../components/CONSTDATA';
 import { SocketContext } from '../context/socket';
 import { BASE_URL } from '../config';
+import LiftUserIndicator from '../components/WatingRoom/LiftUserIndicator';
 
-const WatingRoom = ({
-  mode,
-  setUserData,
-  userData,
-  playerList,
-  setPlayerList,
-  setIsPlayersReady,
-}) => {
+const WatingRoom = ({ gameData }) => {
   const socket = useContext(SocketContext);
-  const params = useParams();
 
   socket.emit('joinRoom', sessionStorage.getItem('GAME_ID'));
 
-  socket.on('join', payload => {
-    // alert('참자가자 ');
-  });
+  // const sendReadyEvent = (playerList, gameId) => {
+  //   socket.emit('ready', playerList, gameId);
+  // };
 
-  const sendReadyEvent = (playerList, gameId) => {
-    socket.emit('ready', playerList, gameId);
-  };
+  // useEffect(() => {
+  //   socket.on('ready', payload => {
+  //     setPlayerList(payload);
+  //   });
+  // }, [setPlayerList, playerList, socket]);
 
-  useEffect(() => {
-    socket.on('ready', payload => {
-      setPlayerList(payload);
-    });
-  }, [setPlayerList, playerList, socket]);
+  // useEffect(() => {
+  //   playerList?.red.indexOf('') === -1 &&
+  //     playerList?.blue.indexOf('') === -1 &&
+  //     setIsPlayersReady(prev => !prev);
+  // }, [playerList, setIsPlayersReady]);
 
-  useEffect(() => {
-    playerList?.red.indexOf('') === -1 &&
-      playerList?.blue.indexOf('') === -1 &&
-      setIsPlayersReady(prev => !prev);
-  }, [playerList, setIsPlayersReady]);
+  // useEffect(() => {
+  //   if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
+  //     setUserData({ ...userData, role: '' });
+  //   } else {
+  //     setUserData({ ...userData, role: 'solo' });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
-  useEffect(() => {
-    if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
-      setUserData({ ...userData, role: '' });
-    } else {
-      setUserData({ ...userData, role: 'solo' });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  //선수들이 준비를 하고 있는 상태애서 입장할때
-  useEffect(() => {
-    sessionStorage.getItem('GAME_ID') &&
-      fetch(`${BASE_URL}:8080/list/player/${params.id}`)
-        .then(res => res.json())
-        .then(res => {
-          setTimeout(() => {
-            setPlayerList(res);
-          }, 10);
-        });
-  }, [params.id, setPlayerList]);
+  // //선수들이 준비를 하고 있는 상태애서 입장할때
+  // useEffect(() => {
+  //   sessionStorage.getItem('GAME_ID') &&
+  //     fetch(`${BASE_URL}:8080/list/player/${params.id}`)
+  //       .then(res => res.json())
+  //       .then(res => {
+  //         setTimeout(() => {
+  //           setPlayerList(res);
+  //         }, 10);
+  //       });
+  // }, [params.id, setPlayerList]);
 
   return (
     <WatingListLayout>
       <WatingList
-        mode={mode}
+        mode={gameData?.mode}
         side="blue"
-        userData={userData}
-        playerList={playerList?.blue}
+        userList={gameData?.userList.blue}
       />
-
+      <LiftUserIndicator mode={gameData?.mode} userList={gameData?.userList} />
       <WatingList
-        mode={mode}
+        mode={gameData?.mode}
         side="red"
-        userData={userData}
-        playerList={playerList?.red}
+        userList={gameData?.userList.red}
       />
     </WatingListLayout>
   );

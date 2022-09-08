@@ -4,7 +4,7 @@ import { CONSTDATA } from '../CONSTDATA';
 
 const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
   const roles = Object.keys(CONSTDATA.ROLEDATA);
-
+  console.log(userList);
   const getJoiningPlayerCount = playerList => {
     const joiningPlayerCount = playerList.reduce(
       (cnt, player) => cnt + ('' === player),
@@ -24,6 +24,7 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
         {isFull() ? `입장불가` : `입장가능`}
       </GameIndicator>
       <JoinBtn
+        isFull={isFull()}
         onClick={() => {
           if (!isFull()) {
             showModal('playerForm', mode);
@@ -206,6 +207,12 @@ const JoinBtn = styled.button`
   font-weight: 600;
 
   cursor: pointer;
+
+  ${props =>
+    props.isFull &&
+    css`
+      opacity: 0.3;
+    `}
 `;
 
 const GameMode = styled.div`

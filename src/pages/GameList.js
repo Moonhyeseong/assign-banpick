@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import ListFillter from '../components/GameList/ListFilter';
 import GameRoom from '../components/GameList/GameRoom';
 import GameListModal from '../components/Modal/GameListModal';
 import { CONSTDATA } from '../components/CONSTDATA';
+import { SocketContext } from '../context/socket';
 
 const GameList = () => {
+  const socket = useContext(SocketContext);
+
   const [isModalActive, setIsModalActive] = useState(false);
   const [selectedGameData, setSelectedGameData] = useState('');
   const [games, setGames] = useState();
@@ -16,6 +19,14 @@ const GameList = () => {
       one: '',
       five: '',
     },
+  });
+
+  socket.once('updateGameList', payload => {
+    console.log(payload);
+    console.log('게임리스트 업데이트');
+    setTimeout(() => {
+      getGameListAPI();
+    }, 100);
   });
 
   const getGameList = () => {
@@ -44,7 +55,7 @@ const GameList = () => {
     }
   };
 
-  const showModal = (type, mode, _id) => {
+  const showModal = (type, mode) => {
     setIsModalActive(true);
     setSelectedGameData({ type: type, gameMode: mode });
   };
@@ -52,18 +63,17 @@ const GameList = () => {
   const initModalState = () => {
     setIsModalActive(false);
     setSelectedGameData('');
+    sessionStorage.removeItem('GAME_ID');
   };
 
-  // useEffect(() => {
-  //   fetch('http://localhost:3000/data/gameData.json')
-  //     .then(res => res.json())
-  //     .then(res => setGames(res));
-  // }, []);
-
-  useEffect(() => {
+  const getGameListAPI = () => {
     fetch('http://localhost:8080/list')
       .then(res => res.json())
       .then(res => setGames(res));
+  };
+
+  useEffect(() => {
+    getGameListAPI();
   }, []);
 
   return (
@@ -91,7 +101,7 @@ const GameList = () => {
               />
             );
           })}
-          {getGameList()?.length === 0 && (
+          {getGameList()?.length < 1 && (
             <EmptyList>게임이 존재하지 않습니다.</EmptyList>
           )}
         </GameRoomContainer>
@@ -112,7 +122,6 @@ const GameRoomsLayout = styled.div`
   text-align: center;
   width: 100%;
   height: 80vh;
-
   overflow-y: scroll;
 
   &::-webkit-scrollbar {

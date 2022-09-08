@@ -6,26 +6,21 @@ import { SocketContext } from '../../../context/socket';
 import { BASE_URL } from '../../../config';
 
 const BanPickIndicator = ({
-  simulatorFormData: { blue, red, mode, time },
   phaseTitle,
   leftTime,
   setLeftTime,
   isPlayersReady,
-  playerList,
-  gameId,
   setIsModalActive,
+  gameData,
 }) => {
-  const [gameInfo, setGameInfo] = useState();
   const socket = useContext(SocketContext);
-
-  const params = useParams();
 
   const notReadyPlayers = side => {
     const teamSide = side;
     return (
-      playerList &&
-      playerList[teamSide].length -
-        playerList[teamSide].filter(element => '' === element).length
+      gameData?.userList &&
+      gameData?.userList[teamSide].length -
+        gameData?.userList[teamSide].filter(element => '' === element).length
     );
   };
 
@@ -33,38 +28,21 @@ const BanPickIndicator = ({
     sessionStorage.setItem('GAME_ID', payload);
   });
 
-  useEffect(() => {
-    gameId &&
-      fetch(`${BASE_URL}:8080/game/info/${gameId}`)
-        .then(res => res.json())
-        .then(res => setGameInfo(res));
-  }, [gameId]);
-
-  useEffect(() => {
-    if (gameInfo?.isProceeding === false) {
-      isPlayersReady && setIsModalActive(true);
-    }
-  }, [gameInfo?.isProceeding, isPlayersReady, setIsModalActive]);
-
   return (
     <IndicatorLayout>
       <TeamInfo side="blue">
         <TeamName side="blue">
           <TeamSide>BLUE</TeamSide>
-          {params.id ? gameInfo?.blueTeam : blue}{' '}
-          {isPlayersReady ||
-            `(${notReadyPlayers('blue')}/${playerList?.blue.length})`}
+          {gameData?.blueTeamName}
+          {gameData?.isProceeding ||
+            `(${notReadyPlayers('blue')}/${gameData?.userList?.blue.length})`}
         </TeamName>
       </TeamInfo>
-      {isPlayersReady && (
+      {gameData?.isProceeding && (
         <TimerContainer>
           <PatchVersion> Patch 12.5.1</PatchVersion>
           <LeftTime>
-            {gameInfo?.timer ? (
-              <Timer leftTime={leftTime} setLeftTime={setLeftTime} />
-            ) : (
-              ':∞'
-            )}
+            <Timer leftTime={leftTime} setLeftTime={setLeftTime} />
           </LeftTime>
 
           <PhaseInfo>{phaseTitle()}</PhaseInfo>
@@ -74,9 +52,9 @@ const BanPickIndicator = ({
       <TeamInfo side="red">
         <TeamName side="blue">
           <TeamSide>RED</TeamSide>
-          {isPlayersReady ||
-            `(${notReadyPlayers('red')}/${playerList?.red.length})`}{' '}
-          {params.id ? gameInfo?.redTeam : red}
+          {gameData?.redTeamName}
+          {gameData?.isProceeding ||
+            `(${notReadyPlayers('red')}/${gameData?.userList.red.length})`}
         </TeamName>
       </TeamInfo>
     </IndicatorLayout>

@@ -1,41 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import uuid from 'react-uuid';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { CONSTDATA } from '../../CONSTDATA';
 import { CgClose } from 'react-icons/cg';
+import { CONSTDATA } from '../../CONSTDATA';
 import { BASE_URL } from '../../../config';
-import { updateUserData } from './userDataSlice';
+import { initUserData, updateUserData } from './userDataSlice';
 
-const PlayerForm = ({
-  gameMode,
-  playerList,
-  initModalState,
-  setPlayerList,
-  sendReadyEvent,
-}) => {
-  const userFormData = useSelector(state => state.userFormData);
-  console.log(userFormData.userData);
+const PlayerForm = ({ gameMode, initModalState }) => {
+  const userData = useSelector(state => state.userFormData.userData);
+  console.log(userData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const isFormReady = () => {
-    const formValues = Object.values(userFormData.userData);
+    const formValues = Object.values(userData);
 
     return formValues.indexOf('') === -1;
   };
-  console.log(isFormReady());
-  // const updatePlayerList = (res, side, role) => {
-  //   if (mode === CONSTDATA.MODEDATA.oneOnOne) {
-  //     return { ...playerList, [side]: [res] };
-  //   } else if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
-  //     const index = CONSTDATA.ROLEDATA[role];
-  //     playerList[side][index] = res;
-
-  //     return { ...playerList, [side]: playerList[side] };
-  //   }
-  // };
-  // 유저정보 추가 함수
 
   const postAddJoin = () => {
     if (gameMode === CONSTDATA.MODEDATA.oneOnOne) {
@@ -46,9 +29,11 @@ const PlayerForm = ({
         },
         body: JSON.stringify({
           game_id: sessionStorage.getItem('GAME_ID'),
-          name: userFormData.userData.name,
-          side: userFormData.userData.side,
+          user_id: userData.user_id,
+          name: userData.name,
+          side: userData.side,
           mode: gameMode,
+          ready: userData.ready,
         }),
       })
         .then(res => res.json())
@@ -61,11 +46,13 @@ const PlayerForm = ({
         },
         body: JSON.stringify({
           game_id: sessionStorage.getItem('GAME_ID'),
-          name: userFormData.userData.name,
-          side: userFormData.userData.side,
-          role: userFormData.userData.role,
-          roleIndex: CONSTDATA.ROLEDATA[userFormData.userData.role],
+          user_id: userData.user_id,
+          name: userData.name,
+          side: userData.side,
+          role: userData.role,
+          roleIndex: CONSTDATA.ROLEDATA[userData.role],
           mode: gameMode,
+          isReady: false,
         }),
       })
         .then(res => res.json())
@@ -75,6 +62,11 @@ const PlayerForm = ({
     }
     navigate(sessionStorage.getItem('GAME_ID'));
   };
+
+  useEffect(() => {
+    dispatch(initUserData());
+    dispatch(updateUserData({ type: 'user_id', value: uuid() }));
+  }, [dispatch]);
 
   return (
     <PlayerFormLayout>
@@ -106,7 +98,7 @@ const PlayerForm = ({
               onClick={() =>
                 dispatch(updateUserData({ type: 'side', value: 'blue' }))
               }
-              isSelected={userFormData.userData.side === 'blue'}
+              isSelected={userData.side === 'blue'}
             >
               BLUE
             </FormOptionBtn>
@@ -114,7 +106,7 @@ const PlayerForm = ({
               onClick={() =>
                 dispatch(updateUserData({ type: 'side', value: 'red' }))
               }
-              isSelected={userFormData.userData.side === 'red'}
+              isSelected={userData.side === 'red'}
             >
               RED
             </FormOptionBtn>
@@ -138,7 +130,7 @@ const PlayerForm = ({
               onClick={() =>
                 dispatch(updateUserData({ type: 'side', value: 'blue' }))
               }
-              isSelected={userFormData.userData.side === 'blue'}
+              isSelected={userData.side === 'blue'}
             >
               BLUE
             </FormOptionBtn>
@@ -146,7 +138,7 @@ const PlayerForm = ({
               onClick={() =>
                 dispatch(updateUserData({ type: 'side', value: 'red' }))
               }
-              isSelected={userFormData.userData.side === 'red'}
+              isSelected={userData.side === 'red'}
             >
               RED
             </FormOptionBtn>
@@ -160,7 +152,7 @@ const PlayerForm = ({
                   onClick={() =>
                     dispatch(updateUserData({ type: 'role', value: `${role}` }))
                   }
-                  isSelected={role === userFormData.userData.role}
+                  isSelected={role === userData.role}
                 >
                   {role}
                 </FormOptionBtn>

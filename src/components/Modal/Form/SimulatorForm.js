@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import { BASE_URL } from '../../../config';
 import { CgClose } from 'react-icons/cg';
 import { useSelector } from 'react-redux';
+import { SocketContext } from '../../../context/socket';
 
 const SimulatorForm = ({
   simulatorFormData,
@@ -12,6 +13,7 @@ const SimulatorForm = ({
   showModal,
 }) => {
   const userFormData = useSelector(state => state.userFormData);
+  const socket = useContext(SocketContext);
 
   const handleTitle = e => {
     setSimulatorFormData({ ...simulatorFormData, title: e.target.value });
@@ -61,6 +63,8 @@ const SimulatorForm = ({
     if (Object.values(userFormData.userData).indexOf !== -1) {
       showModal('playerForm', simulatorFormData.mode);
     }
+
+    socket.emit('createGame', sessionStorage.getItem('GAME_ID'));
   };
 
   return (

@@ -1,34 +1,39 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { CONSTDATA } from '../CONSTDATA';
+import { useSelector } from 'react-redux';
 
-const WatingPlayer = ({ side, role, mode, userData, playerData }) => {
+const WatingPlayer = ({ side, role, mode, playerData }) => {
+  const userData = useSelector(state => state.userFormData.userData);
+  console.log('playerData', playerData);
+  console.log('userData', userData);
   const playerRoleData = userData.role === role || playerData.role === role;
-
   const playerSideData = userData.side === side || playerData.side === side;
-
+  const userIndicateData = playerData.user_id === userData.user_id;
+  console.log(userIndicateData);
   const isOneOneOneMode = CONSTDATA.MODEDATA.oneOnOne === mode;
-
-  const isPlayerReady = playerData !== '';
 
   return (
     <PlayerCard role={role}>
       {playerSideData && playerRoleData ? (
-        <PlayerName side={side} isPlayerReady={isPlayerReady}>
+        <PlayerName side={side} userIndicateData={userIndicateData}>
           {playerData?.name ? playerData?.name : userData.name}
         </PlayerName>
       ) : (
         playerSideData &&
         isOneOneOneMode && (
-          <PlayerName side={side} isPlayerReady={isPlayerReady}>
+          <PlayerName side={side} userIndicateData={userIndicateData}>
             {playerData?.name ? playerData?.name : userData.name}
           </PlayerName>
         )
       )}
 
-      {!isOneOneOneMode && <PlayerRole side={side}>{role}</PlayerRole>}
-      {isPlayerReady && <ReadyText>Ready!</ReadyText>}
-      <GradientMask />
+      {playerData?.role && (
+        <PlayerRole side={side} userIndicateData={userIndicateData}>
+          {role}
+        </PlayerRole>
+      )}
+      {playerData.isReady && <ReadyText>Ready!</ReadyText>}
     </PlayerCard>
   );
 };
@@ -36,6 +41,7 @@ const WatingPlayer = ({ side, role, mode, userData, playerData }) => {
 export default WatingPlayer;
 
 const PlayerCard = styled.div`
+  position: relative;
   display: felx;
   justify-content: center;
   align-items: center;
@@ -54,6 +60,7 @@ const PlayerRole = styled.p`
   color: white;
   font-size: 16px;
   font-weight: 700;
+  opacity: 0.6;
 
   ${props =>
     props.side === 'red'
@@ -63,6 +70,11 @@ const PlayerRole = styled.p`
       : css`
           right: 16px;
         `}
+  ${props =>
+    props.userIndicateData &&
+    css`
+      opacity: 1;
+    `}
 `;
 
 const PlayerName = styled.p`
@@ -70,6 +82,7 @@ const PlayerName = styled.p`
   bottom: 12px;
   z-index: 10;
   color: white;
+
   font-size: 24px;
   font-weight: 700;
 
@@ -82,22 +95,23 @@ const PlayerName = styled.p`
           right: 16px;
         `}
 
-  @keyframes blink-effect {
-    50% {
-      opacity: 0;
-    }
-  }
-
   ${props =>
     props.isPlayerReady ||
     css`
-      animation: blink-effect 1s ease-in-out infinite;
+      /* animation: blink-effect 1s ease-in-out infinite; */
     `}
+
+  ${props =>
+    props.userIndicateData
+      ? css`
+          opacity: 1;
+        `
+      : css`
+          opacity: 0.6;
+        `}
 `;
 
 const ReadyText = styled.span`
   font-weight: 700;
   font-size: 40px;
 `;
-
-const GradientMask = styled.div``;
