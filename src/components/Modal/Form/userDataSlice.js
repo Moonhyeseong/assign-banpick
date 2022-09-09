@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = { userData: { name: '', side: '', isReady: false } };
+const initialState = {
+  userData: { name: '', side: '', role: '', isReady: false },
+};
 
 export const userDataSlice = createSlice({
   name: 'userinfo',
@@ -21,7 +23,8 @@ export const userDataSlice = createSlice({
     },
 
     initUserData: state => {
-      state.userData = { name: '', side: '', isReady: false };
+      state.userData = { name: '', side: '', role: '', isReady: false };
+      sessionStorage.removeItem('USER_ID');
     },
   },
 });

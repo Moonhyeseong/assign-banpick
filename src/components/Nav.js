@@ -21,7 +21,7 @@ const NavLayout = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 50px;
+  height: 36px;
   padding-left: 80px;
   padding-right: 80px;
   padding-top: 8px;
@@ -44,6 +44,6 @@ const NavItem = styled.div`
 `;
 
 const Title = styled.p`
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
 `;

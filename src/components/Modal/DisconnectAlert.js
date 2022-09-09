@@ -35,7 +35,7 @@ const ModalBackGround = styled.div`
 
   top: 0;
   left: 0;
-  /* background-color: red; */
+
   z-index: 1000;
 `;
 

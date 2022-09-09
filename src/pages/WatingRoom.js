@@ -1,6 +1,5 @@
 import React, { useEffect, useContext } from 'react';
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
 import WatingList from '../components/WatingRoom/WatingList';
 
 import { CONSTDATA } from '../components/CONSTDATA';
@@ -50,6 +49,8 @@ const WatingRoom = ({ gameData }) => {
   //       });
   // }, [params.id, setPlayerList]);
 
+  useEffect(() => {}, []);
+
   return (
     <WatingListLayout>
       <WatingList
@@ -70,6 +71,7 @@ const WatingRoom = ({ gameData }) => {
 export default WatingRoom;
 
 const WatingListLayout = styled.div`
+  position: relative;
   display: flex;
   justify-content: space-between;
   width: 100%;

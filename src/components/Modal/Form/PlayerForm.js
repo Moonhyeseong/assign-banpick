@@ -21,6 +21,7 @@ const PlayerForm = ({ gameMode, initModalState }) => {
   };
 
   const postAddJoin = () => {
+    console.log(userData);
     if (gameMode === CONSTDATA.MODEDATA.oneOnOne) {
       fetch(`${BASE_URL}:8080/user/join`, {
         method: 'POST',
@@ -33,7 +34,7 @@ const PlayerForm = ({ gameMode, initModalState }) => {
           name: userData.name,
           side: userData.side,
           mode: gameMode,
-          ready: userData.ready,
+          isReady: userData.isReady,
         }),
       })
         .then(res => res.json())
@@ -52,7 +53,7 @@ const PlayerForm = ({ gameMode, initModalState }) => {
           role: userData.role,
           roleIndex: CONSTDATA.ROLEDATA[userData.role],
           mode: gameMode,
-          isReady: false,
+          isReady: userData.isReady,
         }),
       })
         .then(res => res.json())
@@ -65,8 +66,15 @@ const PlayerForm = ({ gameMode, initModalState }) => {
 
   useEffect(() => {
     dispatch(initUserData());
-    dispatch(updateUserData({ type: 'user_id', value: uuid() }));
-  }, [dispatch]);
+
+    if (gameMode === CONSTDATA.MODEDATA.oneOnOne) {
+      dispatch(updateUserData({ type: 'role', value: 'solo' }));
+    }
+
+    const newUuid = uuid();
+    sessionStorage.setItem('USER_ID', newUuid);
+    dispatch(updateUserData({ type: 'user_id', value: newUuid }));
+  }, [dispatch, gameMode]);
 
   return (
     <PlayerFormLayout>

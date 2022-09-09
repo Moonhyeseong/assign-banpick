@@ -38,7 +38,7 @@ const BanPickIndicator = ({
             `(${notReadyPlayers('blue')}/${gameData?.userList?.blue.length})`}
         </TeamName>
       </TeamInfo>
-      {gameData?.isProceeding && (
+      {gameData?.isProceeding ? (
         <TimerContainer>
           <PatchVersion> Patch 12.5.1</PatchVersion>
           <LeftTime>
@@ -47,6 +47,11 @@ const BanPickIndicator = ({
 
           <PhaseInfo>{phaseTitle()}</PhaseInfo>
         </TimerContainer>
+      ) : (
+        <GameInfoContainer>
+          <GameTitleText>방 제목 : {gameData?.title}</GameTitleText>
+          <GameModeText>1 : 1</GameModeText>
+        </GameInfoContainer>
       )}
 
       <TeamInfo side="red">
@@ -66,9 +71,9 @@ export default BanPickIndicator;
 const IndicatorLayout = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: red;
+
   width: 100%;
-  height: 100px;
+  height: 70px;
 `;
 
 const TimerContainer = styled.div`
@@ -128,6 +133,25 @@ const LeftTime = styled.div`
   color: ${props => props.theme.white.white100};
   font-weight: 700;
   text-align: center;
+`;
+
+const GameInfoContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: auto;
+  background-color: black;
+`;
+
+const GameTitleText = styled.p`
+  font-size: 24px;
+  font-weight: 700;
+`;
+
+const GameModeText = styled.p`
+  font-size: 14px;
+  font-weight: 700;
 `;
 
 const PhaseInfo = styled.p`

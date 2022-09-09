@@ -9,7 +9,8 @@ const WatingPlayer = ({ side, role, mode, playerData }) => {
   console.log('userData', userData);
   const playerRoleData = userData.role === role || playerData.role === role;
   const playerSideData = userData.side === side || playerData.side === side;
-  const userIndicateData = playerData.user_id === userData.user_id;
+  const userIndicateData =
+    playerData.user_id === sessionStorage.getItem('USER_ID');
   console.log(userIndicateData);
   const isOneOneOneMode = CONSTDATA.MODEDATA.oneOnOne === mode;
 
