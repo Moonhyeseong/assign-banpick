@@ -4,7 +4,7 @@ import { CONSTDATA } from '../CONSTDATA';
 
 const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
   const roles = Object.keys(CONSTDATA.ROLEDATA);
-  console.log(userList);
+
   const getJoiningPlayerCount = playerList => {
     const joiningPlayerCount = playerList.reduce(
       (cnt, player) => cnt + ('' === player),
@@ -27,7 +27,7 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
         isFull={isFull()}
         onClick={() => {
           if (!isFull()) {
-            showModal('playerForm', mode);
+            showModal('playerForm', mode, userList);
             sessionStorage.setItem('GAME_ID', _id);
           }
           isFull() && alert('입장이 불가한 게임입니다.');

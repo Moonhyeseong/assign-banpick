@@ -47,6 +47,7 @@ const LiftUserIndicator = ({ userList, mode }) => {
           {userList.red.map((playerData, idx) => {
             return (
               <RoleIcon
+                key={idx}
                 side="red"
                 mode={mode}
                 role={ROLE_INFO[idx]}
@@ -116,6 +117,51 @@ const RoleIcon = styled.img`
     `}
 
   ${props =>
+    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.side === 'blue' &&
+    props.role === 'TOP' &&
+    css`
+      top: 160px;
+      left: 480px;
+    `}  
+
+  ${props =>
+    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.side === 'blue' &&
+    props.role === 'JUNGLE' &&
+    css`
+      top: 210px;
+      left: 540px;
+    `}  
+
+  ${props =>
+    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.side === 'blue' &&
+    props.role === 'MID' &&
+    css`
+      top: 280px;
+      left: 620px;
+    `} 
+
+  ${props =>
+    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.side === 'blue' &&
+    props.role === 'ADC' &&
+    css`
+      bottom: 280px;
+      left: 860px;
+    `}  
+
+  ${props =>
+    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.side === 'blue' &&
+    props.role === 'SUPPORT' &&
+    css`
+      bottom: 280px;
+      left: 780px;
+    `}  
+
+  ${props =>
     props.isUserPosition &&
     css`
       opacity: 1;
@@ -127,4 +173,58 @@ const RoleIcon = styled.img`
     `}
 `;
 
+// const TopIcon = styled.img`
+//   position: absolute;
+//   width: 60px;
+//   height: 60px;
+//   border-radius: 30px;
+//   padding: 10px;
+//   border: 3px solid white;
+//   z-index: 10;
+//   opacity: 0.4;
+// `;
+
+// const JungleIcon = styled.img`
+//   position: absolute;
+//   width: 60px;
+//   height: 60px;
+//   border-radius: 30px;
+//   padding: 10px;
+//   border: 3px solid white;
+//   z-index: 10;
+//   opacity: 0.4;
+// `;
+
+// const MidIcon = styled.img`
+//   position: absolute;
+//   width: 60px;
+//   height: 60px;
+//   border-radius: 30px;
+//   padding: 10px;
+//   border: 3px solid white;
+//   z-index: 10;
+//   opacity: 0.4;
+// `;
+
+// const AdcIcon = styled.img`
+//   position: absolute;
+//   width: 60px;
+//   height: 60px;
+//   border-radius: 30px;
+//   padding: 10px;
+//   border: 3px solid white;
+//   z-index: 10;
+//   opacity: 0.4;
+// `;
+
+// const SupportIcon = styled.img`
+//   position: absolute;
+//   width: 60px;
+//   height: 60px;
+//   border-radius: 30px;
+//   padding: 10px;
+//   border: 3px solid white;
+//   z-index: 10;
+//   opacity: 0.4;
+// `;
 const ROLE_INFO = ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'];

@@ -8,9 +8,11 @@ import { CONSTDATA } from '../../CONSTDATA';
 import { BASE_URL } from '../../../config';
 import { initUserData, updateUserData } from './userDataSlice';
 
-const PlayerForm = ({ gameMode, initModalState }) => {
+const PlayerForm = ({
+  selectedGameData: { gameMode, initModalState, userList },
+}) => {
   const userData = useSelector(state => state.userFormData.userData);
-  console.log(userData);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -20,8 +22,27 @@ const PlayerForm = ({ gameMode, initModalState }) => {
     return formValues.indexOf('') === -1;
   };
 
+  const handleIsAleadyExistRoleData = (role, side) => {
+    const teamUserList = userList[side];
+
+    if (gameMode === CONSTDATA.MODEDATA.fiveOnfive) {
+      if (teamUserList[CONSTDATA.ROLEDATA[role]] !== '') {
+        alert('이미 다른 유저가 선택한 포지션 입니다.');
+        dispatch(updateUserData({ type: 'role', value: '' }));
+      }
+    }
+  };
+
+  const handleIsAleadyExistSideData = side => {
+    const teamUserList = userList[side];
+
+    if (teamUserList[0] !== '') {
+      alert('이미 다른 유저가 선택한 팀 입니다.');
+      dispatch(updateUserData({ type: 'side', value: '' }));
+    }
+  };
+
   const postAddJoin = () => {
-    console.log(userData);
     if (gameMode === CONSTDATA.MODEDATA.oneOnOne) {
       fetch(`${BASE_URL}:8080/user/join`, {
         method: 'POST',
@@ -33,6 +54,7 @@ const PlayerForm = ({ gameMode, initModalState }) => {
           user_id: userData.user_id,
           name: userData.name,
           side: userData.side,
+          role: userData.role,
           mode: gameMode,
           isReady: userData.isReady,
         }),
@@ -66,7 +88,6 @@ const PlayerForm = ({ gameMode, initModalState }) => {
 
   useEffect(() => {
     dispatch(initUserData());
-
     if (gameMode === CONSTDATA.MODEDATA.oneOnOne) {
       dispatch(updateUserData({ type: 'role', value: 'solo' }));
     }
@@ -103,17 +124,25 @@ const PlayerForm = ({ gameMode, initModalState }) => {
           <BtnContainer>
             진영을 선택해 주세요.
             <FormOptionBtn
-              onClick={() =>
-                dispatch(updateUserData({ type: 'side', value: 'blue' }))
-              }
+              onClick={() => {
+                dispatch(updateUserData({ type: 'side', value: 'blue' }));
+
+                if (gameMode === CONSTDATA.MODEDATA.oneOnOne) {
+                  handleIsAleadyExistSideData('blue');
+                }
+              }}
               isSelected={userData.side === 'blue'}
             >
               BLUE
             </FormOptionBtn>
             <FormOptionBtn
-              onClick={() =>
-                dispatch(updateUserData({ type: 'side', value: 'red' }))
-              }
+              onClick={() => {
+                dispatch(updateUserData({ type: 'side', value: 'red' }));
+
+                if (gameMode === CONSTDATA.MODEDATA.oneOnOne) {
+                  handleIsAleadyExistSideData('red');
+                }
+              }}
               isSelected={userData.side === 'red'}
             >
               RED
@@ -157,9 +186,14 @@ const PlayerForm = ({ gameMode, initModalState }) => {
               return (
                 <FormOptionBtn
                   key={idx}
-                  onClick={() =>
-                    dispatch(updateUserData({ type: 'role', value: `${role}` }))
-                  }
+                  onClick={() => {
+                    dispatch(
+                      updateUserData({ type: 'role', value: `${role}` })
+                    );
+                    if (gameMode === CONSTDATA.MODEDATA.fiveOnfive) {
+                      handleIsAleadyExistRoleData(role, userData.side);
+                    }
+                  }}
                   isSelected={role === userData.role}
                 >
                   {role}

@@ -26,10 +26,14 @@ export const userDataSlice = createSlice({
       state.userData = { name: '', side: '', role: '', isReady: false };
       sessionStorage.removeItem('USER_ID');
     },
+
+    getUserData: (state, actions) => {
+      state.userData = actions.payload;
+    },
   },
 });
 
-export const { updateUserData, initUserData, userReadyAction } =
+export const { updateUserData, initUserData, userReadyAction, getUserData } =
   userDataSlice.actions;
 
 export default userDataSlice.reducer;

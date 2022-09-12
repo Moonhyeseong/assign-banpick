@@ -5,13 +5,14 @@ import PlayerForm from './Form/PlayerForm';
 import SimulatorForm from './Form/SimulatorForm';
 import { initUserData } from './Form/userDataSlice';
 import SoloModeForm from './Form/SoloModeForm';
+import { CONSTDATA } from '../CONSTDATA';
 
 const GameListModal = ({
   initModalState,
   showModal,
-  selectedGameData: { type, gameMode },
+  setSelectedGameData,
+  selectedGameData,
 }) => {
-  const dispatch = useDispatch();
   const [simulatorFormData, setSimulatorFormData] = useState({
     title: '',
     blueTeamName: '',
@@ -27,33 +28,26 @@ const GameListModal = ({
     }
   };
 
-  // useEffect(() => {
-  //   return () => {
-  //     setSimulatorFormData({
-  //       title: '',
-  //       blueTeamName: '',
-  //       redTeamName: '',
-  //       mode: '',
-  //     });
-  //     dispatch(initUserData());
-  //   };
-  // }, [dispatch]);
-
   return (
     <ModalBackGround ref={modalBackgroundRef} onClick={e => closeModal(e)}>
-      {type === 'playerForm' && (
-        <PlayerForm initModalState={initModalState} gameMode={gameMode} />
+      {selectedGameData.type === 'playerForm' && (
+        <PlayerForm
+          initModalState={initModalState}
+          selectedGameData={selectedGameData}
+        />
       )}
-      {type === 'simulatorForm' && (
+      {selectedGameData.type === 'simulatorForm' && (
         <SimulatorForm
           initModalState={initModalState}
           closeModal={closeModal}
           simulatorFormData={simulatorFormData}
           setSimulatorFormData={setSimulatorFormData}
           showModal={showModal}
+          selectedGameData={selectedGameData}
+          setSelectedGameData={setSelectedGameData}
         />
       )}
-      {type === 'soloModeForm' && (
+      {selectedGameData.type === 'soloModeForm' && (
         <SoloModeForm initModalState={initModalState} closeModal={closeModal} />
       )}
     </ModalBackGround>

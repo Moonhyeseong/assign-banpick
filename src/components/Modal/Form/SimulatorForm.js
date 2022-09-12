@@ -2,17 +2,22 @@ import React, { useEffect, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import { BASE_URL } from '../../../config';
 import { CgClose } from 'react-icons/cg';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { SocketContext } from '../../../context/socket';
+import { initUserData } from './userDataSlice';
+import { CONSTDATA } from '../../CONSTDATA';
 
 const SimulatorForm = ({
   simulatorFormData,
   setSimulatorFormData,
-
   initModalState,
   showModal,
+  setSelectedGameData,
+  selectedGameData,
 }) => {
   const userFormData = useSelector(state => state.userFormData);
+  const dispatch = useDispatch();
+
   const socket = useContext(SocketContext);
 
   const handleTitle = e => {
@@ -28,6 +33,20 @@ const SimulatorForm = ({
 
   const handleMode = option => {
     setSimulatorFormData({ ...simulatorFormData, mode: option });
+
+    if (option === CONSTDATA.MODEDATA.oneOnOne) {
+      setSelectedGameData({
+        ...selectedGameData,
+        gameMode: option,
+        userList: { blue: [''], red: [''] },
+      });
+    } else if (option === CONSTDATA.MODEDATA.fiveOnfive) {
+      setSelectedGameData({
+        ...selectedGameData,
+        gameMode: option,
+        userList: { blue: ['', '', '', '', ''], red: ['', '', '', '', ''] },
+      });
+    }
   };
 
   const isFormReady = () => {
@@ -36,9 +55,6 @@ const SimulatorForm = ({
     return formValues.indexOf('') === -1;
   };
 
-  //게임생성 -> 게임아이디 세션 스토리지 저장 -> 유저데이터 당연히 없음 -> 유저데이터 입력 -> 유저데이터 입력시 게임 아이디를 통한 게임 대기방 입장
-
-  //참여 -> 참여버튼 클릭시 게임 아이디 세션 스토리지 저장 -> 유저데이터 입력 -> 게임아이디를 통한 게임 대기방 입장
   const createGame = () => {
     const { title, blueTeamName, redTeamName, mode } = simulatorFormData;
 
@@ -60,12 +76,13 @@ const SimulatorForm = ({
         sessionStorage.setItem('GAME_ID', res._id);
       });
 
-    if (Object.values(userFormData.userData).indexOf !== -1) {
-      showModal('playerForm', simulatorFormData.mode);
-    }
-
+    showModal('playerForm', mode, selectedGameData.userList);
     socket.emit('createGame', sessionStorage.getItem('GAME_ID'));
   };
+
+  useEffect(() => {
+    dispatch(initUserData());
+  }, [dispatch]);
 
   return (
     <LandingLayout>

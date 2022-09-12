@@ -1,18 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { CONSTDATA } from '../CONSTDATA';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { BASE_URL } from '../../config';
+import { getUserData } from '../Modal/Form/userDataSlice';
 
 const WatingPlayer = ({ side, role, mode, playerData }) => {
   const userData = useSelector(state => state.userFormData.userData);
-  console.log('playerData', playerData);
-  console.log('userData', userData);
+  const dispatch = useDispatch();
+
   const playerRoleData = userData.role === role || playerData.role === role;
   const playerSideData = userData.side === side || playerData.side === side;
   const userIndicateData =
     playerData.user_id === sessionStorage.getItem('USER_ID');
-  console.log(userIndicateData);
+
   const isOneOneOneMode = CONSTDATA.MODEDATA.oneOnOne === mode;
+
+  useEffect(() => {
+    // sessionStorage.getItem('USER_ID') &&
+    fetch(`${BASE_URL}:8080/user/${sessionStorage.getItem('USER_ID')}`)
+      .then(res => res.json())
+      .then(res => {
+        dispatch(getUserData(res));
+      });
+  }, [dispatch]);
 
   return (
     <PlayerCard role={role}>

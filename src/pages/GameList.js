@@ -1,18 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
-import ListFillter from '../components/GameList/ListFilter';
+import ListFilter from '../components/GameList/ListFilter';
 import GameRoom from '../components/GameList/GameRoom';
 import GameListModal from '../components/Modal/GameListModal';
 import { CONSTDATA } from '../components/CONSTDATA';
 import { SocketContext } from '../context/socket';
+import { useDispatch } from 'react-redux';
+import { initUserData } from '../components/Modal/Form/userDataSlice';
 
 const GameList = () => {
   const socket = useContext(SocketContext);
+  const dispatch = useDispatch();
 
   const [isModalActive, setIsModalActive] = useState(false);
   const [selectedGameData, setSelectedGameData] = useState('');
   const [games, setGames] = useState();
-
+  console.log(selectedGameData);
   const [filterData, setFilterData] = useState({
     searchFilter: '',
     checkBoxFilter: {
@@ -55,15 +58,21 @@ const GameList = () => {
     }
   };
 
-  const showModal = (type, mode) => {
+  const showModal = (type, mode, userList) => {
     setIsModalActive(true);
-    setSelectedGameData({ type: type, gameMode: mode });
+    setSelectedGameData({
+      ...selectedGameData,
+      type: type,
+      gameMode: mode,
+      userList: userList,
+    });
   };
 
   const initModalState = () => {
     setIsModalActive(false);
     setSelectedGameData('');
     sessionStorage.removeItem('GAME_ID');
+    dispatch(initUserData());
   };
 
   const getGameListAPI = () => {
@@ -78,7 +87,7 @@ const GameList = () => {
 
   return (
     <GameListLayout>
-      <ListFillter
+      <ListFilter
         showModal={showModal}
         setFilterData={setFilterData}
         filterData={filterData}
@@ -87,6 +96,7 @@ const GameList = () => {
         <GameListModal
           initModalState={initModalState}
           selectedGameData={selectedGameData}
+          setSelectedGameData={setSelectedGameData}
           showModal={showModal}
         />
       )}
