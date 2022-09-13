@@ -42,6 +42,8 @@ const BanPickSimulator = () => {
     },
   });
 
+  const [userList, setUserList] = useState();
+
   const [leftTime, setLeftTime] = useState(30);
 
   const [turn, setTurn] = useState('blue');
@@ -177,22 +179,22 @@ const BanPickSimulator = () => {
   //   socket.emit('finish', isFinish);
   // });
 
-  socket.once('user-join', payload => {
-    setTimeout(() => {
-      getGameData();
-    }, 100);
+  socket.once('updateGameData', docs => {
+    // console.log(docs);
+    setGameData(docs);
   });
 
-  socket.once('userReadyEvent', payload => {
-    setTimeout(() => {
-      getGameData();
-    }, 100);
-  });
+  // socket.once('userReadyEvent', payload => {
+  //   console.log(payload);
+  //   setTimeout(() => {
+  //     getGameData();
+  //   }, 100);
+  // });
 
   useEffect(() => {
     setTimeout(() => {
       getGameData();
-    }, 50);
+    }, 100);
     return clearInterval();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

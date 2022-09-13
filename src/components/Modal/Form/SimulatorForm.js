@@ -15,7 +15,7 @@ const SimulatorForm = ({
   setSelectedGameData,
   selectedGameData,
 }) => {
-  const userFormData = useSelector(state => state.userFormData);
+  // const userFormData = useSelector(state => state.userFormData);
   const dispatch = useDispatch();
 
   const socket = useContext(SocketContext);

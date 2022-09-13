@@ -9,7 +9,8 @@ import { SocketContext } from '../../context/socket';
 const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
-
+  // console.log(userData);
+  // console.log(playerData);
   const socket = useContext(SocketContext);
 
   const playerRoleData = userData?.role === role || playerData?.role === role;
@@ -17,6 +18,66 @@ const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
   const userIndicateData = playerData?.user_id === userData?.user_id;
 
   const isOneOneOneMode = CONSTDATA.MODEDATA.oneOnOne === mode;
+
+  const postUserReadyData = () => {
+    // if (mode === CONSTDATA.MODEDATA.oneOnOne) {
+    //   socket.emit(
+    //     'userReady',
+    //     sessionStorage.getItem('GAME_ID'),
+    //     sessionStorage.getItem('USER_ID'),
+    //     userData?.side,
+    //     0
+    //   );
+    // } else if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
+    //   socket.emit(
+    //     'userReady',
+    //     sessionStorage.getItem('GAME_ID'),
+    //     sessionStorage.getItem('USER_ID'),
+    //     userData?.side,
+    //     CONSTDATA.ROLEDATA[playerData.role]
+    //   );
+    // }
+    if (mode === CONSTDATA.MODEDATA.oneOnOne) {
+      fetch(`${BASE_URL}:8080/user/ready`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          game_id: sessionStorage.getItem('GAME_ID'),
+          user_id: userData.user_id,
+          userSide: userData.side,
+          userIndex: 0,
+          mode: mode,
+        }),
+      })
+        .then(res => res.json())
+        .then(res => {
+          socket.emit('userReadyEvent', sessionStorage.getItem('GAME_ID'), res);
+          setGameData(res);
+        });
+    } else if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
+      fetch(`${BASE_URL}:8080/user/ready`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          game_id: sessionStorage.getItem('GAME_ID'),
+          user_id: userData.user_id,
+          userSide: userData.side,
+          userIndex: CONSTDATA.ROLEDATA[userData.role],
+          mode: mode,
+        }),
+      })
+        .then(res => res.json())
+        .then(res => {
+          socket.emit('userReadyEvent', sessionStorage.getItem('GAME_ID'), res);
+          setGameData(res);
+        });
+    }
+    dispatch(userReadyAction());
+  };
 
   useEffect(() => {
     sessionStorage.getItem('USER_ID') &&
@@ -47,29 +108,11 @@ const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
           {role}
         </PlayerRole>
       )}
-      {playerData?.isReady && <ReadyText>Ready!</ReadyText>}
+      {playerData.isReady && <ReadyText>Ready!</ReadyText>}
       {userIndicateData && userData?.isReady === false && (
         <ReadyBtn
           onClick={() => {
-            if (mode === CONSTDATA.MODEDATA.oneOnOne) {
-              socket.emit(
-                'userReady',
-                sessionStorage.getItem('GAME_ID'),
-                sessionStorage.getItem('USER_ID'),
-                userData?.side,
-                0
-              );
-              dispatch(userReadyAction());
-            } else if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
-              socket.emit(
-                'userReady',
-                sessionStorage.getItem('GAME_ID'),
-                sessionStorage.getItem('USER_ID'),
-                userData?.side,
-                CONSTDATA.ROLEDATA[playerData.role]
-              );
-              dispatch(userReadyAction());
-            }
+            postUserReadyData();
           }}
         >
           Ready

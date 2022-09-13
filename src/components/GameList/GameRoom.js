@@ -6,7 +6,7 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
   const roles = Object.keys(CONSTDATA.ROLEDATA);
 
   const getJoiningPlayerCount = playerList => {
-    const joiningPlayerCount = playerList.reduce(
+    const joiningPlayerCount = playerList?.reduce(
       (cnt, player) => cnt + ('' === player),
       0
     );
@@ -14,7 +14,9 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
   };
 
   const isFull = () => {
-    return userList.blue.indexOf('') === -1 && userList.red.indexOf('') === -1;
+    return (
+      userList?.blue.indexOf('') === -1 && userList?.red.indexOf('') === -1
+    );
   };
 
   return (
@@ -42,15 +44,16 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
       <CurruntRoomInfo>
         <TeamInfo>
           <TeamTitle side="blue">
-            BLUE ({userList.blue.length - getJoiningPlayerCount(userList.blue)}/
-            {`${userList.blue.length}`})
+            BLUE (
+            {userList?.blue.length - getJoiningPlayerCount(userList?.blue)}/
+            {`${userList?.blue.length}`})
           </TeamTitle>
           {mode === CONSTDATA.MODEDATA.oneOnOne ? (
             <TeamRoleIconContainer>
               <RoleIcon
                 mode={mode}
                 src={`/images/ROLE/solo.png`}
-                isEmpty={userList.blue[0] !== ''}
+                isEmpty={userList?.blue[0] !== ''}
               />
             </TeamRoleIconContainer>
           ) : (
@@ -61,7 +64,7 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
                     mode={mode}
                     key={idx}
                     src={`/images/ROLE/${role}.png`}
-                    isEmpty={userList.blue[idx] !== ''}
+                    isEmpty={userList?.blue[idx] !== ''}
                   />
                 );
               })}
@@ -70,15 +73,15 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
         </TeamInfo>
         <TeamInfo>
           <TeamTitle side="red">
-            RED ({userList.red.length - getJoiningPlayerCount(userList.red)}/
-            {`${userList.red.length}`})
+            RED ({userList?.red.length - getJoiningPlayerCount(userList?.red)}/
+            {`${userList?.red.length}`})
           </TeamTitle>
           {mode === CONSTDATA.MODEDATA.oneOnOne ? (
             <TeamRoleIconContainer>
               <RoleIcon
                 mode={mode}
                 src={`/images/ROLE/solo.png`}
-                isEmpty={userList.red[0] !== ''}
+                isEmpty={userList?.red[0] !== ''}
               />
             </TeamRoleIconContainer>
           ) : (
