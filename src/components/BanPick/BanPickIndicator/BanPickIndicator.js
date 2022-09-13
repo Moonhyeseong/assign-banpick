@@ -1,20 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
+import { CONSTDATA } from '../../CONSTDATA';
 import Timer from './Timer';
-import { useParams } from 'react-router-dom';
-import { SocketContext } from '../../../context/socket';
-import { BASE_URL } from '../../../config';
 
-const BanPickIndicator = ({
-  phaseTitle,
-  leftTime,
-  setLeftTime,
-  isPlayersReady,
-  setIsModalActive,
-  gameData,
-}) => {
-  const socket = useContext(SocketContext);
-
+const BanPickIndicator = ({ phaseTitle, leftTime, setLeftTime, gameData }) => {
   const notReadyPlayers = side => {
     const teamSide = side;
     return (
@@ -23,10 +12,6 @@ const BanPickIndicator = ({
         gameData?.userList[teamSide].filter(element => '' === element).length
     );
   };
-
-  socket.on('gmaeID', payload => {
-    sessionStorage.setItem('GAME_ID', payload);
-  });
 
   return (
     <IndicatorLayout>
@@ -42,15 +27,20 @@ const BanPickIndicator = ({
         <TimerContainer>
           <PatchVersion> Patch 12.5.1</PatchVersion>
           <LeftTime>
-            <Timer leftTime={leftTime} setLeftTime={setLeftTime} />
+            {gameData?.timer ? (
+              <Timer leftTime={leftTime} setLeftTime={setLeftTime} />
+            ) : (
+              '∞'
+            )}
           </LeftTime>
 
           <PhaseInfo>{phaseTitle()}</PhaseInfo>
         </TimerContainer>
       ) : (
         <GameInfoContainer>
-          <GameTitleText>방 제목 : {gameData?.title}</GameTitleText>
-          <GameModeText>1 : 1</GameModeText>
+          <GameModeText>
+            {gameData?.mode === CONSTDATA.MODEDATA.oneOnOne ? `1 : 1` : `5 : 5`}
+          </GameModeText>
         </GameInfoContainer>
       )}
 
@@ -73,7 +63,7 @@ const IndicatorLayout = styled.div`
   justify-content: space-between;
 
   width: 100%;
-  height: 70px;
+  height: 90px;
 `;
 
 const TimerContainer = styled.div`
@@ -144,14 +134,11 @@ const GameInfoContainer = styled.div`
   background-color: black;
 `;
 
-const GameTitleText = styled.p`
-  font-size: 24px;
-  font-weight: 700;
-`;
-
 const GameModeText = styled.p`
-  font-size: 14px;
+  width: 100px;
+  font-size: 30px;
   font-weight: 700;
+  text-align: center;
 `;
 
 const PhaseInfo = styled.p`

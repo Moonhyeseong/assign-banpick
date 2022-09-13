@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import WatingPlayer from './WatingPlayer';
 
-const WatingList = ({ mode, side, userData, userList }) => {
+const WatingList = ({ mode, side, userData, userList, setGameData }) => {
   return (
     <WatingListLayout>
       {userList?.map((playerData, idx) => {
@@ -15,6 +15,7 @@ const WatingList = ({ mode, side, userData, userList }) => {
             userData={userData}
             side={side}
             playerData={playerData}
+            setGameData={setGameData}
           />
         );
       })}

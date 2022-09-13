@@ -68,11 +68,11 @@ const SimulatorForm = ({
         blueTeamName: blueTeamName,
         redTeamName: redTeamName,
         mode: mode,
+        isProceeding: false,
       }),
     })
       .then(res => res.json())
       .then(res => {
-        console.log(res);
         sessionStorage.setItem('GAME_ID', res._id);
       });
 

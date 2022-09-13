@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import uuid from 'react-uuid';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,6 +7,7 @@ import { CgClose } from 'react-icons/cg';
 import { CONSTDATA } from '../../CONSTDATA';
 import { BASE_URL } from '../../../config';
 import { initUserData, updateUserData } from './userDataSlice';
+import { SocketContext } from '../../../context/socket';
 
 const PlayerForm = ({
   selectedGameData: { gameMode, initModalState, userList },
@@ -15,6 +16,8 @@ const PlayerForm = ({
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const socket = useContext(SocketContext);
 
   const isFormReady = () => {
     const formValues = Object.values(userData);
@@ -42,7 +45,7 @@ const PlayerForm = ({
     }
   };
 
-  const postAddJoin = () => {
+  const postUserJoin = () => {
     if (gameMode === CONSTDATA.MODEDATA.oneOnOne) {
       fetch(`${BASE_URL}:8080/user/join`, {
         method: 'POST',
@@ -83,6 +86,7 @@ const PlayerForm = ({
           console.log(res);
         });
     }
+    socket.emit('user-join', sessionStorage.getItem('GAME_ID'));
     navigate(sessionStorage.getItem('GAME_ID'));
   };
 
@@ -206,7 +210,7 @@ const PlayerForm = ({
       <ReadyBtn
         disabled={!isFormReady()}
         onClick={() => {
-          isFormReady() && postAddJoin();
+          isFormReady() && postUserJoin();
         }}
       >
         JOIN

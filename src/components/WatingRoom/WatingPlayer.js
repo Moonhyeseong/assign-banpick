@@ -1,28 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import { CONSTDATA } from '../CONSTDATA';
 import { useSelector, useDispatch } from 'react-redux';
 import { BASE_URL } from '../../config';
-import { getUserData } from '../Modal/Form/userDataSlice';
+import { getUserData, userReadyAction } from '../Modal/Form/userDataSlice';
+import { SocketContext } from '../../context/socket';
 
-const WatingPlayer = ({ side, role, mode, playerData }) => {
+const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
 
-  const playerRoleData = userData.role === role || playerData.role === role;
-  const playerSideData = userData.side === side || playerData.side === side;
-  const userIndicateData =
-    playerData.user_id === sessionStorage.getItem('USER_ID');
+  const socket = useContext(SocketContext);
+
+  const playerRoleData = userData?.role === role || playerData?.role === role;
+  const playerSideData = userData?.side === side || playerData?.side === side;
+  const userIndicateData = playerData?.user_id === userData?.user_id;
 
   const isOneOneOneMode = CONSTDATA.MODEDATA.oneOnOne === mode;
 
   useEffect(() => {
-    // sessionStorage.getItem('USER_ID') &&
-    fetch(`${BASE_URL}:8080/user/${sessionStorage.getItem('USER_ID')}`)
-      .then(res => res.json())
-      .then(res => {
-        dispatch(getUserData(res));
-      });
+    sessionStorage.getItem('USER_ID') &&
+      fetch(`${BASE_URL}:8080/user/${sessionStorage.getItem('USER_ID')}`)
+        .then(res => res.json())
+        .then(res => {
+          dispatch(getUserData(res));
+        });
   }, [dispatch]);
 
   return (
@@ -45,7 +47,34 @@ const WatingPlayer = ({ side, role, mode, playerData }) => {
           {role}
         </PlayerRole>
       )}
-      {playerData.isReady && <ReadyText>Ready!</ReadyText>}
+      {playerData?.isReady && <ReadyText>Ready!</ReadyText>}
+      {userIndicateData && userData?.isReady === false && (
+        <ReadyBtn
+          onClick={() => {
+            if (mode === CONSTDATA.MODEDATA.oneOnOne) {
+              socket.emit(
+                'userReady',
+                sessionStorage.getItem('GAME_ID'),
+                sessionStorage.getItem('USER_ID'),
+                userData?.side,
+                0
+              );
+              dispatch(userReadyAction());
+            } else if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
+              socket.emit(
+                'userReady',
+                sessionStorage.getItem('GAME_ID'),
+                sessionStorage.getItem('USER_ID'),
+                userData?.side,
+                CONSTDATA.ROLEDATA[playerData.role]
+              );
+              dispatch(userReadyAction());
+            }
+          }}
+        >
+          Ready
+        </ReadyBtn>
+      )}
     </PlayerCard>
   );
 };
@@ -126,4 +155,23 @@ const PlayerName = styled.p`
 const ReadyText = styled.span`
   font-weight: 700;
   font-size: 40px;
+`;
+
+const ReadyBtn = styled.button`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  margin-bottom: 8px;
+  width: 180px;
+  height: 50px;
+  background-color: ${props => props.theme.black.black70};
+  border-radius: 25px;
+  color: white;
+  font-weight: 500;
+  font-size: 22px;
+  z-index: 10000;
+
+  cursor: pointer;
 `;

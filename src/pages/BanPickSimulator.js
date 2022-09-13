@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
-// import { useLocation } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { SocketContext } from '../context/socket';
 import Simulator from './Simulator';
 import DisconnectAlert from '../components/Modal/DisconnectAlert';
 import ChampionList from '../components/BanPick/ChampionList/ChampionList';
@@ -9,18 +10,19 @@ import PickList from '../components/BanPick/PickBanList/PickList';
 import BanPickIndicator from '../components/BanPick/BanPickIndicator/BanPickIndicator';
 import WatingRoom from './WatingRoom';
 import { CONSTDATA } from '../components/CONSTDATA';
-import { SocketContext } from '../context/socket';
+import { getUserData } from '../components/Modal/Form/userDataSlice';
 import { BASE_URL } from '../config';
 
 const BanPickSimulator = () => {
-  const [isPlayersReady, setIsPlayersReady] = useState(false);
+  const socket = useContext(SocketContext);
+  const params = useParams();
+  const userData = useSelector(state => state.userFormData.userData);
+  // const dispatch = useDispatch();
+
   const [isFinish, setIsFinish] = useState(false);
 
   const [isModalActive, setIsModalActive] = useState(false);
   const [gameData, setGameData] = useState(null);
-
-  const socket = useContext(SocketContext);
-  const params = useParams();
 
   const [championData, setChampionData] = useState([]);
   const [selectedChampion, setSelectedChampion] = useState('');
@@ -54,8 +56,6 @@ const BanPickSimulator = () => {
     setTurn(nextTurn);
     return nextTurn;
   };
-  // 밴픽 버튼을 클릭한 유저의 브라우저에서만 턴 정보가 변경됨
-  // 그렇다면 밴픽 버튼을 클릭할 때가 아닌 상황에서도 handleTurn함수가 실행 되어야 한다.
 
   const selectedChampions = [
     ...banPickList.banList.red,
@@ -147,18 +147,13 @@ const BanPickSimulator = () => {
   };
 
   const handleTimeOut = () => {
-    if (leftTime < 0 && isEditable) {
+    if (leftTime < 0) {
       if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
         handleSelectBtn();
         postBanPickList();
         setLeftTime(30);
       }
     }
-  };
-
-  const disconnectEvent = () => {
-    window.location = '/';
-    setIsPlayersReady(false);
   };
 
   const getGameData = () => {
@@ -174,49 +169,33 @@ const BanPickSimulator = () => {
       });
   };
 
-  socket.once('user-disconnected', () => {
-    if (isPlayersReady) {
-      setIsModalActive(true);
-    }
-    socket.emit('finish', isFinish);
+  //socket
+  // socket.once('user-disconnected', () => {
+  //   if (isPlayersReady) {
+  //     setIsModalActive(true);
+  //   }
+  //   socket.emit('finish', isFinish);
+  // });
+
+  socket.once('user-join', payload => {
+    setTimeout(() => {
+      getGameData();
+    }, 100);
   });
 
-  socket.once('join', () => {
-    getGameData();
+  socket.once('userReadyEvent', payload => {
+    setTimeout(() => {
+      getGameData();
+    }, 100);
   });
 
   useEffect(() => {
     setTimeout(() => {
       getGameData();
     }, 50);
+    return clearInterval();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // useEffect(() => {
-  //   params.id &&
-  //     fetch(`${BASE_URL}:8080/list/banpick/${params.id}`)
-  //       .then(res => res.json())
-  //       .then(res => setBanPickList(res));
-  // }, [params.id]);
-
-  // useEffect(() => {
-  //   params.id &&
-  //     isFormReady &&
-  //     isPlayersReady &&
-  //     fetch(`${BASE_URL}:8080/list/turn/${params.id}`)
-  //       .then(res => res.json())
-  //       .then(res => {
-  //         setTurn(res?.turnData.nextTurn);
-  //         setTurnData(res?.turnData.nextTurnData);
-  //       });
-  // }, [isFormReady, isPlayersReady, params.id]);
-
-  // useEffect(() => {
-  //   sessionStorage.getItem('GAME_ID') &&
-  //     fetch(`${BASE_URL}:8080/list/player/${sessionStorage.getItem('GAME_ID')}`)
-  //       .then(res => res.json())
-  //       .then(res => setPlayerList(res));
-  // }, [params.id, setPlayerList]);
 
   const getPhaseTitle = () => {
     if (phaseCounter === CONSTDATA.PHASEDATA.banPhase1) {
@@ -240,9 +219,28 @@ const BanPickSimulator = () => {
       .then(data => setChampionData(data.data));
   }, []);
 
+  // useEffect(() => {
+  //   fetch(`${BASE_URL}:8080/gameData/${params.id}`)
+  //     .then(res => res.json())
+  //     .then(res => {
+  //       setGameData(res);
+  //       setBanPickList(res.banPickList);
+  //     });
+  // }, [params.id]);
+
+  // useEffect(() => {
+  //   sessionStorage.getItem('USER_ID') &&
+  //     fetch(`${BASE_URL}:8080/user/${sessionStorage.getItem('USER_ID')}`)
+  //       .then(res => res.json())
+  //       .then(res => {
+  //         console.log(res);
+  //         dispatch(getUserData(res));
+  //       });
+  // }, []);
+
   useEffect(() => {
     updatePhaseCounter();
-    handleTimeOut();
+    if (isEditable) handleTimeOut();
   });
 
   //init turn data
@@ -272,44 +270,27 @@ const BanPickSimulator = () => {
     });
   }, []);
 
-  //player List 초기화
-  // useEffect(() => {
-  //   if (
-  //     parseInt(simulatorFormData.mode) === parseInt(CONSTDATA.MODEDATA.oneOnOne)
-  //   ) {
-  //     setPlayerList({ blue: [''], red: [''] });
-  //   } else if (
-  //     parseInt(simulatorFormData.mode) ===
-  //     parseInt(CONSTDATA.MODEDATA.fiveOnfive)
-  //   ) {
-  //     setPlayerList({
-  //       blue: ['', '', '', '', ''],
-  //       red: ['', '', '', '', ''],
-  //     });
-  //   }
-  // }, [simulatorFormData.mode]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   // 편집권한 설정 함수
-  // useEffect(() => {
-  //   if (simulatorFormData.mode === CONSTDATA.MODEDATA.oneOnOne) {
-  //     if (userData?.side === turn) {
-  //       setIsEditable(true);
-  //     }
-  //   } else if (simulatorFormData.mode === CONSTDATA.MODEDATA.fiveOnfive) {
-  //     const index = banPickList[phaseInfo][turn]?.indexOf('');
-  //     const turnInfo = userData.side === turn;
-  //     const indexInfo = index === CONSTDATA.ROLEDATA[userData.role];
+  //eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (gameData?.mode === CONSTDATA.MODEDATA.oneOnOne) {
+      if (userData?.side === turn) {
+        setIsEditable(true);
+      }
+    } else if (gameData?.mode === CONSTDATA.MODEDATA.fiveOnfive) {
+      const index = banPickList[phaseInfo][turn]?.indexOf('');
+      const turnInfo = userData?.side === turn;
+      const indexInfo = index === CONSTDATA.ROLEDATA[userData?.role];
 
-  //     if (indexInfo && turnInfo) {
-  //       setIsEditable(true);
-  //     } else {
-  //       setIsEditable(false);
-  //     }
-  //   } else if (simulatorFormData.mode === CONSTDATA.MODEDATA.solo) {
-  //     setIsEditable(true);
-  //   }
-  // });
+      if (indexInfo && turnInfo) {
+        setIsEditable(true);
+      } else {
+        setIsEditable(false);
+      }
+    } else if (gameData?.mode === CONSTDATA.MODEDATA.solo) {
+      setIsEditable(true);
+    }
+  });
 
   useEffect(() => {
     if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase && leftTime === 0) {
@@ -318,29 +299,25 @@ const BanPickSimulator = () => {
   }, [leftTime, phaseCounter]);
 
   return (
-    <Simulator isPlayersReady={isPlayersReady}>
+    <Simulator>
       {isModalActive && (
         <DisconnectAlert
           setIsModalActive={setIsModalActive}
-          disconnectEvent={disconnectEvent}
+          // disconnectEvent={disconnectEvent}
         />
       )}
       <BanPickLayout>
-        {gameData && (
-          <BanPickIndicator
-            phaseTitle={getPhaseTitle}
-            leftTime={leftTime}
-            setLeftTime={setLeftTime}
-            isPlayersReady={isPlayersReady}
-            setIsModalActive={setIsModalActive}
-            gameData={gameData}
-          />
-        )}
-        {!isPlayersReady ? (
-          <WatingRoom gameData={gameData} />
+        <BanPickIndicator
+          phaseTitle={getPhaseTitle}
+          leftTime={leftTime}
+          setLeftTime={setLeftTime}
+          gameData={gameData}
+        />
+        {!gameData?.isProceeding ? (
+          <WatingRoom gameData={gameData} setGameData={setGameData} />
         ) : (
           <ListLayout>
-            {/* <PickList
+            <PickList
               side="blue"
               banPickList={banPickList}
               selectedChampion={selectedChampion}
@@ -349,8 +326,7 @@ const BanPickSimulator = () => {
               turn={turn}
               leftTime={leftTime}
               postBanPickList={postBanPickList}
-              playerList={playerList?.blue}
-              // userData={userData}
+              playerList={gameData?.userList.blue}
             />
             <ChampionList
               setBanPickList={setBanPickList}
@@ -365,7 +341,6 @@ const BanPickSimulator = () => {
               setTurnData={setTurnData}
               setLeftTime={setLeftTime}
               isEditable={isEditable}
-              // setUserData={setUserData}
             />
             <PickList
               side="red"
@@ -376,9 +351,8 @@ const BanPickSimulator = () => {
               turn={turn}
               leftTime={leftTime}
               postBanPickList={postBanPickList}
-              playerList={playerList?.red}
-              // userData={userData}
-            /> */}
+              playerList={gameData?.userList.red}
+            />
           </ListLayout>
         )}
       </BanPickLayout>

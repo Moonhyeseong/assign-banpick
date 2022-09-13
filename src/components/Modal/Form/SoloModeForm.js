@@ -1,8 +1,48 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../../../config';
 
 const SoloModeForm = () => {
   const [timerOption, setTimerOption] = useState(null);
+  const navigate = useNavigate();
+
+  const createSoloUser = game_id => {
+    fetch(`${BASE_URL}:8080/user/solo`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        game_id: game_id,
+      }),
+    })
+      .then(res => res.json())
+      .then(res => {});
+  };
+
+  const createGame = () => {
+    fetch(`${BASE_URL}:8080/start`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: 'solo game',
+        blueTeamName: 'BLUE TEAM',
+        redTeamName: 'RED TEAM',
+        mode: 0,
+        timer: timerOption,
+        isProceeding: true,
+      }),
+    })
+      .then(res => res.json())
+      .then(res => {
+        sessionStorage.setItem('GAME_ID', res._id);
+        createSoloUser(res._id);
+        navigate(res._id);
+      });
+  };
 
   return (
     <SoloModeFormLayout>
@@ -19,7 +59,7 @@ const SoloModeForm = () => {
           </FormOptionBtn>
           <FormOptionBtn
             onClick={() => {
-              setTimerOption(true);
+              setTimerOption(false);
             }}
             isSelected={timerOption === false}
           >
@@ -27,7 +67,18 @@ const SoloModeForm = () => {
           </FormOptionBtn>
         </BtnContainer>
       </FormContainer>
-      <StartBtn>START</StartBtn>
+      <StartBtn
+        disabled={timerOption === null}
+        onClick={() => {
+          if (timerOption === null) {
+            alert('타이머 옵션을 선택해 주세요.');
+          } else {
+            createGame();
+          }
+        }}
+      >
+        START
+      </StartBtn>
     </SoloModeFormLayout>
   );
 };

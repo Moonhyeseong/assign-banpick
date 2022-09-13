@@ -19,7 +19,6 @@ const ChampionList = ({
   setTurnData,
   setLeftTime,
   isEditable,
-  setUserData,
 }) => {
   const [search, setSearch] = useState('');
 
@@ -40,26 +39,20 @@ const ChampionList = ({
     setSelectedChampion('');
   });
 
-  socket.on('phase', phase => {
+  socket.once('phase', phase => {
     if (phase !== CONSTDATA.PHASEDATA.swapPhase) {
       setLeftTime(30);
     }
   });
 
-  socket.on('selectChampion', champion => {
+  socket.once('selectChampion', champion => {
     setSelectedChampion(champion);
   });
 
-  socket.on('updateTurn', turnData => {
+  socket.once('updateTurn', turnData => {
     setTurn(turnData.nextTurn);
     setTurnData(turnData.nextTurnData);
   });
-
-  // useEffect(() => {
-  //   fetch(`${BASE_URL}:8080/user/${localStorage.getItem('USER_ID')}`)
-  //     .then(res => res.json())
-  //     .then(res => console.log(res));
-  // }, []);
 
   return (
     <ChampionListLayout>

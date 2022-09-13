@@ -7,6 +7,7 @@ import { CONSTDATA } from '../components/CONSTDATA';
 import { SocketContext } from '../context/socket';
 import { useDispatch } from 'react-redux';
 import { initUserData } from '../components/Modal/Form/userDataSlice';
+import { BASE_URL } from '../config';
 
 const GameList = () => {
   const socket = useContext(SocketContext);
@@ -15,7 +16,7 @@ const GameList = () => {
   const [isModalActive, setIsModalActive] = useState(false);
   const [selectedGameData, setSelectedGameData] = useState('');
   const [games, setGames] = useState();
-  console.log(selectedGameData);
+
   const [filterData, setFilterData] = useState({
     searchFilter: '',
     checkBoxFilter: {
@@ -26,7 +27,6 @@ const GameList = () => {
 
   socket.once('updateGameList', payload => {
     console.log(payload);
-    console.log('게임리스트 업데이트');
     setTimeout(() => {
       getGameListAPI();
     }, 100);
@@ -35,7 +35,8 @@ const GameList = () => {
   const getGameList = () => {
     const gameList = games?.filter(game => {
       return (
-        game?.title.includes(filterData.searchFilter) ||
+        (game?.mode !== CONSTDATA.MODEDATA.solo &&
+          game?.title.includes(filterData.searchFilter)) ||
         (filterData.searchFilter.length > 8 &&
           game?._id.includes(filterData.searchFilter))
       );
@@ -76,7 +77,7 @@ const GameList = () => {
   };
 
   const getGameListAPI = () => {
-    fetch('http://localhost:8080/list')
+    fetch(`${BASE_URL}:8080/list`)
       .then(res => res.json())
       .then(res => setGames(res));
   };

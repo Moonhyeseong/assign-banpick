@@ -16,7 +16,6 @@ const PickCard = ({
   phaseCounter,
   leftTime,
   playerData,
-  userData,
 }) => {
   const [isSelecting, setIsSelecting] = useState(false);
   const [playerInfo, setPlayerInfo] = useState();
@@ -31,13 +30,18 @@ const PickCard = ({
       `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${selectedChampion}_0.jpg`;
 
   const handleSwapItems = () => {
-    if (userData.side === side) {
-      if (swapItems.currentIndex === '') {
-        setSwapItems({ ...swapItems, side: side, currentIndex: index });
-      } else {
-        setSwapItems({ ...swapItems, side: side, replaceIndex: index });
-      }
+    if (swapItems.currentIndex === '') {
+      setSwapItems({ ...swapItems, side: side, currentIndex: index });
+    } else {
+      setSwapItems({ ...swapItems, side: side, replaceIndex: index });
     }
+    // if (userData.side === side) {
+    //   if (swapItems.currentIndex === '') {
+    //     setSwapItems({ ...swapItems, side: side, currentIndex: index });
+    //   } else {
+    //     setSwapItems({ ...swapItems, side: side, replaceIndex: index });
+    //   }
+    // }
   };
 
   useEffect(() => {
