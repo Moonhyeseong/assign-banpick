@@ -39,17 +39,17 @@ const ChampionList = ({
     setSelectedChampion('');
   });
 
-  socket.once('phase', phase => {
+  socket.on('phase', phase => {
     if (phase !== CONSTDATA.PHASEDATA.swapPhase) {
       setLeftTime(30);
     }
   });
 
-  socket.once('selectChampion', champion => {
+  socket.on('selectChampion', champion => {
     setSelectedChampion(champion);
   });
 
-  socket.once('updateTurn', turnData => {
+  socket.on('updateTurn', turnData => {
     setTurn(turnData.nextTurn);
     setTurnData(turnData.nextTurnData);
   });
