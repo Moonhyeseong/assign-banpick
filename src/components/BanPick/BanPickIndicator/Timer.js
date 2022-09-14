@@ -2,21 +2,20 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 const Timer = ({ leftTime, setLeftTime, curruntTime }) => {
-  function milToSeconds(leftTime) {
+  const milToSeconds = leftTime => {
     let leftSeconds = Math.floor(leftTime / 1000)
       .toString()
       .padStart(2, '0');
     return leftSeconds;
-  }
+  };
 
   useEffect(() => {
     let timer;
-
     timer = setInterval(() => {
       setLeftTime(curruntTime - new Date().getTime());
     }, 1000);
-
     leftTime < 0 && clearInterval(timer);
+
     return () => clearInterval(timer);
   }, [curruntTime, leftTime, setLeftTime]);
 

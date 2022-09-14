@@ -15,7 +15,9 @@ import { BASE_URL } from '../config';
 
 const BanPickSimulator = () => {
   const socket = useContext(SocketContext);
+
   const params = useParams();
+
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
 
@@ -46,13 +48,7 @@ const BanPickSimulator = () => {
   const [leftTime, setLeftTime] = useState();
 
   const [turn, setTurn] = useState();
-
   const [isEditable, setIsEditable] = useState(false);
-
-  const initTimer = () => {
-    setLeftTime(29000);
-    setCurruntTime(new Date().getTime() + 29000);
-  };
 
   //선택된 챔피언 목록
   const selectedChampions = [
@@ -69,6 +65,11 @@ const BanPickSimulator = () => {
       ? 'banList'
       : 'pickList';
 
+  const initTimer = () => {
+    setLeftTime(29000);
+    setCurruntTime(new Date().getTime() + 29000);
+  };
+
   //타임아웃시 자동 밴픽 동작
   const getTimeOutItem = () => {
     const championList = Object.values(championData);
@@ -81,22 +82,6 @@ const BanPickSimulator = () => {
         socket.emit('timeout', championList[randomIndex].id);
         return championList[randomIndex].id;
       }
-    }
-  };
-
-  //밴픽 챔피언 선택버튼
-  const handleSelectBtn = () => {
-    const index = banPickList[phaseInfo][turn].indexOf('');
-
-    //페이즈정보 턴정보 인덱스 정보 - 선택된 챔피언 정보
-    banPickList[phaseInfo][turn][index] = selectedChampion
-      ? selectedChampion
-      : getTimeOutItem();
-
-    setSelectedChampion('');
-
-    if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
-      initTimer();
     }
   };
 
@@ -128,6 +113,22 @@ const BanPickSimulator = () => {
       banPickList.pickList.red.indexOf('') === -1
     ) {
       setPhaseCounter(CONSTDATA.PHASEDATA.swapPhase);
+    }
+  };
+
+  //밴픽 챔피언 선택버튼
+  const handleSelectBtn = () => {
+    const index = banPickList[phaseInfo][turn].indexOf('');
+
+    //페이즈정보 턴정보 인덱스 정보 - 선택된 챔피언 정보
+    banPickList[phaseInfo][turn][index] = selectedChampion
+      ? selectedChampion
+      : getTimeOutItem();
+
+    setSelectedChampion('');
+
+    if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
+      initTimer();
     }
   };
 
@@ -210,6 +211,15 @@ const BanPickSimulator = () => {
     }, 50);
   });
 
+  //챔피언 목록 불러오기
+  useEffect(() => {
+    fetch(
+      'https://ddragon.leagueoflegends.com/cdn/12.15.1/data/ko_KR/champion.json'
+    )
+      .then(response => response.json())
+      .then(data => setChampionData(data.data));
+  }, []);
+
   //타이머 초기화
   useEffect(() => {
     if (gameData?.isProceeding) {
@@ -218,7 +228,6 @@ const BanPickSimulator = () => {
     }
   }, [gameData?.isProceeding]);
 
-  //데이터 get
   useEffect(() => {
     setTimeout(() => {
       getGameDataAPI();
@@ -235,26 +244,12 @@ const BanPickSimulator = () => {
     }
   }, [gameData?.banpickCount, gameData?.banpickTurnData, phaseCounter]);
 
-  //챔피언 목록 불러오기
-  useEffect(() => {
-    fetch(
-      'https://ddragon.leagueoflegends.com/cdn/12.15.1/data/ko_KR/champion.json'
-    )
-      .then(response => response.json())
-      .then(data => setChampionData(data.data));
-  }, []);
-
-  //
-
   useEffect(() => {
     updatePhaseCounter();
     if (isEditable) handleTimeOut();
   });
 
-  //init turn data
-
   // #편집권한 설정 함수
-
   useEffect(() => {
     if (gameData?.mode === CONSTDATA.MODEDATA.oneOnOne) {
       if (

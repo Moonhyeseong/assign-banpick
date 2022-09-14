@@ -236,7 +236,7 @@ const RoleIcon = styled.img`
       border-color: ${props => props.theme.red.redW80}; ;
     `}
 
-    ${props =>
+  ${props =>
     props.isUserPosition &&
     props.side === 'blue' &&
     css`
@@ -248,7 +248,7 @@ const RoleIcon = styled.img`
       border-color: ${props => props.theme.blue.blueW60}; ;
     `}
 
-    ${props =>
+  ${props =>
     props.isReady ||
     (props.isUserPosition &&
       css`

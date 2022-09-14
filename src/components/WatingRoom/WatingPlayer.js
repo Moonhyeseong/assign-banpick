@@ -9,8 +9,7 @@ import { SocketContext } from '../../context/socket';
 const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
-  // console.log(userData);
-  // console.log(playerData);
+
   const socket = useContext(SocketContext);
 
   const playerRoleData = userData?.role === role || playerData?.role === role;
@@ -20,23 +19,6 @@ const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
   const isOneOneOneMode = CONSTDATA.MODEDATA.oneOnOne === mode;
 
   const postUserReadyData = () => {
-    // if (mode === CONSTDATA.MODEDATA.oneOnOne) {
-    //   socket.emit(
-    //     'userReady',
-    //     sessionStorage.getItem('GAME_ID'),
-    //     sessionStorage.getItem('USER_ID'),
-    //     userData?.side,
-    //     0
-    //   );
-    // } else if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
-    //   socket.emit(
-    //     'userReady',
-    //     sessionStorage.getItem('GAME_ID'),
-    //     sessionStorage.getItem('USER_ID'),
-    //     userData?.side,
-    //     CONSTDATA.ROLEDATA[playerData.role]
-    //   );
-    // }
     if (mode === CONSTDATA.MODEDATA.oneOnOne) {
       fetch(`${BASE_URL}:8080/user/ready`, {
         method: 'POST',
@@ -54,7 +36,6 @@ const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
         .then(res => res.json())
         .then(res => {
           socket.emit('userReadyEvent', sessionStorage.getItem('GAME_ID'), res);
-          // setGameData(res);
         });
     } else if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
       fetch(`${BASE_URL}:8080/user/ready`, {
@@ -73,7 +54,6 @@ const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
         .then(res => res.json())
         .then(res => {
           socket.emit('userReadyEvent', sessionStorage.getItem('GAME_ID'), res);
-          // setGameData(res);
         });
     }
     dispatch(userReadyAction());

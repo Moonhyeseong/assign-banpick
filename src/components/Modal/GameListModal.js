@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
 import PlayerForm from './Form/PlayerForm';
 import SimulatorForm from './Form/SimulatorForm';
-import { initUserData } from './Form/userDataSlice';
 import SoloModeForm from './Form/SoloModeForm';
-import { CONSTDATA } from '../CONSTDATA';
 
 const GameListModal = ({
   initModalState,
@@ -65,9 +62,7 @@ const ModalBackGround = styled.div`
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
-
   top: 0;
   left: 0;
-  /* background-color: red; */
   z-index: 10;
 `;

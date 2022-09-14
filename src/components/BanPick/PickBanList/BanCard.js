@@ -13,6 +13,16 @@ const BanCard = ({
   const [isSelecting, setIsSelecting] = useState(false);
   const currentIndex = banList.indexOf('');
 
+  const getImgURL = () => {
+    if (champion === 'NO DATA') {
+      return 'https://ddragon.leagueoflegends.com/cdn/12.13.1/img/profileicon/29.png';
+    } else if (champion) {
+      return `http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${champion}.png`;
+    } else if (selectedChampion) {
+      return `http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${selectedChampion}.png`;
+    }
+  };
+
   useEffect(() => {
     setIsSelecting(false);
     if (phaseInfo === 'banList') {
@@ -25,16 +35,6 @@ const BanCard = ({
       }
     }
   }, [champion, currentIndex, index, phaseInfo, side, turn]);
-
-  const getImgURL = () => {
-    if (champion === 'NO DATA') {
-      return 'https://ddragon.leagueoflegends.com/cdn/12.13.1/img/profileicon/29.png';
-    } else if (champion) {
-      return `http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${champion}.png`;
-    } else if (selectedChampion) {
-      return `http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${selectedChampion}.png`;
-    }
-  };
 
   return (
     <BanCardLayout>
