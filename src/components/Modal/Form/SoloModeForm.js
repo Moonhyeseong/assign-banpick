@@ -16,9 +16,7 @@ const SoloModeForm = () => {
       body: JSON.stringify({
         game_id: game_id,
       }),
-    })
-      .then(res => res.json())
-      .then(res => {});
+    });
   };
 
   const createGame = () => {

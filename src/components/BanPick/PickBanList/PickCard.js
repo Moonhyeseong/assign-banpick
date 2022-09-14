@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
+import { useSelector } from 'react-redux';
 import { CONSTDATA } from '../../CONSTDATA';
 import { BASE_URL } from '../../../config';
+
 const PickCard = ({
   side,
   champion,
@@ -18,30 +20,24 @@ const PickCard = ({
   playerData,
 }) => {
   const [isSelecting, setIsSelecting] = useState(false);
-  const [playerInfo, setPlayerInfo] = useState();
-
+  const userData = useSelector(state => state.userFormData.userData);
   const currentIndex = pickList.indexOf('');
   const isSwapPhase =
     phaseCounter === CONSTDATA.PHASEDATA.swapPhase && leftTime > 0;
 
   const imgURL = champion
-    ? `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion}_0.jpg`
+    ? `http://ddragon.leagueoflegends.com/cdn/img/champion/centered/${champion}_0.jpg`
     : selectedChampion &&
-      `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${selectedChampion}_0.jpg`;
+      `http://ddragon.leagueoflegends.com/cdn/img/champion/centered/${selectedChampion}_0.jpg`;
 
   const handleSwapItems = () => {
-    if (swapItems.currentIndex === '') {
-      setSwapItems({ ...swapItems, side: side, currentIndex: index });
-    } else {
-      setSwapItems({ ...swapItems, side: side, replaceIndex: index });
+    if (userData?.side === side) {
+      if (swapItems.currentIndex === '') {
+        setSwapItems({ ...swapItems, side: side, currentIndex: index });
+      } else {
+        setSwapItems({ ...swapItems, side: side, replaceIndex: index });
+      }
     }
-    // if (userData.side === side) {
-    //   if (swapItems.currentIndex === '') {
-    //     setSwapItems({ ...swapItems, side: side, currentIndex: index });
-    //   } else {
-    //     setSwapItems({ ...swapItems, side: side, replaceIndex: index });
-    //   }
-    // }
   };
 
   useEffect(() => {
@@ -50,12 +46,6 @@ const PickCard = ({
       if (turn === side) setIsSelecting(currentIndex === index);
     }
   }, [currentIndex, index, phaseInfo, side, turn]);
-
-  useEffect(() => {
-    fetch(`${BASE_URL}:8080/user/${localStorage.getItem('USER_ID')}`)
-      .then(res => res.json())
-      .then(res => setPlayerInfo(res));
-  }, []);
 
   return (
     <PickCardLayout
@@ -128,8 +118,8 @@ const BackgroundImage = styled.div`
   height: 100%;
   background-image: ${props => `url(${props.imgURL})`};
   background-repeat: no-repeat;
-  background-position: 80% 10%;
-  background-size: 350px;
+  background-position: 90% 0%;
+  background-size: cover;
 
   ${props =>
     props.side === 'blue' &&

@@ -226,13 +226,26 @@ const RoleIcon = styled.img`
 
   ${props =>
     props.isUserPosition &&
+    props.side === 'red' &&
     css`
       opacity: 1;
       width: 80px;
       height: 80px;
       border-radius: 40px;
       border-width: 4px;
-      border-color: white;
+      border-color: ${props => props.theme.red.redW80}; ;
+    `}
+
+    ${props =>
+    props.isUserPosition &&
+    props.side === 'blue' &&
+    css`
+      opacity: 1;
+      width: 80px;
+      height: 80px;
+      border-radius: 40px;
+      border-width: 4px;
+      border-color: ${props => props.theme.blue.blueW60}; ;
     `}
 
     ${props =>

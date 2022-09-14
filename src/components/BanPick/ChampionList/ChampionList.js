@@ -4,7 +4,6 @@ import ChampionCard from './ChampionCard';
 import ChampionFilter from './ChampionFilter';
 import { CONSTDATA } from '../../CONSTDATA';
 import { SocketContext } from '../../../context/socket';
-import { BASE_URL } from '../../../config';
 
 const ChampionList = ({
   setBanPickList,
@@ -15,10 +14,8 @@ const ChampionList = ({
   handleSelectBtn,
   phaseCounter,
   postBanPickList,
-  setTurn,
-  setTurnData,
-  setLeftTime,
   isEditable,
+  initTimer,
 }) => {
   const [search, setSearch] = useState('');
 
@@ -34,24 +31,16 @@ const ChampionList = ({
 
   const socket = useContext(SocketContext);
 
-  socket.on('banpick', banPickList => {
+  socket.on('banpick', (banPickList, phaseCounter) => {
     setBanPickList(banPickList);
     setSelectedChampion('');
-  });
-
-  socket.on('phase', phase => {
-    if (phase !== CONSTDATA.PHASEDATA.swapPhase) {
-      setLeftTime(30);
+    if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
+      initTimer();
     }
   });
 
   socket.on('selectChampion', champion => {
     setSelectedChampion(champion);
-  });
-
-  socket.on('updateTurn', turnData => {
-    setTurn(turnData.nextTurn);
-    setTurnData(turnData.nextTurnData);
   });
 
   return (

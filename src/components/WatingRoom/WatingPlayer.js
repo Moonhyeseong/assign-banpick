@@ -54,7 +54,7 @@ const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
         .then(res => res.json())
         .then(res => {
           socket.emit('userReadyEvent', sessionStorage.getItem('GAME_ID'), res);
-          setGameData(res);
+          // setGameData(res);
         });
     } else if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
       fetch(`${BASE_URL}:8080/user/ready`, {
@@ -73,7 +73,7 @@ const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
         .then(res => res.json())
         .then(res => {
           socket.emit('userReadyEvent', sessionStorage.getItem('GAME_ID'), res);
-          setGameData(res);
+          // setGameData(res);
         });
     }
     dispatch(userReadyAction());

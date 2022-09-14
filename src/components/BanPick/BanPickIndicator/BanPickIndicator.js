@@ -3,7 +3,13 @@ import styled, { css } from 'styled-components';
 import { CONSTDATA } from '../../CONSTDATA';
 import Timer from './Timer';
 
-const BanPickIndicator = ({ phaseTitle, leftTime, setLeftTime, gameData }) => {
+const BanPickIndicator = ({
+  phaseTitle,
+  leftTime,
+  setLeftTime,
+  gameData,
+  curruntTime,
+}) => {
   const notReadyPlayers = side => {
     const teamSide = side;
     return (
@@ -28,7 +34,11 @@ const BanPickIndicator = ({ phaseTitle, leftTime, setLeftTime, gameData }) => {
           <PatchVersion> Patch 12.5.1</PatchVersion>
           <LeftTime>
             {gameData?.timer ? (
-              <Timer leftTime={leftTime} setLeftTime={setLeftTime} />
+              <Timer
+                leftTime={leftTime}
+                setLeftTime={setLeftTime}
+                curruntTime={curruntTime}
+              />
             ) : (
               '∞'
             )}

@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import { BASE_URL } from '../../../config';
 import { CgClose } from 'react-icons/cg';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { SocketContext } from '../../../context/socket';
 import { initUserData } from './userDataSlice';
 import { CONSTDATA } from '../../CONSTDATA';
@@ -15,7 +15,6 @@ const SimulatorForm = ({
   setSelectedGameData,
   selectedGameData,
 }) => {
-  // const userFormData = useSelector(state => state.userFormData);
   const dispatch = useDispatch();
 
   const socket = useContext(SocketContext);

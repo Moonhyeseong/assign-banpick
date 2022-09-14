@@ -61,7 +61,11 @@ const PlayerForm = ({
           mode: gameMode,
           isReady: userData.isReady,
         }),
-      });
+      })
+        .then(res => res.json())
+        .then(res => {
+          socket.emit('user-join', sessionStorage.getItem('GAME_ID'), res);
+        });
     } else if (gameMode === CONSTDATA.MODEDATA.fiveOnfive) {
       fetch(`${BASE_URL}:8080/user/join`, {
         method: 'POST',
@@ -189,10 +193,18 @@ const PlayerForm = ({
                 <FormOptionBtn
                   key={idx}
                   onClick={() => {
-                    dispatch(
-                      updateUserData({ type: 'role', value: `${role}` })
-                    );
-                    if (gameMode === CONSTDATA.MODEDATA.fiveOnfive) {
+                    if (userData.side === '') {
+                      alert('진영을 먼저 선택해주세요');
+                    } else {
+                      dispatch(
+                        updateUserData({ type: 'role', value: `${role}` })
+                      );
+                    }
+
+                    if (
+                      gameMode === CONSTDATA.MODEDATA.fiveOnfive &&
+                      userData.side !== ''
+                    ) {
                       handleIsAleadyExistRoleData(role, userData.side);
                     }
                   }}

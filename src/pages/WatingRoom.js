@@ -1,9 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import WatingList from '../components/WatingRoom/WatingList';
-import { CONSTDATA } from '../components/CONSTDATA';
 import { SocketContext } from '../context/socket';
-import { BASE_URL } from '../config';
 import LiftUserIndicator from '../components/WatingRoom/LiftUserIndicator';
 
 const WatingRoom = ({ gameData, setGameData }) => {
@@ -11,21 +9,19 @@ const WatingRoom = ({ gameData, setGameData }) => {
 
   socket.emit('joinRoom', sessionStorage.getItem('GAME_ID'));
 
+  //유저 준비 여부 검사
   useEffect(() => {
-    let blueTeamIsReady;
-    let redTeamIsReady;
     if (gameData) {
-      for (let user of gameData?.userList.blue) {
-        blueTeamIsReady = user.isReady;
-      }
+      const blueTeamUserList = gameData?.userList.blue;
+      const redTeamUserList = gameData?.userList.red;
+      const allUserList = [...blueTeamUserList, ...redTeamUserList];
 
-      for (let user of gameData?.userList.red) {
-        redTeamIsReady = user.isReady;
-      }
-    }
+      const userCount = allUserList.length;
+      const preparedUsers = allUserList.filter(user => user.isReady);
 
-    if (blueTeamIsReady && redTeamIsReady) {
-      socket.emit('start-simulator', sessionStorage.getItem('GAME_ID'));
+      if (userCount === preparedUsers.length) {
+        socket.emit('start-simulator', sessionStorage.getItem('GAME_ID'));
+      }
     }
   }, [gameData, gameData?.userList, socket]);
 
