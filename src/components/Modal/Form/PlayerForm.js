@@ -64,7 +64,12 @@ const PlayerForm = ({
       })
         .then(res => res.json())
         .then(res => {
-          socket.emit('user-join', sessionStorage.getItem('GAME_ID'), res);
+          socket.emit(
+            'user-join',
+            sessionStorage.getItem('GAME_ID'),
+            res,
+            userData.user_id
+          );
         });
     } else if (gameMode === CONSTDATA.MODEDATA.fiveOnfive) {
       fetch(`${BASE_URL}:8080/user/join`, {
@@ -85,7 +90,12 @@ const PlayerForm = ({
       })
         .then(res => res.json())
         .then(res => {
-          socket.emit('user-join', sessionStorage.getItem('GAME_ID'), res);
+          socket.emit(
+            'user-join',
+            sessionStorage.getItem('GAME_ID'),
+            res,
+            userData.user_id
+          );
         });
     }
 

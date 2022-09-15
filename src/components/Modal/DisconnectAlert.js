@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const DisconnectAlert = ({ setIsModalActive, disconnectEvent }) => {
+const DisconnectAlert = ({ setIsDisconnectModalActive }) => {
   return (
     <ModalBackGround>
       <Modal>
@@ -11,8 +11,8 @@ const DisconnectAlert = ({ setIsModalActive, disconnectEvent }) => {
         </ModalTextContainer>
         <ModalBtn
           onClick={() => {
-            setIsModalActive(false);
-            disconnectEvent();
+            setIsDisconnectModalActive(false);
+            window.location.replace('/');
           }}
         >
           확인

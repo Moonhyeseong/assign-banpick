@@ -26,6 +26,7 @@ const GameList = () => {
   });
 
   socket.once('updateGameList', payload => {
+    console.log(payload);
     setTimeout(() => {
       getGameListAPI();
     }, 100);
@@ -112,7 +113,7 @@ const GameList = () => {
             );
           })}
           {getGameList()?.length < 1 && (
-            <EmptyList>게임이 존재하지 않습니다.</EmptyList>
+            <EmptyList>생성된 게임이 없습니다.</EmptyList>
           )}
         </GameRoomContainer>
       </GameRoomsLayout>

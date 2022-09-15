@@ -23,7 +23,7 @@ const BanPickSimulator = () => {
 
   const [isFinish, setIsFinish] = useState(false);
 
-  const [isModalActive, setIsModalActive] = useState(false);
+  const [isDisconnectModalActive, setIsDisconnectModalActive] = useState(false);
   const [gameData, setGameData] = useState(null);
 
   const [championData, setChampionData] = useState([]);
@@ -182,14 +182,6 @@ const BanPickSimulator = () => {
         });
   };
 
-  //socket
-  // socket.once('user-disconnected', () => {
-  //   if (isPlayersReady) {
-  //     setIsModalActive(true);
-  //   }
-  //   socket.emit('finish', isFinish);
-  // });
-
   const getPhaseTitle = () => {
     if (phaseCounter === CONSTDATA.PHASEDATA.banPhase1) {
       return '1st BAN PHASE';
@@ -203,6 +195,11 @@ const BanPickSimulator = () => {
       return 'SWAP PHASE';
     }
   };
+
+  //socket
+  socket.once('shutdown-simulator', () => {
+    setIsDisconnectModalActive(true);
+  });
 
   socket.once('updateGameData', docs => {
     setTimeout(() => {
@@ -235,6 +232,13 @@ const BanPickSimulator = () => {
     }, 50);
     return clearInterval();
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (sessionStorage.getItem('USER_ID') === null) {
+      alert('유저정보가 없습니다.');
+      window.location.replace('/');
+    }
   }, []);
 
   //턴정보 업데이트
@@ -292,10 +296,9 @@ const BanPickSimulator = () => {
 
   return (
     <Simulator>
-      {isModalActive && (
+      {isDisconnectModalActive && (
         <DisconnectAlert
-          setIsModalActive={setIsModalActive}
-          // disconnectEvent={disconnectEvent}
+          setIsDisconnectModalActive={setIsDisconnectModalActive}
         />
       )}
       <BanPickLayout>
