@@ -31,7 +31,7 @@ const PickCard = ({
       `http://ddragon.leagueoflegends.com/cdn/img/champion/centered/${selectedChampion}_0.jpg`;
 
   const handleSwapItems = () => {
-    if (userData?.side === side) {
+    if (userData?.side === side || userData?.side === 'solo') {
       if (swapItems.currentIndex === '') {
         setSwapItems({ ...swapItems, side: side, currentIndex: index });
       } else {

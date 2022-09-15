@@ -25,8 +25,7 @@ const GameList = () => {
     },
   });
 
-  socket.once('updateGameList', payload => {
-    console.log(payload);
+  socket.once('updateGameList', () => {
     setTimeout(() => {
       getGameListAPI();
     }, 100);

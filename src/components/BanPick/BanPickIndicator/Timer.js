@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
-const Timer = ({ leftTime, setLeftTime, curruntTime }) => {
+const Timer = ({ leftTime, setLeftTime, initialTime }) => {
   const milToSeconds = leftTime => {
-    let leftSeconds = Math.floor(leftTime / 1000)
+    let leftSeconds = Math.ceil(leftTime / 1000)
       .toString()
       .padStart(2, '0');
     return leftSeconds;
@@ -12,12 +12,12 @@ const Timer = ({ leftTime, setLeftTime, curruntTime }) => {
   useEffect(() => {
     let timer;
     timer = setInterval(() => {
-      setLeftTime(curruntTime - new Date().getTime());
+      setLeftTime(initialTime - new Date().getTime());
     }, 1000);
     leftTime < 0 && clearInterval(timer);
 
     return () => clearInterval(timer);
-  }, [curruntTime, leftTime, setLeftTime]);
+  }, [initialTime, leftTime, setLeftTime]);
 
   return (
     <TimerText>

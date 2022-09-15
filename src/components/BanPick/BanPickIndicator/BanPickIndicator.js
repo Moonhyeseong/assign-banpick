@@ -8,7 +8,8 @@ const BanPickIndicator = ({
   leftTime,
   setLeftTime,
   gameData,
-  curruntTime,
+  initialTime,
+  isFinish,
 }) => {
   const notReadyPlayers = side => {
     const teamSide = side;
@@ -37,7 +38,7 @@ const BanPickIndicator = ({
               <Timer
                 leftTime={leftTime}
                 setLeftTime={setLeftTime}
-                curruntTime={curruntTime}
+                initialTime={initialTime}
               />
             ) : (
               '∞'

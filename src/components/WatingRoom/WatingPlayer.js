@@ -83,7 +83,7 @@ const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
         )
       )}
 
-      {playerData?.role && (
+      {playerData?.role && !isOneOneOneMode && (
         <PlayerRole side={side} userIndicateData={userIndicateData}>
           {role}
         </PlayerRole>

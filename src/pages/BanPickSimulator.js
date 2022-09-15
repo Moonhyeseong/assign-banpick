@@ -44,7 +44,7 @@ const BanPickSimulator = () => {
     },
   });
 
-  const [curruntTime, setCurruntTime] = useState();
+  const [initialTime, setInitialTime] = useState();
   const [leftTime, setLeftTime] = useState();
 
   const [turn, setTurn] = useState();
@@ -67,7 +67,7 @@ const BanPickSimulator = () => {
 
   const initTimer = () => {
     setLeftTime(29000);
-    setCurruntTime(new Date().getTime() + 29000);
+    setInitialTime(new Date().getTime() + 29000);
   };
 
   //타임아웃시 자동 밴픽 동작
@@ -220,7 +220,7 @@ const BanPickSimulator = () => {
   //타이머 초기화
   useEffect(() => {
     if (gameData?.isProceeding) {
-      setCurruntTime(new Date().getTime() + 29000);
+      setInitialTime(new Date().getTime() + 29000);
       setLeftTime(29000);
     }
   }, [gameData?.isProceeding]);
@@ -307,7 +307,8 @@ const BanPickSimulator = () => {
           leftTime={leftTime}
           setLeftTime={setLeftTime}
           gameData={gameData}
-          curruntTime={curruntTime}
+          initialTime={initialTime}
+          isFinish={isFinish}
         />
         {!gameData?.isProceeding ? (
           <WatingRoom gameData={gameData} setGameData={setGameData} />

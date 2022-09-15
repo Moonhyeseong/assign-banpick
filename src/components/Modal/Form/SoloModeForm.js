@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
+import uuid from 'react-uuid';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../../../config';
 
@@ -15,6 +16,7 @@ const SoloModeForm = () => {
       },
       body: JSON.stringify({
         game_id: game_id,
+        user_id: sessionStorage.getItem('USER_ID'),
       }),
     });
   };
@@ -41,6 +43,11 @@ const SoloModeForm = () => {
         navigate(res._id);
       });
   };
+
+  useEffect(() => {
+    const newUuid = uuid();
+    sessionStorage.setItem('USER_ID', newUuid);
+  }, []);
 
   return (
     <SoloModeFormLayout>
