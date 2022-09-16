@@ -157,9 +157,3 @@ const PhaseInfo = styled.p`
   text-align: center;
   font-weight: 700;
 `;
-
-// 타임아웃이 되었을때 루트 컴포넌트에 위치한 handleSelectBtn 함수가 실행
-// 밴페이즈일때 밴 리스트에 null 넣기
-// 픽 페이즈일때 픽 리스트에 랜덤으로 추출한 챔피언 넣기
-// handleSelectBtn함수에서 어느 문자열을 넣을지는 selectedChampion state에 저장된 문자열을 넣는다.
-//
