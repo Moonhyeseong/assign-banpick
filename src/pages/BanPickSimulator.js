@@ -24,8 +24,6 @@ const BanPickSimulator = () => {
   const params = useParams();
   const location = useLocation();
 
-  // console.log(banPickList);
-
   const [simulatorFormData, setSimulatorFormData] = useState({
     blue: '',
     red: '',
