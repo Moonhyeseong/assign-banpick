@@ -28,11 +28,11 @@ const ChampionCard = ({
       disabled={isSelected || phaseCounter === CONSTDATA.PHASEDATA.swapPhase}
       onClick={() => {
         setSelectedChampion(champion);
-        socket.emit(
-          'selectChampion',
-          sessionStorage.getItem('GAME_ID'),
-          champion
-        );
+        // socket.emit(
+        //   'selectChampion',
+        //   sessionStorage.getItem('GAME_ID'),
+        //   champion
+        // );
       }}
     >
       <ChampionIcon

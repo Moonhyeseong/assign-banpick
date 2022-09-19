@@ -2,7 +2,6 @@ import React, { useEffect, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import uuid from 'react-uuid';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { CgClose } from 'react-icons/cg';
 import { CONSTDATA } from '../../CONSTDATA';
 import { BASE_URL } from '../../../config';
@@ -64,12 +63,12 @@ const PlayerForm = ({
       })
         .then(res => res.json())
         .then(res => {
-          socket.emit(
-            'user-join',
-            sessionStorage.getItem('GAME_ID'),
-            res,
-            userData.user_id
-          );
+          // socket.emit(
+          //   'user-join',
+          //   sessionStorage.getItem('GAME_ID'),
+          //   res,
+          //   userData.user_id
+          // );
         });
     } else if (gameMode === CONSTDATA.MODEDATA.fiveOnfive) {
       fetch(`${BASE_URL}:8080/user/join`, {
@@ -90,12 +89,12 @@ const PlayerForm = ({
       })
         .then(res => res.json())
         .then(res => {
-          socket.emit(
-            'user-join',
-            sessionStorage.getItem('GAME_ID'),
-            res,
-            userData.user_id
-          );
+          // socket.emit(
+          //   'user-join',
+          //   sessionStorage.getItem('GAME_ID'),
+          //   res,
+          //   userData.user_id
+          // );
         });
     }
 

@@ -79,7 +79,7 @@ const BanPickSimulator = () => {
       return 'NO DATA';
     } else if (phaseInfo === 'pickList') {
       if (selectedChampions.indexOf(championList[randomIndex]) === -1) {
-        socket.emit('timeout', championList[randomIndex].id);
+        // socket.emit('timeout', championList[randomIndex].id);
         return championList[randomIndex].id;
       }
     }

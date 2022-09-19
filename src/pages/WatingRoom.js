@@ -7,7 +7,7 @@ import LiftUserIndicator from '../components/WatingRoom/LiftUserIndicator';
 const WatingRoom = ({ gameData, setGameData }) => {
   const socket = useContext(SocketContext);
 
-  socket.emit('joinRoom', sessionStorage.getItem('GAME_ID'));
+  // socket.emit('joinRoom', sessionStorage.getItem('GAME_ID'));
 
   //유저 준비 여부 검사
   useEffect(() => {
@@ -20,7 +20,7 @@ const WatingRoom = ({ gameData, setGameData }) => {
       const preparedUsers = allUserList.filter(user => user.isReady);
 
       if (userCount === preparedUsers.length) {
-        socket.emit('start-simulator', sessionStorage.getItem('GAME_ID'));
+        // socket.emit('start-simulator', sessionStorage.getItem('GAME_ID'));
       }
     }
   }, [gameData, gameData?.userList, socket]);

@@ -31,17 +31,17 @@ const ChampionList = ({
 
   const socket = useContext(SocketContext);
 
-  socket.on('banpick', (banPickList, phaseCounter) => {
-    setBanPickList(banPickList);
-    setSelectedChampion('');
-    if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
-      initTimer();
-    }
-  });
+  // socket.on('banpick', (banPickList, phaseCounter) => {
+  //   setBanPickList(banPickList);
+  //   setSelectedChampion('');
+  //   if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
+  //     initTimer();
+  //   }
+  // });
 
-  socket.on('selectChampion', champion => {
-    setSelectedChampion(champion);
-  });
+  // socket.on('selectChampion', champion => {
+  //   setSelectedChampion(champion);
+  // });
 
   return (
     <ChampionListLayout>

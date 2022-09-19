@@ -26,11 +26,11 @@ const GameList = () => {
   });
 
   //socket
-  socket.once('updateGameList', () => {
-    setTimeout(() => {
-      getGameListAPI();
-    }, 100);
-  });
+  // socket.once('updateGameList', () => {
+  //   setTimeout(() => {
+  //     getGameListAPI();
+  //   }, 100);
+  // });
 
   //필터 적용 게임 리스트
   const getGameList = () => {

@@ -76,7 +76,7 @@ const SimulatorForm = ({
       });
 
     showModal('playerForm', mode, selectedGameData.userList);
-    socket.emit('createGame', sessionStorage.getItem('GAME_ID'));
+    // socket.emit('createGame', sessionStorage.getItem('GAME_ID'));
   };
 
   useEffect(() => {

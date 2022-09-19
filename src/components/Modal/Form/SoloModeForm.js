@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import uuid from 'react-uuid';
-import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../../../config';
 
 const SoloModeForm = () => {
