@@ -1,4 +1,4 @@
-const theme = {
+export const theme = {
   white: {
     white100: '#F3F3F3',
     white80: '#C6C6C5',
@@ -67,5 +67,3 @@ const theme = {
     greenOPA80: 'rgba(162, 212, 67, 0.8)',
   },
 };
-
-export default theme;
