@@ -16,10 +16,10 @@ import { BASE_URL } from '../config';
 const BanPickSimulator = () => {
   const socket = useContext(SocketContext);
 
-  const params = useParams();
-
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
+
+  const params = useParams();
 
   const [isFinish, setIsFinish] = useState(false);
 

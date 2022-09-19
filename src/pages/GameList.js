@@ -25,12 +25,14 @@ const GameList = () => {
     },
   });
 
+  //socket
   socket.once('updateGameList', () => {
     setTimeout(() => {
       getGameListAPI();
     }, 100);
   });
 
+  //필터 적용 게임 리스트
   const getGameList = () => {
     const gameList = games?.filter(game => {
       return (
@@ -58,6 +60,7 @@ const GameList = () => {
     }
   };
 
+  //모달 실행
   const showModal = (type, mode, userList) => {
     setIsModalActive(true);
     setSelectedGameData({
@@ -81,6 +84,7 @@ const GameList = () => {
       .then(res => setGames(res));
   };
 
+  //게임리스트 get
   useEffect(() => {
     getGameListAPI();
   }, []);
