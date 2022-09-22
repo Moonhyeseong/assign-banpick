@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import ListFilter from '../components/GameList/ListFilter';
 import GameRoom from '../components/GameList/GameRoom';
@@ -79,9 +79,9 @@ const GameList = () => {
   };
 
   const getGameListAPI = () => {
-    fetch(`${BASE_URL}:8080/list`)
-      .then(res => res.json())
-      .then(res => setGames(res));
+    // fetch(`${BASE_URL}:8080/list`)
+    //   .then(res => res.json())
+    //   .then(res => setGames(res));
   };
 
   //게임리스트 get
