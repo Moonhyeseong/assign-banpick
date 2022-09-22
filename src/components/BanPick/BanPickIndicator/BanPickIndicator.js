@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { CONSTDATA } from '../../CONSTDATA';
+import { CONSTDATA } from '../../CONSTDATA/CONSTDATA';
 import Timer from './Timer';
 
 const BanPickIndicator = ({

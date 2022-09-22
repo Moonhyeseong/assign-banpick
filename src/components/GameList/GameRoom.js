@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { CONSTDATA } from '../CONSTDATA';
+import { CONSTDATA } from '../CONSTDATA/CONSTDATA';
 
 const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
   const roles = Object.keys(CONSTDATA.ROLEDATA);

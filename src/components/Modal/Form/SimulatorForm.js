@@ -1,11 +1,10 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { BASE_URL } from '../../../config';
 import { CgClose } from 'react-icons/cg';
 import { useDispatch } from 'react-redux';
-import { SocketContext } from '../../../context/socket';
 import { initUserData } from './userDataSlice';
-import { CONSTDATA } from '../../CONSTDATA';
+import { CONSTDATA } from '../../CONSTDATA/CONSTDATA';
 
 const SimulatorForm = ({
   simulatorFormData,
@@ -16,8 +15,6 @@ const SimulatorForm = ({
   selectedGameData,
 }) => {
   const dispatch = useDispatch();
-
-  const socket = useContext(SocketContext);
 
   const handleTitle = e => {
     setSimulatorFormData({ ...simulatorFormData, title: e.target.value });

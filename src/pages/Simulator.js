@@ -1,7 +1,11 @@
-import React from 'react';
+import BanPickSimulator from '../components/BanPick/BanPickSimulator';
 
-const Simulator = ({ children }) => {
-  return <div>{children}</div>;
+const simulator = () => {
+  return (
+    <>
+      <BanPickSimulator />
+    </>
+  );
 };
 
-export default Simulator;
+export default simulator;

@@ -1,15 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import Nav from '../Nav';
-import { SocketContext, socket } from '../../context/socket';
+import Nav from '../nav/Nav';
 
 const ContentsWrapper = ({ children }) => {
   return (
     <Layout>
       <Nav />
-      <SocketContext.Provider value={socket}>
-        <Wrapper>{children}</Wrapper>
-      </SocketContext.Provider>
+      <Wrapper>{children}</Wrapper>
     </Layout>
   );
 };

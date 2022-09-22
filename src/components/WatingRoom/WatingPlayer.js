@@ -1,16 +1,13 @@
-import React, { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { CONSTDATA } from '../CONSTDATA';
+import { CONSTDATA } from '../CONSTDATA/CONSTDATA';
 import { useSelector, useDispatch } from 'react-redux';
 import { BASE_URL } from '../../config';
 import { getUserData, userReadyAction } from '../Modal/Form/userDataSlice';
-import { SocketContext } from '../../context/socket';
 
 const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
-
-  const socket = useContext(SocketContext);
 
   const playerRoleData = userData?.role === role || playerData?.role === role;
   const playerSideData = userData?.side === side || playerData?.side === side;

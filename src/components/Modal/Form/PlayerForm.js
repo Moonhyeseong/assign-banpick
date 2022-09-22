@@ -1,12 +1,11 @@
-import React, { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import uuid from 'react-uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import { CgClose } from 'react-icons/cg';
-import { CONSTDATA } from '../../CONSTDATA';
+import { CONSTDATA } from '../../CONSTDATA/CONSTDATA';
 import { BASE_URL } from '../../../config';
 import { initUserData, updateUserData } from './userDataSlice';
-import { SocketContext } from '../../../context/socket';
 
 const PlayerForm = ({
   selectedGameData: { gameMode, initModalState, userList },
@@ -15,8 +14,6 @@ const PlayerForm = ({
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const socket = useContext(SocketContext);
 
   const isFormReady = () => {
     const formValues = Object.values(userData);

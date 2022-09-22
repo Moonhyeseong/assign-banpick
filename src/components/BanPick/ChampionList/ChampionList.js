@@ -1,9 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import ChampionCard from './ChampionCard';
 import ChampionFilter from './ChampionFilter';
-import { CONSTDATA } from '../../CONSTDATA';
-import { SocketContext } from '../../../context/socket';
+import { CONSTDATA } from '../../CONSTDATA/CONSTDATA';
 
 const ChampionList = ({
   setBanPickList,
@@ -28,8 +27,6 @@ const ChampionList = ({
       champion.id.toLowerCase().includes(search.toLowerCase())
     );
   });
-
-  const socket = useContext(SocketContext);
 
   // socket.on('banpick', (banPickList, phaseCounter) => {
   //   setBanPickList(banPickList);

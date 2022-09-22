@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { CONSTDATA } from '../../CONSTDATA';
-import { SocketContext } from '../../../context/socket';
+import { CONSTDATA } from '../../CONSTDATA/CONSTDATA';
 
 const ChampionCard = ({
   champion,
@@ -12,7 +11,6 @@ const ChampionCard = ({
   isEditable,
 }) => {
   const [isSelected, setIsSelected] = useState(false);
-  const socket = useContext(SocketContext);
 
   useEffect(() => {
     if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase || !isEditable) {

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { HiRefresh } from 'react-icons/hi';
 import { BsCheck } from 'react-icons/bs';
-import { CONSTDATA } from '../CONSTDATA';
+import { CONSTDATA } from '../CONSTDATA/CONSTDATA';
 
 const ListFilter = ({ showModal, setFilterData, filterData }) => {
   const handleSearchInput = event => {

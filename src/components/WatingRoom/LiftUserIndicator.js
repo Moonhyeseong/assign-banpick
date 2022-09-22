@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { useSelector } from 'react-redux';
-import { CONSTDATA } from '../CONSTDATA';
+import { CONSTDATA } from '../CONSTDATA/CONSTDATA';
 
 const LiftUserIndicator = ({ userList, mode }) => {
   const userData = useSelector(state => state.userFormData.userData);
