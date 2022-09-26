@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
 import { useSelector, useDispatch } from 'react-redux';
 
-import Simulator from '../../pages/simulator';
 import DisconnectAlert from '../Modal/DisconnectAlert';
 import ChampionList from './ChampionList/ChampionList';
 import PickList from './PickBanList/PickList';
@@ -16,7 +14,7 @@ import { BASE_URL } from '../../config';
 const BanPickSimulator = () => {
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
-
+  const aaaaaaaa = 1;
   const [isFinish, setIsFinish] = useState(false);
 
   const [isDisconnectModalActive, setIsDisconnectModalActive] = useState(false);

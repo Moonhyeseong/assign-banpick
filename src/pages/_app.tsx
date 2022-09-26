@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app';
+import type { NextPage } from 'next';
 import { Provider } from 'react-redux';
 import { wrapper } from '../app/store';
 import { ThemeProvider } from 'styled-components';
