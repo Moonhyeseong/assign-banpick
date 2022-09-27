@@ -1,11 +1,7 @@
 import BanPickSimulator from '../components/BanPick/BanPickSimulator';
 
 function simulator() {
-  return (
-    <div>
-      <BanPickSimulator />
-    </div>
-  );
+  return <BanPickSimulator />;
 }
 
 export default simulator;

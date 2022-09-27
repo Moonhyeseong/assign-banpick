@@ -9,7 +9,6 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/styled-components": "^5.1.26",
     "eslint-plugin-prettier": "^4.2.1",
-    "html2canvas": "^1.4.1",
     "next": "^12.3.0",
     "next-redux-wrapper": "^8.0.0",
     "react": "^18.2.0",

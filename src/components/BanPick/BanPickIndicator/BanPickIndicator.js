@@ -9,7 +9,6 @@ const BanPickIndicator = ({
   setLeftTime,
   gameData,
   initialTime,
-  isFinish,
 }) => {
   const notReadyPlayers = side => {
     const teamSide = side;

@@ -20,7 +20,7 @@
     "**/*.ts",
     "**/*.tsx",
     "src/pages/_document.js",
-    "src/components/BanPick/BanPickIndicator/Timer.tsx"
+    "src/components/BanPick/BanPickIndicator/Timer.jsx"
   ],
   "exclude": ["node_modules"]
 }
