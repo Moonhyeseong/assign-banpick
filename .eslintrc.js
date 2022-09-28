@@ -20,6 +20,7 @@ module.exports = {
     'no-console': ['warn', { allow: ['warn', 'error'] }],
     'no-var': 'warn',
     'no-unused-vars': 'warn',
+    '@typescript-eslint/no-explicit-any': 'off',
     'dot-notation': 'warn', // 가능하다면 dot notation 사용
     'react/destructuring-assignment': 'warn', // state, prop 등에 구조분해 할당 적용
     'react/jsx-pascal-case': 'warn', // 컴포넌트 이름은 PascalCase로

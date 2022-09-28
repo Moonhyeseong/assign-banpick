@@ -9,12 +9,13 @@ import { useDispatch } from 'react-redux';
 import { initUserData } from '../Modal/Form/userDataSlice';
 import { BASE_URL } from '../../config';
 
-const GameList = () => {
+const GameList = ({ gameData }) => {
+  console.log(gameData);
   const dispatch = useDispatch();
 
   const [isModalActive, setIsModalActive] = useState(false);
   const [selectedGameData, setSelectedGameData] = useState('');
-  const [games, setGames] = useState();
+  const [games, setGames] = useState(gameData);
 
   const [filterData, setFilterData] = useState({
     searchFilter: '',

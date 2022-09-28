@@ -1,8 +1,19 @@
+import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import GameList from '../components/GameList/GameList';
-import type { NextPage } from 'next';
+import { getAllGames } from '../../lib/games';
+import { gameData } from '../../lib/gameData';
 
-const Home: NextPage = () => {
-  return <GameList />;
+export default function Home({
+  gameData,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  return <GameList gameData={gameData} />;
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+  // const games = getAllGames();
+  return {
+    props: {
+      gameData,
+    },
+  };
 };
-
-export default Home;
