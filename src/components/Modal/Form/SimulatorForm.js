@@ -4,7 +4,7 @@ import { BASE_URL } from '../../../config';
 import { CgClose } from 'react-icons/cg';
 import { useDispatch } from 'react-redux';
 import { initUserData } from './userDataSlice';
-import { CONSTDATA } from '../../CONSTDATA/CONSTDATA';
+import { MODEDATA } from '../../CONSTDATA/CONSTDATA';
 
 const SimulatorForm = ({
   simulatorFormData,
@@ -30,13 +30,13 @@ const SimulatorForm = ({
   const handleMode = option => {
     setSimulatorFormData({ ...simulatorFormData, mode: option });
 
-    if (option === CONSTDATA.MODEDATA.oneOnOne) {
+    if (option === MODEDATA.oneOnOne) {
       setSelectedGameData({
         ...selectedGameData,
         gameMode: option,
         userList: { blue: [''], red: [''] },
       });
-    } else if (option === CONSTDATA.MODEDATA.fiveOnfive) {
+    } else if (option === MODEDATA.fiveOnfive) {
       setSelectedGameData({
         ...selectedGameData,
         gameMode: option,

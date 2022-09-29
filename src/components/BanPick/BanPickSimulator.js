@@ -7,14 +7,14 @@ import ChampionList from './ChampionList/ChampionList';
 import PickList from './PickBanList/PickList';
 import BanPickIndicator from './BanPickIndicator/BanPickIndicator';
 import WatingRoom from '../WatingRoom/WatingRoom';
-import { CONSTDATA } from '../CONSTDATA/CONSTDATA';
+import { MODEDATA, PHASEDATA } from '../CONSTDATA/CONSTDATA';
 import { getUserData } from '../Modal/Form/userDataSlice';
 import { BASE_URL } from '../../config';
 
 const BanPickSimulator = () => {
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
-  const aaaaaaaa = 1;
+
   const [isFinish, setIsFinish] = useState(false);
 
   const [isDisconnectModalActive, setIsDisconnectModalActive] = useState(false);
@@ -23,9 +23,7 @@ const BanPickSimulator = () => {
   const [championData, setChampionData] = useState([]);
   const [selectedChampion, setSelectedChampion] = useState('');
 
-  const [phaseCounter, setPhaseCounter] = useState(
-    CONSTDATA.PHASEDATA.banPhase1
-  );
+  const [phaseCounter, setPhaseCounter] = useState(PHASEDATA.banPhase1);
 
   const [banPickList, setBanPickList] = useState({
     banList: {
@@ -54,8 +52,7 @@ const BanPickSimulator = () => {
   ];
 
   const phaseInfo =
-    phaseCounter === CONSTDATA.PHASEDATA.banPhase1 ||
-    phaseCounter === CONSTDATA.PHASEDATA.banPhase2
+    phaseCounter === PHASEDATA.banPhase1 || phaseCounter === PHASEDATA.banPhase2
       ? 'banList'
       : 'pickList';
 
@@ -85,28 +82,28 @@ const BanPickSimulator = () => {
       banPickList.banList.blue.indexOf('') === 3 &&
       banPickList.banList.red.indexOf('') === 3
     ) {
-      setPhaseCounter(CONSTDATA.PHASEDATA.pickPhase1);
+      setPhaseCounter(PHASEDATA.pickPhase1);
     }
 
     if (
       banPickList.pickList.blue.indexOf('') === 3 &&
       banPickList.pickList.red.indexOf('') === 3
     ) {
-      setPhaseCounter(CONSTDATA.PHASEDATA.banPhase2);
+      setPhaseCounter(PHASEDATA.banPhase2);
     }
 
     if (
       banPickList.banList.blue.indexOf('') === -1 &&
       banPickList.banList.red.indexOf('') === -1
     ) {
-      setPhaseCounter(CONSTDATA.PHASEDATA.pickPhase2);
+      setPhaseCounter(PHASEDATA.pickPhase2);
     }
 
     if (
       banPickList.pickList.blue.indexOf('') === -1 &&
       banPickList.pickList.red.indexOf('') === -1
     ) {
-      setPhaseCounter(CONSTDATA.PHASEDATA.swapPhase);
+      setPhaseCounter(PHASEDATA.swapPhase);
     }
   };
 
@@ -121,7 +118,7 @@ const BanPickSimulator = () => {
 
     setSelectedChampion('');
 
-    if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
+    if (phaseCounter !== PHASEDATA.swapPhase) {
       initTimer();
     }
   };
@@ -139,7 +136,7 @@ const BanPickSimulator = () => {
 
   const handleTimeOut = () => {
     if (leftTime < 0) {
-      if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
+      if (phaseCounter !== PHASEDATA.swapPhase) {
         handleSelectBtn();
         postBanPickList();
         initTimer();
@@ -148,21 +145,21 @@ const BanPickSimulator = () => {
   };
 
   const getGameDataAPI = () => {
-    fetch(`${BASE_URL}:8080/gameData/${params.id}`)
-      .then(res => res.json())
-      .then(res => {
-        if (res) {
-          setGameData(res);
-          setBanPickList(res.banPickList);
-        } else {
-          alert('존재하지 않는 게임입니다.');
-          window.location.replace('/');
-        }
-      });
+    // fetch(`${BASE_URL}:8080/gameData/${params.id}`)
+    //   .then(res => res.json())
+    //   .then(res => {
+    //     if (res) {
+    //       setGameData(res);
+    //       setBanPickList(res.banPickList);
+    //     } else {
+    //       alert('존재하지 않는 게임입니다.');
+    //       window.location.replace('/');
+    //     }
+    //   });
   };
 
   const getUserDataAPI = () => {
-    gameData?.mode !== CONSTDATA.MODEDATA.solo &&
+    gameData?.mode !== MODEDATA.solo &&
       sessionStorage.getItem('USER_ID') &&
       fetch(`${BASE_URL}:8080/user/${sessionStorage.getItem('USER_ID')}`)
         .then(res => res.json())
@@ -177,15 +174,15 @@ const BanPickSimulator = () => {
   };
 
   const getPhaseTitle = () => {
-    if (phaseCounter === CONSTDATA.PHASEDATA.banPhase1) {
+    if (phaseCounter === PHASEDATA.banPhase1) {
       return '1st BAN PHASE';
-    } else if (phaseCounter === CONSTDATA.PHASEDATA.pickPhase1) {
+    } else if (phaseCounter === PHASEDATA.pickPhase1) {
       return '1st PICK PHASE';
-    } else if (phaseCounter === CONSTDATA.PHASEDATA.banPhase2) {
+    } else if (phaseCounter === PHASEDATA.banPhase2) {
       return '2nd BAN PHASE';
-    } else if (phaseCounter === CONSTDATA.PHASEDATA.pickPhase2) {
+    } else if (phaseCounter === PHASEDATA.pickPhase2) {
       return '2nd PICK PHASE';
-    } else if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase) {
+    } else if (phaseCounter === PHASEDATA.swapPhase) {
       return 'SWAP PHASE';
     }
   };
@@ -237,7 +234,7 @@ const BanPickSimulator = () => {
 
   //턴정보 업데이트
   useEffect(() => {
-    if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
+    if (phaseCounter !== PHASEDATA.swapPhase) {
       setTurn(gameData?.banpickTurnData[gameData?.banpickCount]?.side);
     }
   }, [gameData?.banpickCount, gameData?.banpickTurnData, phaseCounter]);
@@ -249,7 +246,7 @@ const BanPickSimulator = () => {
 
   // #편집권한 설정 함수
   useEffect(() => {
-    if (gameData?.mode === CONSTDATA.MODEDATA.oneOnOne) {
+    if (gameData?.mode === MODEDATA.oneOnOne) {
       if (
         userData?.side ===
         gameData?.banpickTurnData[gameData?.banpickCount]?.side
@@ -258,7 +255,7 @@ const BanPickSimulator = () => {
       } else {
         setIsEditable(false);
       }
-    } else if (gameData?.mode === CONSTDATA.MODEDATA.fiveOnfive) {
+    } else if (gameData?.mode === MODEDATA.fiveOnfive) {
       const userSideInfo =
         userData?.side ===
         gameData?.banpickTurnData[gameData?.banpickCount]?.side;
@@ -271,7 +268,7 @@ const BanPickSimulator = () => {
       } else {
         setIsEditable(false);
       }
-    } else if (gameData?.mode === CONSTDATA.MODEDATA.solo) {
+    } else if (gameData?.mode === MODEDATA.solo) {
       setIsEditable(true);
     }
   }, [
@@ -283,7 +280,7 @@ const BanPickSimulator = () => {
   ]);
 
   useEffect(() => {
-    if (phaseCounter === CONSTDATA.PHASEDATA.swapPhase && leftTime < 0) {
+    if (phaseCounter === PHASEDATA.swapPhase && leftTime < 0) {
       setIsFinish(true);
     }
   }, [leftTime, phaseCounter]);

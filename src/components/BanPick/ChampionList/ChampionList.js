@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import ChampionCard from './ChampionCard';
 import ChampionFilter from './ChampionFilter';
-import { CONSTDATA } from '../../CONSTDATA/CONSTDATA';
+import { PHASEDATA } from '../../CONSTDATA/CONSTDATA';
 
 const ChampionList = ({
   setBanPickList,
@@ -62,7 +62,7 @@ const ChampionList = ({
       <SelectBtn
         selectedChampion={selectedChampion}
         disabled={
-          phaseCounter === CONSTDATA.PHASEDATA.swapPhase ||
+          phaseCounter === PHASEDATA.swapPhase ||
           selectedChampion === '' ||
           !isEditable
         }

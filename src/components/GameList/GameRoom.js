@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import styled, { css } from 'styled-components';
-import { CONSTDATA } from '../CONSTDATA/CONSTDATA';
+import { ROLEDATA, MODEDATA } from '../CONSTDATA/CONSTDATA';
 
 const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
-  const roles = Object.keys(CONSTDATA.ROLEDATA);
+  const roles = Object.keys(ROLEDATA);
 
   const getJoiningPlayerCount = playerList => {
     const joiningPlayerCount = playerList?.reduce(
@@ -39,7 +39,7 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
       </JoinBtn>
       <GameMode>
         <span style={{ color: '#9f9f9f' }}>MODE</span>{' '}
-        {mode === CONSTDATA.MODEDATA.oneOnOne ? `1 : 1` : `5 : 5`}
+        {mode === MODEDATA.oneOnOne ? `1 : 1` : `5 : 5`}
       </GameMode>
       <CurruntRoomInfo>
         <TeamInfo>
@@ -48,7 +48,7 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
             {userList?.blue.length - getJoiningPlayerCount(userList?.blue)}/
             {`${userList?.blue.length}`})
           </TeamTitle>
-          {mode === CONSTDATA.MODEDATA.oneOnOne ? (
+          {mode === MODEDATA.oneOnOne ? (
             <TeamRoleIconContainer>
               <RoleIcon mode={mode} isEmpty={userList?.blue[0] !== ''}>
                 <Image
@@ -85,7 +85,7 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
             RED ({userList?.red.length - getJoiningPlayerCount(userList?.red)}/
             {`${userList?.red.length}`})
           </TeamTitle>
-          {mode === CONSTDATA.MODEDATA.oneOnOne ? (
+          {mode === MODEDATA.oneOnOne ? (
             <TeamRoleIconContainer>
               <RoleIcon mode={mode} isEmpty={userList?.red[0] !== ''}>
                 <Image
@@ -205,7 +205,8 @@ const TeamRoleIconContainer = styled.div`
 
 const RoleIcon = styled.div`
   opacity: 0.3;
-
+  width: auto;
+  height: auto;
   ${props =>
     props.isEmpty &&
     css`

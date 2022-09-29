@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { CONSTDATA } from '../CONSTDATA/CONSTDATA';
+import { MODEDATA, ROLEDATA } from '../CONSTDATA/CONSTDATA';
 import { useSelector, useDispatch } from 'react-redux';
 import { BASE_URL } from '../../config';
 import { getUserData, userReadyAction } from '../Modal/Form/userDataSlice';
@@ -13,10 +13,10 @@ const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
   const playerSideData = userData?.side === side || playerData?.side === side;
   const userIndicateData = playerData?.user_id === userData?.user_id;
 
-  const isOneOneOneMode = CONSTDATA.MODEDATA.oneOnOne === mode;
+  const isOneOneOneMode = MODEDATA.oneOnOne === mode;
 
   const postUserReadyData = () => {
-    if (mode === CONSTDATA.MODEDATA.oneOnOne) {
+    if (mode === MODEDATA.oneOnOne) {
       fetch(`${BASE_URL}:8080/user/ready`, {
         method: 'POST',
         headers: {
@@ -34,7 +34,7 @@ const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
         .then(res => {
           // socket.emit('userReadyEvent', sessionStorage.getItem('GAME_ID'), res);
         });
-    } else if (mode === CONSTDATA.MODEDATA.fiveOnfive) {
+    } else if (mode === MODEDATA.fiveOnfive) {
       fetch(`${BASE_URL}:8080/user/ready`, {
         method: 'POST',
         headers: {
@@ -44,7 +44,7 @@ const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
           game_id: sessionStorage.getItem('GAME_ID'),
           user_id: userData.user_id,
           userSide: userData.side,
-          userIndex: CONSTDATA.ROLEDATA[userData.role],
+          userIndex: ROLEDATA[userData.role],
           mode: mode,
         }),
       })

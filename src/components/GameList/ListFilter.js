@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { HiRefresh } from 'react-icons/hi';
 import { BsCheck } from 'react-icons/bs';
-import { CONSTDATA } from '../CONSTDATA/CONSTDATA';
+import { MODEDATA } from '../CONSTDATA/CONSTDATA';
 
 const ListFilter = ({ showModal, setFilterData, filterData }) => {
   const handleSearchInput = event => {
@@ -10,7 +10,7 @@ const ListFilter = ({ showModal, setFilterData, filterData }) => {
   };
 
   const handleModeCheckBox = option => {
-    if (option === CONSTDATA.MODEDATA.oneOnOne) {
+    if (option === MODEDATA.oneOnOne) {
       if (filterData.checkBoxFilter.one === '') {
         setFilterData({
           ...filterData,
@@ -22,7 +22,7 @@ const ListFilter = ({ showModal, setFilterData, filterData }) => {
           checkBoxFilter: { one: '', five: filterData.checkBoxFilter.five },
         });
       }
-    } else if (option === CONSTDATA.MODEDATA.fiveOnfive) {
+    } else if (option === MODEDATA.fiveOnfive) {
       if (filterData.checkBoxFilter.five === '') {
         setFilterData({
           ...filterData,
@@ -57,7 +57,7 @@ const ListFilter = ({ showModal, setFilterData, filterData }) => {
         </SearchInputContainer>
         <CheckBoxContainer>
           <CheckBox onClick={() => handleModeCheckBox(1)}>
-            {filterData.checkBoxFilter.one === CONSTDATA.MODEDATA.oneOnOne && (
+            {filterData.checkBoxFilter.one === MODEDATA.oneOnOne && (
               <BsCheck size="30" />
             )}
           </CheckBox>{' '}
@@ -65,8 +65,9 @@ const ListFilter = ({ showModal, setFilterData, filterData }) => {
         </CheckBoxContainer>
         <CheckBoxContainer>
           <CheckBox onClick={() => handleModeCheckBox(2)}>
-            {filterData.checkBoxFilter.five ===
-              CONSTDATA.MODEDATA.fiveOnfive && <BsCheck size="30" />}
+            {filterData.checkBoxFilter.five === MODEDATA.fiveOnfive && (
+              <BsCheck size="30" />
+            )}
           </CheckBox>{' '}
           5:5
         </CheckBoxContainer>

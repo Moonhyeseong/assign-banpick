@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { CONSTDATA } from '../../CONSTDATA/CONSTDATA';
+import { MODEDATA } from '../../CONSTDATA/CONSTDATA';
 import Timer from './Timer';
 
 const BanPickIndicator = ({
@@ -49,7 +49,7 @@ const BanPickIndicator = ({
       ) : (
         <GameInfoContainer>
           <GameModeText>
-            {gameData?.mode === CONSTDATA.MODEDATA.oneOnOne ? `1 : 1` : `5 : 5`}
+            {gameData?.mode === MODEDATA.oneOnOne ? `1 : 1` : `5 : 5`}
           </GameModeText>
         </GameInfoContainer>
       )}

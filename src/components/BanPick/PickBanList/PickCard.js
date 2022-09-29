@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { useSelector } from 'react-redux';
-import { CONSTDATA } from '../../CONSTDATA/CONSTDATA';
+import { PHASEDATA } from '../../CONSTDATA/CONSTDATA';
 
 const PickCard = ({
   side,
@@ -21,8 +21,7 @@ const PickCard = ({
   const [isSelecting, setIsSelecting] = useState(false);
   const userData = useSelector(state => state.userFormData.userData);
   const currentIndex = pickList.indexOf('');
-  const isSwapPhase =
-    phaseCounter === CONSTDATA.PHASEDATA.swapPhase && leftTime > 0;
+  const isSwapPhase = phaseCounter === PHASEDATA.swapPhase && leftTime > 0;
 
   const imgURL = champion
     ? `http://ddragon.leagueoflegends.com/cdn/img/champion/centered/${champion}_0.jpg`

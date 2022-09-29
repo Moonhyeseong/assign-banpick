@@ -1,18 +1,19 @@
 import { GetServerSideProps } from 'next';
 import { getGameData } from '../../lib/games';
 
-const Simulator = () => {
-  return <div>Enter</div>;
+const Simulator = ({ game }) => {
+  console.log(game);
+
+  return <div>Simulator</div>;
 };
 
 export default Simulator;
 
-// export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-//   console.log(params);
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const gameId = params.id.toString();
+  const game = await getGameData(gameId);
 
-//   // const game = await getGameData(params._id);
-
-//   return {
-//     props: null,
-//   };
-// };
+  return {
+    props: { game },
+  };
+};

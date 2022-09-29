@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ListFilter from './ListFilter';
 import GameRoom from './GameRoom';
 import GameListModal from '../Modal/GameListModal';
-import { CONSTDATA } from '../CONSTDATA/CONSTDATA';
+import { MODEDATA } from '../CONSTDATA/CONSTDATA';
 
 import { useDispatch } from 'react-redux';
 import { initUserData } from '../Modal/Form/userDataSlice';
@@ -35,7 +35,7 @@ const GameList = ({ gameData }) => {
   const getGameList = () => {
     const gameList = games?.filter(game => {
       return (
-        (game?.mode !== CONSTDATA.MODEDATA.solo &&
+        (game?.mode !== MODEDATA.solo &&
           game?.title.includes(filterData.searchFilter)) ||
         (filterData.searchFilter.length > 8 &&
           game?._id.includes(filterData.searchFilter))

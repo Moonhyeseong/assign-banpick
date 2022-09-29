@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { useSelector } from 'react-redux';
-import { CONSTDATA } from '../CONSTDATA/CONSTDATA';
+import { MODEDATA } from '../CONSTDATA/CONSTDATA';
 
 const LiftUserIndicator = ({ userList, mode }) => {
   const userData = useSelector(state => state.userFormData.userData);
@@ -9,7 +9,7 @@ const LiftUserIndicator = ({ userList, mode }) => {
   return (
     <LiftBackGround>
       <Filter />
-      {CONSTDATA.MODEDATA.oneOnOne === mode && (
+      {MODEDATA.oneOnOne === mode && (
         <>
           <RoleIcon
             side="blue"
@@ -34,7 +34,7 @@ const LiftUserIndicator = ({ userList, mode }) => {
         </>
       )}
 
-      {CONSTDATA.MODEDATA.fiveOnfive === mode && (
+      {MODEDATA.fiveOnfive === mode && (
         <>
           {userList.blue.map((playerData, idx) => {
             return (
@@ -109,7 +109,7 @@ const RoleIcon = styled.img`
   }
 
   ${props =>
-    props.mode === CONSTDATA.MODEDATA.oneOnOne &&
+    props.mode === MODEDATA.oneOnOne &&
     props.side === 'blue' &&
     css`
       bottom: 360px;
@@ -117,7 +117,7 @@ const RoleIcon = styled.img`
     `}
 
   ${props =>
-    props.mode === CONSTDATA.MODEDATA.oneOnOne &&
+    props.mode === MODEDATA.oneOnOne &&
     props.side === 'red' &&
     css`
       top: 170px;
@@ -125,7 +125,7 @@ const RoleIcon = styled.img`
     `}
 
   ${props =>
-    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.mode === MODEDATA.fiveOnfive &&
     props.side === 'blue' &&
     props.role === 'TOP' &&
     css`
@@ -135,7 +135,7 @@ const RoleIcon = styled.img`
     `}  
 
   ${props =>
-    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.mode === MODEDATA.fiveOnfive &&
     props.side === 'blue' &&
     props.role === 'JUNGLE' &&
     css`
@@ -145,7 +145,7 @@ const RoleIcon = styled.img`
     `}  
 
   ${props =>
-    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.mode === MODEDATA.fiveOnfive &&
     props.side === 'blue' &&
     props.role === 'MID' &&
     css`
@@ -155,7 +155,7 @@ const RoleIcon = styled.img`
     `} 
 
   ${props =>
-    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.mode === MODEDATA.fiveOnfive &&
     props.side === 'blue' &&
     props.role === 'ADC' &&
     css`
@@ -165,7 +165,7 @@ const RoleIcon = styled.img`
     `}  
 
   ${props =>
-    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.mode === MODEDATA.fiveOnfive &&
     props.side === 'blue' &&
     props.role === 'SUPPORT' &&
     css`
@@ -175,7 +175,7 @@ const RoleIcon = styled.img`
     `}  
 
   ${props =>
-    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.mode === MODEDATA.fiveOnfive &&
     props.side === 'red' &&
     props.role === 'TOP' &&
     css`
@@ -185,7 +185,7 @@ const RoleIcon = styled.img`
     `}  
 
   ${props =>
-    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.mode === MODEDATA.fiveOnfive &&
     props.side === 'red' &&
     props.role === 'JUNGLE' &&
     css`
@@ -195,7 +195,7 @@ const RoleIcon = styled.img`
     `}  
 
   ${props =>
-    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.mode === MODEDATA.fiveOnfive &&
     props.side === 'red' &&
     props.role === 'MID' &&
     css`
@@ -205,7 +205,7 @@ const RoleIcon = styled.img`
     `} 
 
   ${props =>
-    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.mode === MODEDATA.fiveOnfive &&
     props.side === 'red' &&
     props.role === 'ADC' &&
     css`
@@ -215,7 +215,7 @@ const RoleIcon = styled.img`
     `}  
 
   ${props =>
-    props.mode === CONSTDATA.MODEDATA.fiveOnfive &&
+    props.mode === MODEDATA.fiveOnfive &&
     props.side === 'red' &&
     props.role === 'SUPPORT' &&
     css`

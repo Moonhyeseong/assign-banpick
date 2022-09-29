@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import uuid from 'react-uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import { CgClose } from 'react-icons/cg';
-import { CONSTDATA } from '../../CONSTDATA/CONSTDATA';
+import { MODEDATA, ROLEDATA } from '../../CONSTDATA/CONSTDATA';
 import { BASE_URL } from '../../../config';
 import { initUserData, updateUserData } from './userDataSlice';
 
@@ -23,8 +23,8 @@ const PlayerForm = ({
   const handleIsAleadyExistRoleData = (role, side) => {
     const teamUserList = userList[side];
 
-    if (gameMode === CONSTDATA.MODEDATA.fiveOnfive) {
-      if (teamUserList[CONSTDATA.ROLEDATA[role]] !== '') {
+    if (gameMode === MODEDATA.fiveOnfive) {
+      if (teamUserList[ROLEDATA[role]] !== '') {
         alert('이미 다른 유저가 선택한 포지션 입니다.');
         dispatch(updateUserData({ type: 'role', value: '' }));
       }
@@ -41,7 +41,7 @@ const PlayerForm = ({
   };
 
   const postUserJoin = () => {
-    if (gameMode === CONSTDATA.MODEDATA.oneOnOne) {
+    if (gameMode === MODEDATA.oneOnOne) {
       fetch(`${BASE_URL}:8080/user/join`, {
         method: 'POST',
         headers: {
@@ -66,7 +66,7 @@ const PlayerForm = ({
           //   userData.user_id
           // );
         });
-    } else if (gameMode === CONSTDATA.MODEDATA.fiveOnfive) {
+    } else if (gameMode === MODEDATA.fiveOnfive) {
       fetch(`${BASE_URL}:8080/user/join`, {
         method: 'POST',
         headers: {
@@ -78,7 +78,7 @@ const PlayerForm = ({
           name: userData.name,
           side: userData.side,
           role: userData.role,
-          roleIndex: CONSTDATA.ROLEDATA[userData.role],
+          roleIndex: ROLEDATA[userData.role],
           mode: gameMode,
           isReady: userData.isReady,
         }),
@@ -99,7 +99,7 @@ const PlayerForm = ({
 
   useEffect(() => {
     dispatch(initUserData());
-    if (gameMode === CONSTDATA.MODEDATA.oneOnOne) {
+    if (gameMode === MODEDATA.oneOnOne) {
       dispatch(updateUserData({ type: 'role', value: 'solo' }));
     }
 
@@ -120,7 +120,7 @@ const PlayerForm = ({
         size={32}
         onClick={initModalState}
       />
-      {CONSTDATA.MODEDATA.oneOnOne === gameMode ? (
+      {MODEDATA.oneOnOne === gameMode ? (
         <FormContainer>
           <NameInputContainer>
             대표 소환사명을 입력해 주세요.
@@ -138,7 +138,7 @@ const PlayerForm = ({
               onClick={() => {
                 dispatch(updateUserData({ type: 'side', value: 'blue' }));
 
-                if (gameMode === CONSTDATA.MODEDATA.oneOnOne) {
+                if (gameMode === MODEDATA.oneOnOne) {
                   handleIsAleadyExistSideData('blue');
                 }
               }}
@@ -150,7 +150,7 @@ const PlayerForm = ({
               onClick={() => {
                 dispatch(updateUserData({ type: 'side', value: 'red' }));
 
-                if (gameMode === CONSTDATA.MODEDATA.oneOnOne) {
+                if (gameMode === MODEDATA.oneOnOne) {
                   handleIsAleadyExistSideData('red');
                 }
               }}
@@ -207,7 +207,7 @@ const PlayerForm = ({
                     }
 
                     if (
-                      gameMode === CONSTDATA.MODEDATA.fiveOnfive &&
+                      gameMode === MODEDATA.fiveOnfive &&
                       userData.side !== ''
                     ) {
                       handleIsAleadyExistRoleData(role, userData.side);
