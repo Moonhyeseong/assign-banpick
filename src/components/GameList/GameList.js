@@ -10,7 +10,6 @@ import { initUserData } from '../Modal/Form/userDataSlice';
 import { BASE_URL } from '../../config';
 
 const GameList = ({ gameData }) => {
-  console.log(gameData);
   const dispatch = useDispatch();
 
   const [isModalActive, setIsModalActive] = useState(false);
@@ -79,16 +78,16 @@ const GameList = ({ gameData }) => {
   };
 
   //게임리스트 호출
-  const getGameListAPI = () => {
-    // fetch(`${BASE_URL}:8080/list`)
-    //   .then(res => res.json())
-    //   .then(res => setGames(res));
-  };
+  // const getGameListAPI = () => {
+  //   fetch(`${BASE_URL}:8080/game`)
+  //     .then(res => res.json())
+  //     .then(res => console.log(res));
+  // };
 
   //게임리스트 get
-  useEffect(() => {
-    getGameListAPI();
-  }, []);
+  // useEffect(() => {
+  //   getGameListAPI();
+  // }, []);
 
   return (
     <GameListLayout>

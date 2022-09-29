@@ -1,4 +1,4 @@
-import React from 'react';
+import Image from 'next/image';
 import styled, { css } from 'styled-components';
 import { CONSTDATA } from '../CONSTDATA/CONSTDATA';
 
@@ -50,11 +50,14 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
           </TeamTitle>
           {mode === CONSTDATA.MODEDATA.oneOnOne ? (
             <TeamRoleIconContainer>
-              <RoleIcon
-                mode={mode}
-                src={`/images/ROLE/solo.png`}
-                isEmpty={userList?.blue[0] !== ''}
-              />
+              <RoleIcon mode={mode} isEmpty={userList?.blue[0] !== ''}>
+                <Image
+                  priority
+                  src="/images/ROLE/solo.png"
+                  width="36"
+                  height="36"
+                />
+              </RoleIcon>
             </TeamRoleIconContainer>
           ) : (
             <TeamRoleIconContainer>
@@ -63,9 +66,15 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
                   <RoleIcon
                     mode={mode}
                     key={idx}
-                    src={`/images/ROLE/${role}.png`}
                     isEmpty={userList?.blue[idx] !== ''}
-                  />
+                  >
+                    <Image
+                      priority
+                      src={`/images/ROLE/${role}.png`}
+                      width="36"
+                      height="36"
+                    />
+                  </RoleIcon>
                 );
               })}
             </TeamRoleIconContainer>
@@ -78,11 +87,14 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
           </TeamTitle>
           {mode === CONSTDATA.MODEDATA.oneOnOne ? (
             <TeamRoleIconContainer>
-              <RoleIcon
-                mode={mode}
-                src={`/images/ROLE/solo.png`}
-                isEmpty={userList?.red[0] !== ''}
-              />
+              <RoleIcon mode={mode} isEmpty={userList?.red[0] !== ''}>
+                <Image
+                  priority
+                  src="/images/ROLE/solo.png"
+                  width="36"
+                  height="36"
+                />
+              </RoleIcon>
             </TeamRoleIconContainer>
           ) : (
             <TeamRoleIconContainer>
@@ -91,9 +103,15 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
                   <RoleIcon
                     mode={mode}
                     key={idx}
-                    src={`/images/ROLE/${role}.png`}
-                    isEmpty={userList.red[idx] !== ''}
-                  />
+                    isEmpty={userList?.red[idx] !== ''}
+                  >
+                    <Image
+                      priority
+                      src={`/images/ROLE/${role}.png`}
+                      width="36"
+                      height="36"
+                    />
+                  </RoleIcon>
                 );
               })}
             </TeamRoleIconContainer>
@@ -185,9 +203,7 @@ const TeamRoleIconContainer = styled.div`
   height: 50px;
 `;
 
-const RoleIcon = styled.img`
-  width: 36px;
-  height: 36px;
+const RoleIcon = styled.div`
   opacity: 0.3;
 
   ${props =>

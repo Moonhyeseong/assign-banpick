@@ -13,7 +13,6 @@ const PlayerForm = ({
   const userData = useSelector(state => state.userFormData.userData);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const isFormReady = () => {
     const formValues = Object.values(userData);
@@ -95,7 +94,7 @@ const PlayerForm = ({
         });
     }
 
-    navigate(sessionStorage.getItem('GAME_ID'));
+    // navigate(sessionStorage.getItem('GAME_ID'));
   };
 
   useEffect(() => {

@@ -5,7 +5,6 @@ import { BASE_URL } from '../../../config';
 
 const SoloModeForm = () => {
   const [timerOption, setTimerOption] = useState(null);
-  const navigate = useNavigate();
 
   const createSoloUser = game_id => {
     fetch(`${BASE_URL}:8080/user/solo`, {
@@ -21,7 +20,7 @@ const SoloModeForm = () => {
   };
 
   const createGame = () => {
-    fetch(`${BASE_URL}:8080/start`, {
+    fetch(`${BASE_URL}:8080/game`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -38,8 +37,7 @@ const SoloModeForm = () => {
       .then(res => res.json())
       .then(res => {
         sessionStorage.setItem('GAME_ID', res._id);
-        createSoloUser(res._id);
-        navigate(res._id);
+        // createSoloUser(res._id);
       });
   };
 

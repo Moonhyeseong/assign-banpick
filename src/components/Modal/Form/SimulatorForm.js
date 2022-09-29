@@ -54,7 +54,7 @@ const SimulatorForm = ({
   const createGame = () => {
     const { title, blueTeamName, redTeamName, mode } = simulatorFormData;
 
-    fetch(`${BASE_URL}:8080/start`, {
+    fetch(`${BASE_URL}:8080/game`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
