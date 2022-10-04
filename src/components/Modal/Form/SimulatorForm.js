@@ -30,6 +30,7 @@ const SimulatorForm = ({
   const handleMode = option => {
     setSimulatorFormData({ ...simulatorFormData, mode: option });
 
+    //모드에 따라서 유저리스트를 초기화하는 이 setState가 필요한가
     if (option === MODEDATA.oneOnOne) {
       setSelectedGameData({
         ...selectedGameData,
@@ -54,7 +55,7 @@ const SimulatorForm = ({
   const createGame = () => {
     const { title, blueTeamName, redTeamName, mode } = simulatorFormData;
 
-    fetch(`${BASE_URL}:8080/game`, {
+    const fetchOption = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -66,10 +67,13 @@ const SimulatorForm = ({
         mode: mode,
         isProceeding: false,
       }),
-    })
-      .then(res => res.json())
+    };
+
+    fetch(`${BASE_URL}:8080/game`, fetchOption)
+      .then(res => res.json(res))
       .then(res => {
         sessionStorage.setItem('GAME_ID', res._id);
+        console.log(res);
       });
 
     showModal('playerForm', mode, selectedGameData.userList);

@@ -2,8 +2,6 @@ import { GetServerSideProps } from 'next';
 import { getGameData } from '../../lib/games';
 
 const Simulator = ({ game }) => {
-  console.log(game);
-
   return <div>Simulator</div>;
 };
 

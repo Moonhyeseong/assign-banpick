@@ -10,7 +10,6 @@ export default function Home({
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const gameData = await getAllGames();
-
   return {
     props: { gameData },
   };

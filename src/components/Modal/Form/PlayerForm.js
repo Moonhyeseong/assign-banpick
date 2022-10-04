@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
-import uuid from 'react-uuid';
 import { useDispatch, useSelector } from 'react-redux';
+import uuid from 'react-uuid';
 import { CgClose } from 'react-icons/cg';
 import { MODEDATA, ROLEDATA } from '../../CONSTDATA/CONSTDATA';
 import { BASE_URL } from '../../../config';
@@ -13,7 +14,7 @@ const PlayerForm = ({
   const userData = useSelector(state => state.userFormData.userData);
 
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const isFormReady = () => {
     const formValues = Object.values(userData);
 
@@ -40,59 +41,34 @@ const PlayerForm = ({
     }
   };
 
-  const postUserJoin = () => {
-    if (gameMode === MODEDATA.oneOnOne) {
-      fetch(`${BASE_URL}:8080/user/join`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          game_id: sessionStorage.getItem('GAME_ID'),
-          user_id: userData.user_id,
-          name: userData.name,
-          side: userData.side,
-          role: userData.role,
-          mode: gameMode,
-          isReady: userData.isReady,
-        }),
-      })
-        .then(res => res.json())
-        .then(res => {
-          // socket.emit(
-          //   'user-join',
-          //   sessionStorage.getItem('GAME_ID'),
-          //   res,
-          //   userData.user_id
-          // );
-        });
-    } else if (gameMode === MODEDATA.fiveOnfive) {
-      fetch(`${BASE_URL}:8080/user/join`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          game_id: sessionStorage.getItem('GAME_ID'),
-          user_id: userData.user_id,
-          name: userData.name,
-          side: userData.side,
-          role: userData.role,
-          roleIndex: ROLEDATA[userData.role],
-          mode: gameMode,
-          isReady: userData.isReady,
-        }),
-      })
-        .then(res => res.json())
-        .then(res => {
-          // socket.emit(
-          //   'user-join',
-          //   sessionStorage.getItem('GAME_ID'),
-          //   res,
-          //   userData.user_id
-          // );
-        });
-    }
+  const postUserJoin = async () => {
+    const fetchOption = {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        gameId: sessionStorage.getItem('GAME_ID'),
+        userId: userData.user_id,
+        name: userData.name,
+        side: userData.side,
+        role: userData.role,
+        mode: gameMode,
+        isReady: userData.isReady,
+      }),
+    };
+
+    const res = await fetch(`${BASE_URL}:8080/game/join`, fetchOption);
+    const result = await res.json();
+    console.log(result);
+    // .then(res => {
+    //   // socket.emit(
+    //   //   'user-join',
+    //   //   sessionStorage.getItem('GAME_ID'),
+    //   //   res,
+    //   //   userData.user_id
+    //   // );
+    // });
 
     // navigate(sessionStorage.getItem('GAME_ID'));
   };

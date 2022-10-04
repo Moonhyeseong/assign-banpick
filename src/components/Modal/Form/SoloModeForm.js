@@ -1,26 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
+import { useRouter } from 'next/router';
 import uuid from 'react-uuid';
 import { BASE_URL } from '../../../config';
+import { createGame } from '../../../../lib/games';
 
 const SoloModeForm = () => {
   const [timerOption, setTimerOption] = useState(null);
 
-  const createSoloUser = game_id => {
-    fetch(`${BASE_URL}:8080/user/solo`, {
+  const router = useRouter();
+
+  const createSoloUser = async gameId => {
+    const fetchOption = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        game_id: game_id,
-        user_id: sessionStorage.getItem('USER_ID'),
+        gameId: gameId,
+        userId: sessionStorage.getItem('USER_ID'),
+        name: 'solo',
+        side: 'solo',
+        role: 'solo',
+        mode: 0,
+        isReady: true,
       }),
-    });
+    };
+
+    await fetch(`${BASE_URL}:8080/user`, fetchOption);
   };
 
-  const createGame = () => {
-    fetch(`${BASE_URL}:8080/game`, {
+  const createGame = async () => {
+    const fetchOption = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -33,12 +44,19 @@ const SoloModeForm = () => {
         timer: timerOption,
         isProceeding: true,
       }),
-    })
-      .then(res => res.json())
-      .then(res => {
-        sessionStorage.setItem('GAME_ID', res._id);
-        // createSoloUser(res._id);
-      });
+    };
+    const res = await fetch(`${BASE_URL}:8080/game`, fetchOption);
+    const result = await res.json();
+    sessionStorage.setItem('GAME_ID', result._id);
+    createSoloUser(result._id);
+    router.push(result._id);
+
+    // .then(res => res.json())
+    // .then(res => {
+    //   sessionStorage.setItem('GAME_ID', res._id);
+    //   createSoloUser(res._id);
+    //   router.push(res._id);
+    // });
   };
 
   useEffect(() => {
