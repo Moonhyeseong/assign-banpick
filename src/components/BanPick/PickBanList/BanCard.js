@@ -25,7 +25,7 @@ const BanCard = ({
 
   useEffect(() => {
     setIsSelecting(false);
-    if (phaseInfo === 'banList') {
+    if (phaseInfo === 'ban') {
       if (turn === side) {
         setIsSelecting(currentIndex === index);
       }

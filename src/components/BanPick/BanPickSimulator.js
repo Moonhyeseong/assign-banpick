@@ -1,36 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
-
+import { MODEDATA, PHASEDATA } from '../CONSTDATA/CONSTDATA';
+import { getUserData } from '../Modal/Form/userDataSlice';
+import { BASE_URL } from '../../config';
 import DisconnectAlert from '../Modal/DisconnectAlert';
 import ChampionList from './ChampionList/ChampionList';
 import PickList from './PickBanList/PickList';
 import BanPickIndicator from './BanPickIndicator/BanPickIndicator';
 import WatingRoom from '../WatingRoom/WatingRoom';
-import { MODEDATA, PHASEDATA } from '../CONSTDATA/CONSTDATA';
-import { getUserData } from '../Modal/Form/userDataSlice';
-import { BASE_URL } from '../../config';
+import { getGameData } from '../../../lib/games';
 
-const BanPickSimulator = () => {
+const BanPickSimulator = ({ championList }) => {
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const [isFinish, setIsFinish] = useState(false);
 
   const [isDisconnectModalActive, setIsDisconnectModalActive] = useState(false);
   const [gameData, setGameData] = useState(null);
 
-  const [championData, setChampionData] = useState([]);
+  const [championData, setChampionData] = useState(championList.data);
   const [selectedChampion, setSelectedChampion] = useState('');
 
   const [phaseCounter, setPhaseCounter] = useState(PHASEDATA.banPhase1);
 
   const [banPickList, setBanPickList] = useState({
-    banList: {
+    ban: {
       blue: ['', '', '', '', ''],
       red: ['', '', '', '', ''],
     },
-    pickList: {
+    pick: {
       blue: ['', '', '', '', ''],
       red: ['', '', '', '', ''],
     },
@@ -44,17 +46,17 @@ const BanPickSimulator = () => {
 
   //선택된 챔피언 목록
   const selectedChampions = [
-    ...banPickList.banList.red,
-    ...banPickList.banList.blue,
-    ...banPickList.pickList.red,
-    ...banPickList.pickList.blue,
+    ...banPickList.ban.red,
+    ...banPickList.ban.blue,
+    ...banPickList.pick.red,
+    ...banPickList.pick.blue,
     selectedChampion,
   ];
 
   const phaseInfo =
     phaseCounter === PHASEDATA.banPhase1 || phaseCounter === PHASEDATA.banPhase2
-      ? 'banList'
-      : 'pickList';
+      ? 'ban'
+      : 'pick';
 
   const initTimer = () => {
     setLeftTime(29000);
@@ -79,29 +81,29 @@ const BanPickSimulator = () => {
   //phaseCounter 업데이트
   const updatePhaseCounter = () => {
     if (
-      banPickList.banList.blue.indexOf('') === 3 &&
-      banPickList.banList.red.indexOf('') === 3
+      banPickList.ban.blue.indexOf('') === 3 &&
+      banPickList.ban.red.indexOf('') === 3
     ) {
       setPhaseCounter(PHASEDATA.pickPhase1);
     }
 
     if (
-      banPickList.pickList.blue.indexOf('') === 3 &&
-      banPickList.pickList.red.indexOf('') === 3
+      banPickList.pick.blue.indexOf('') === 3 &&
+      banPickList.pick.red.indexOf('') === 3
     ) {
       setPhaseCounter(PHASEDATA.banPhase2);
     }
 
     if (
-      banPickList.banList.blue.indexOf('') === -1 &&
-      banPickList.banList.red.indexOf('') === -1
+      banPickList.ban.blue.indexOf('') === -1 &&
+      banPickList.ban.red.indexOf('') === -1
     ) {
       setPhaseCounter(PHASEDATA.pickPhase2);
     }
 
     if (
-      banPickList.pickList.blue.indexOf('') === -1 &&
-      banPickList.pickList.red.indexOf('') === -1
+      banPickList.pick.blue.indexOf('') === -1 &&
+      banPickList.pick.red.indexOf('') === -1
     ) {
       setPhaseCounter(PHASEDATA.swapPhase);
     }
@@ -123,7 +125,7 @@ const BanPickSimulator = () => {
     }
   };
 
-  const postBanPickList = () => {
+  const postBanPickList = async () => {
     // socket.emit(
     //   'banpick',
     //   sessionStorage.getItem('GAME_ID'),
@@ -131,6 +133,29 @@ const BanPickSimulator = () => {
     //   gameData.banpickCount,
     //   phaseCounter
     // );
+
+    const fetchOption = {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        gameId: sessionStorage.getItem('GAME_ID'),
+        banPickList: banPickList,
+        banpickCount: gameData?.banpickCount,
+      }),
+    };
+
+    await fetch(`${BASE_URL}:8080/game/banpick`, fetchOption)
+      .then(res => res.json())
+      .then(res =>
+        setGameData({
+          ...gameData,
+          banPickList: res.banPickList,
+          banpickCount: res.banpickCount,
+        })
+      );
+
     setSelectedChampion('');
   };
 
@@ -159,18 +184,18 @@ const BanPickSimulator = () => {
   };
 
   const getUserDataAPI = () => {
-    gameData?.mode !== MODEDATA.solo &&
-      sessionStorage.getItem('USER_ID') &&
-      fetch(`${BASE_URL}:8080/user/${sessionStorage.getItem('USER_ID')}`)
-        .then(res => res.json())
-        .then(res => {
-          if (res) {
-            dispatch(getUserData(res));
-          } else {
-            alert('유저정보가 없습니다.');
-            window.location.replace('/');
-          }
-        });
+    // gameData?.mode !== MODEDATA.solo &&
+    //   sessionStorage.getItem('USER_ID') &&
+    //   fetch(`${BASE_URL}:8080/user/${sessionStorage.getItem('USER_ID')}`)
+    //     .then(res => res.json())
+    //     .then(res => {
+    //       if (res) {
+    //         dispatch(getUserData(res));
+    //       } else {
+    //         alert('유저정보가 없습니다.');
+    //         window.location.replace('/');
+    //       }
+    //     });
   };
 
   const getPhaseTitle = () => {
@@ -199,14 +224,11 @@ const BanPickSimulator = () => {
   //   }, 50);
   // });
 
-  //챔피언 목록 불러오기
   useEffect(() => {
-    fetch(
-      'https://ddragon.leagueoflegends.com/cdn/12.15.1/data/ko_KR/champion.json'
-    )
-      .then(response => response.json())
-      .then(data => setChampionData(data.data));
-  }, []);
+    fetch(`${BASE_URL}:8080/game/${router.query.id}`)
+      .then(res => res.json())
+      .then(res => setGameData(res));
+  }, [router.query.id]);
 
   //타이머 초기화
   useEffect(() => {

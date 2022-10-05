@@ -59,7 +59,7 @@ const BanPickIndicator = ({
           <TeamSide>RED</TeamSide>
           {gameData?.redTeamName}
           {gameData?.isProceeding ||
-            `(${notReadyPlayers('red')}/${gameData?.userList.red.length})`}
+            `(${notReadyPlayers('red')}/${gameData?.userList?.red.length})`}
         </TeamName>
       </TeamInfo>
     </IndicatorLayout>

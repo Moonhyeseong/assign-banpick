@@ -7,7 +7,7 @@ import { createGame } from '../../../../lib/games';
 
 const SoloModeForm = () => {
   const [timerOption, setTimerOption] = useState(null);
-
+  console.log(timerOption);
   const router = useRouter();
 
   const createSoloUser = async gameId => {

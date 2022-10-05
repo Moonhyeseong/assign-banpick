@@ -4,7 +4,7 @@ import PickCard from './PickCard';
 import BanList from './BanList';
 
 const PickList = ({
-  banPickList: { banList, pickList },
+  banPickList: { ban, pick },
   side,
   selectedChampion,
   turn,
@@ -21,19 +21,16 @@ const PickList = ({
   });
 
   const swapListItem = useCallback(() => {
-    [
-      pickList[side][swapItems.currentIndex],
-      pickList[side][swapItems.replaceIndex],
-    ] = [
-      pickList[side][swapItems.replaceIndex],
-      pickList[side][swapItems.currentIndex],
+    [pick[side][swapItems.currentIndex], pick[side][swapItems.replaceIndex]] = [
+      pick[side][swapItems.replaceIndex],
+      pick[side][swapItems.currentIndex],
     ];
     setSwapItems({
       side: '',
       currentIndex: '',
       replaceIndex: '',
     });
-  }, [pickList, side, swapItems.currentIndex, swapItems.replaceIndex]);
+  }, [pick, side, swapItems.currentIndex, swapItems.replaceIndex]);
 
   useEffect(() => {
     if (swapItems.replaceIndex !== '') {
@@ -45,14 +42,14 @@ const PickList = ({
   return (
     <PickListLayout>
       <PickListWrapper>
-        {pickList[side].map((champion, idx) => {
+        {pick[side].map((champion, idx) => {
           return (
             <PickCard
               key={idx}
               side={side}
               index={idx}
               champion={champion}
-              pickList={pickList[side]}
+              pickList={pick[side]}
               phaseInfo={phaseInfo}
               role={ROLE_INFO[idx]}
               selectedChampion={selectedChampion}
@@ -68,7 +65,7 @@ const PickList = ({
       </PickListWrapper>
       <BanList
         side={side}
-        banList={banList[side]}
+        banList={ban[side]}
         selectedChampion={selectedChampion}
         turn={turn}
         phaseInfo={phaseInfo}

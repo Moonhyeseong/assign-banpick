@@ -5,7 +5,6 @@ import { MODEDATA } from '../CONSTDATA/CONSTDATA';
 
 const LiftUserIndicator = ({ userList, mode }) => {
   const userData = useSelector(state => state.userFormData.userData);
-
   return (
     <LiftBackGround>
       <Filter />
@@ -14,20 +13,20 @@ const LiftUserIndicator = ({ userList, mode }) => {
           <RoleIcon
             side="blue"
             mode={mode}
-            isReady={userList.blue[0].isReady}
-            isJoin={userList.blue[0] === ''}
+            isReady={userList?.blue[0].isReady}
+            isJoin={userList?.blue[0] === ''}
             isUserPosition={
-              sessionStorage.getItem('USER_ID') === userList.blue[0].user_id
+              sessionStorage.getItem('USER_ID') === userList?.blue[0].user_id
             }
             src="/images/ROLE/solo.png"
           />
           <RoleIcon
             side="red"
             mode={mode}
-            isJoin={userList.red[0] === ''}
-            isReady={userList.red[0].isReady}
+            isJoin={userList?.red[0] === ''}
+            isReady={userList?.red[0].isReady}
             isUserPosition={
-              sessionStorage.getItem('USER_ID') === userList.red[0].user_id
+              sessionStorage.getItem('USER_ID') === userList?.red[0].user_id
             }
             src="/images/ROLE/solo.png"
           />

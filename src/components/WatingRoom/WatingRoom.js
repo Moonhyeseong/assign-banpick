@@ -27,14 +27,14 @@ const WatingRoom = ({ gameData, setGameData }) => {
       <WatingList
         mode={gameData?.mode}
         side="blue"
-        userList={gameData?.userList.blue}
+        userList={gameData?.userList?.blue}
         setGameData={setGameData}
       />
       <LiftUserIndicator mode={gameData?.mode} userList={gameData?.userList} />
       <WatingList
         mode={gameData?.mode}
         side="red"
-        userList={gameData?.userList.red}
+        userList={gameData?.userList?.red}
         setGameData={setGameData}
       />
     </WatingListLayout>

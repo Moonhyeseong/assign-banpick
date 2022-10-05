@@ -69,7 +69,7 @@ const PlayerForm = ({
     //   //   userData.user_id
     //   // );
     // });
-
+    router.push(sessionStorage.getItem('GAME_ID'));
     // navigate(sessionStorage.getItem('GAME_ID'));
   };
 

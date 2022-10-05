@@ -40,7 +40,7 @@ const PickCard = ({
 
   useEffect(() => {
     setIsSelecting(false);
-    if (phaseInfo === 'pickList') {
+    if (phaseInfo === 'pick') {
       if (turn === side) setIsSelecting(currentIndex === index);
     }
   }, [currentIndex, index, phaseInfo, side, turn]);
