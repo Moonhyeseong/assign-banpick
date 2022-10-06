@@ -11,7 +11,7 @@ const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
 
   const playerRoleData = userData?.role === role || playerData?.role === role;
   const playerSideData = userData?.side === side || playerData?.side === side;
-  const userIndicateData = playerData?.user_id === userData?.user_id;
+  const userIndicateData = playerData?.userId === userData?.userId;
 
   const isOneOneOneMode = MODEDATA.oneOnOne === mode;
 

@@ -11,8 +11,9 @@ import PickList from './PickBanList/PickList';
 import BanPickIndicator from './BanPickIndicator/BanPickIndicator';
 import WatingRoom from '../WatingRoom/WatingRoom';
 import { getGameData } from '../../../lib/games';
+import Head from 'next/head';
 
-const BanPickSimulator = ({ championList }) => {
+const BanPickSimulator = ({ game, championList }) => {
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -20,9 +21,9 @@ const BanPickSimulator = ({ championList }) => {
   const [isFinish, setIsFinish] = useState(false);
 
   const [isDisconnectModalActive, setIsDisconnectModalActive] = useState(false);
-  const [gameData, setGameData] = useState(null);
+  const [gameData, setGameData] = useState(game);
 
-  const [championData, setChampionData] = useState(championList.data);
+  const [championData, setChampionData] = useState(championList);
   const [selectedChampion, setSelectedChampion] = useState('');
 
   const [phaseCounter, setPhaseCounter] = useState(PHASEDATA.banPhase1);
@@ -141,20 +142,14 @@ const BanPickSimulator = ({ championList }) => {
       },
       body: JSON.stringify({
         gameId: sessionStorage.getItem('GAME_ID'),
-        banPickList: banPickList,
+        banpickList: banPickList,
         banpickCount: gameData?.banpickCount,
       }),
     };
 
-    await fetch(`${BASE_URL}:8080/game/banpick`, fetchOption)
-      .then(res => res.json())
-      .then(res =>
-        setGameData({
-          ...gameData,
-          banPickList: res.banPickList,
-          banpickCount: res.banpickCount,
-        })
-      );
+    const res = await fetch(`${BASE_URL}:8080/game/banpick`, fetchOption);
+    const result = await res.json();
+    setGameData(result);
 
     setSelectedChampion('');
   };
@@ -224,11 +219,11 @@ const BanPickSimulator = ({ championList }) => {
   //   }, 50);
   // });
 
-  useEffect(() => {
-    fetch(`${BASE_URL}:8080/game/${router.query.id}`)
-      .then(res => res.json())
-      .then(res => setGameData(res));
-  }, [router.query.id]);
+  // useEffect(() => {
+  //   fetch(`${BASE_URL}:8080/game/${router.query.id}`)
+  //     .then(res => res.json())
+  //     .then(res => setGameData(res));
+  // }, [router.query.id]);
 
   //타이머 초기화
   useEffect(() => {
@@ -309,6 +304,9 @@ const BanPickSimulator = ({ championList }) => {
 
   return (
     <>
+      <Head>
+        <title>BanPick Simulator | Simulator</title>
+      </Head>
       {isDisconnectModalActive && (
         <DisconnectAlert
           setIsDisconnectModalActive={setIsDisconnectModalActive}

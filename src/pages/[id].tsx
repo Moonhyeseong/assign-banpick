@@ -1,24 +1,33 @@
 import { GetServerSideProps } from 'next';
 
-import { getGameData, getChampionList } from '../../lib/games';
+import { getGameData, getInitialGameData } from '../../lib/games';
 import BanPickSimulator from '../components/BanPick/BanPickSimulator';
 
-const Simulator = ({ championList }) => {
-  return <BanPickSimulator championList={championList} />;
+const Simulator = ({ game, championList }) => {
+  return <BanPickSimulator game={game} championList={championList} />;
 };
 
 export default Simulator;
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  // const gameId = params?.id?.toString();
+  const gameId = params?.id?.toString();
 
-  // console.log('gameId', gameId);
+  // const [game, championList] = await Promise.all([
+  //   getGameData(gameId),
+  //   getChampionList(gameId),
+  // ]);
 
-  // const game = await getGameData(gameId);
+  // const gamedata = await getGameData(gameId);
+  // console.log(gamedata.game);
 
-  const championList = await getChampionList();
+  // const championList = await getChampionList();
+
+  const initalGameData = await getInitialGameData(gameId);
 
   return {
-    props: { championList },
+    props: {
+      game: initalGameData.game,
+      championList: initalGameData.championList,
+    },
   };
 };

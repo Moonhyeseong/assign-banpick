@@ -41,6 +41,26 @@ const PlayerForm = ({
     }
   };
 
+  const createUser = async () => {
+    const fetchOption = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        gameId: sessionStorage.getItem('GAME_ID'),
+        userId: userData.user_id,
+        name: userData.name,
+        side: userData.side,
+        role: userData.role,
+        mode: gameMode,
+        isReady: userData.isReady,
+      }),
+    };
+
+    await fetch(`${BASE_URL}:8080/user`, fetchOption);
+  };
+
   const postUserJoin = async () => {
     const fetchOption = {
       method: 'PATCH',
@@ -58,9 +78,9 @@ const PlayerForm = ({
       }),
     };
 
-    const res = await fetch(`${BASE_URL}:8080/game/join`, fetchOption);
-    const result = await res.json();
-    console.log(result);
+    await fetch(`${BASE_URL}:8080/game/join`, fetchOption);
+
+    createUser();
     // .then(res => {
     //   // socket.emit(
     //   //   'user-join',
@@ -70,7 +90,6 @@ const PlayerForm = ({
     //   // );
     // });
     router.push(sessionStorage.getItem('GAME_ID'));
-    // navigate(sessionStorage.getItem('GAME_ID'));
   };
 
   useEffect(() => {

@@ -9,8 +9,8 @@ const WatingRoom = ({ gameData, setGameData }) => {
   //유저 준비 여부 검사
   useEffect(() => {
     if (gameData) {
-      const blueTeamUserList = gameData?.userList.blue;
-      const redTeamUserList = gameData?.userList.red;
+      const blueTeamUserList = gameData?.userList?.blue;
+      const redTeamUserList = gameData?.userList?.red;
       const allUserList = [...blueTeamUserList, ...redTeamUserList];
 
       const userCount = allUserList.length;

@@ -3,11 +3,10 @@ import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
 import uuid from 'react-uuid';
 import { BASE_URL } from '../../../config';
-import { createGame } from '../../../../lib/games';
 
 const SoloModeForm = () => {
   const [timerOption, setTimerOption] = useState(null);
-  console.log(timerOption);
+
   const router = useRouter();
 
   const createSoloUser = async gameId => {
@@ -50,13 +49,6 @@ const SoloModeForm = () => {
     sessionStorage.setItem('GAME_ID', result._id);
     createSoloUser(result._id);
     router.push(result._id);
-
-    // .then(res => res.json())
-    // .then(res => {
-    //   sessionStorage.setItem('GAME_ID', res._id);
-    //   createSoloUser(res._id);
-    //   router.push(res._id);
-    // });
   };
 
   useEffect(() => {

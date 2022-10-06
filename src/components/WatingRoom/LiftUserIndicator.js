@@ -5,6 +5,9 @@ import { MODEDATA } from '../CONSTDATA/CONSTDATA';
 
 const LiftUserIndicator = ({ userList, mode }) => {
   const userData = useSelector(state => state.userFormData.userData);
+  const userID =
+    typeof window !== 'undefined' ? sessionStorage.getItem('USER_ID') : null;
+
   return (
     <LiftBackGround>
       <Filter />
@@ -15,9 +18,7 @@ const LiftUserIndicator = ({ userList, mode }) => {
             mode={mode}
             isReady={userList?.blue[0].isReady}
             isJoin={userList?.blue[0] === ''}
-            isUserPosition={
-              sessionStorage.getItem('USER_ID') === userList?.blue[0].user_id
-            }
+            isUserPosition={userID === userList?.blue[0].userId}
             src="/images/ROLE/solo.png"
           />
           <RoleIcon
@@ -25,9 +26,7 @@ const LiftUserIndicator = ({ userList, mode }) => {
             mode={mode}
             isJoin={userList?.red[0] === ''}
             isReady={userList?.red[0].isReady}
-            isUserPosition={
-              sessionStorage.getItem('USER_ID') === userList?.red[0].user_id
-            }
+            isUserPosition={userID === userList?.red[0].userId}
             src="/images/ROLE/solo.png"
           />
         </>
@@ -44,7 +43,7 @@ const LiftUserIndicator = ({ userList, mode }) => {
                 role={ROLE_INFO[idx]}
                 isJoin={playerData === ''}
                 isReady={playerData.isReady}
-                isUserPosition={userData?.user_id === playerData.user_id}
+                isUserPosition={userData?.userId === playerData.userId}
                 src={`/images/ROLE/${ROLE_INFO[idx]}.png`}
               />
             );
@@ -59,7 +58,7 @@ const LiftUserIndicator = ({ userList, mode }) => {
                 role={ROLE_INFO[idx]}
                 isJoin={playerData === ''}
                 isReady={playerData.isReady}
-                isUserPosition={userData?.user_id === playerData.user_id}
+                isUserPosition={userData?.userId === playerData.userId}
                 src={`/images/ROLE/${ROLE_INFO[idx]}.png`}
               />
             );
