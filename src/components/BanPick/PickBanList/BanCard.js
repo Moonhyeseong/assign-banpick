@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
+import Image from 'next/image';
 
 const BanCard = ({
   index,
@@ -39,14 +40,15 @@ const BanCard = ({
   return (
     <BanCardLayout>
       {(isSelecting || champion) && (
-        <BanCardImage imgURL={getImgURL()}>
+        <>
+          <Image width="66" height="66" priority src={getImgURL()} />
           <GradientMask
             side={side}
             isSelecting={isSelecting}
             champion={champion}
             index={index}
           />
-        </BanCardImage>
+        </>
       )}
     </BanCardLayout>
   );
@@ -59,16 +61,6 @@ const BanCardLayout = styled.div`
   width: 66px;
   height: 66px;
   border: 1px solid ${props => props.theme.black.black85};
-`;
-
-const BanCardImage = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-image: ${props => `url(${props.imgURL})`};
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
 `;
 
 const GradientMask = styled.div`

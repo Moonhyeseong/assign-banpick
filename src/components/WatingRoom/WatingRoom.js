@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import Head from 'next/head';
 import styled from 'styled-components';
 import WatingList from './WatingList';
 import LiftUserIndicator from './LiftUserIndicator';
@@ -24,6 +25,9 @@ const WatingRoom = ({ gameData, setGameData }) => {
 
   return (
     <WatingListLayout>
+      <Head>
+        <title>BanPick Simulator | Wating Room</title>
+      </Head>
       <WatingList
         mode={gameData?.mode}
         side="blue"

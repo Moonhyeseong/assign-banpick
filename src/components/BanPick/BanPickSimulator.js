@@ -230,13 +230,8 @@ const BanPickSimulator = ({ game }) => {
       ...banPickList.pick.blue,
       selectedChampion,
     ]);
-  }, [
-    banPickList.ban.blue,
-    banPickList.ban.red,
-    banPickList.pick.blue,
-    banPickList.pick.red,
-    selectedChampion,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   //타이머 초기화
   useEffect(() => {

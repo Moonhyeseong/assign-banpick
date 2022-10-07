@@ -1,12 +1,10 @@
-import React from 'react';
+import Image from 'next/image';
 import styled, { css } from 'styled-components';
 import { useSelector } from 'react-redux';
 import { MODEDATA } from '../CONSTDATA/CONSTDATA';
 
 const LiftUserIndicator = ({ userList, mode }) => {
   const userData = useSelector(state => state.userFormData.userData);
-  const userID =
-    typeof window !== 'undefined' ? sessionStorage.getItem('USER_ID') : null;
 
   return (
     <LiftBackGround>
@@ -15,20 +13,24 @@ const LiftUserIndicator = ({ userList, mode }) => {
         <>
           <RoleIcon
             side="blue"
+            role="solo"
             mode={mode}
             isReady={userList?.blue[0].isReady}
             isJoin={userList?.blue[0] === ''}
-            isUserPosition={userID === userList?.blue[0].userId}
-            src="/images/ROLE/solo.png"
-          />
+            isUserPosition={userData?.userId === userList?.blue[0].userId}
+          >
+            <Image width="60" height="60" src="/images/ROLE/solo.png" />
+          </RoleIcon>
           <RoleIcon
             side="red"
+            role="solo"
             mode={mode}
-            isJoin={userList?.red[0] === ''}
             isReady={userList?.red[0].isReady}
-            isUserPosition={userID === userList?.red[0].userId}
-            src="/images/ROLE/solo.png"
-          />
+            isJoin={userList?.red[0] === ''}
+            isUserPosition={userData?.userId === userList?.red[0].userId}
+          >
+            <Image width="60" height="60" src="/images/ROLE/solo.png" />
+          </RoleIcon>
         </>
       )}
 
@@ -44,8 +46,13 @@ const LiftUserIndicator = ({ userList, mode }) => {
                 isJoin={playerData === ''}
                 isReady={playerData.isReady}
                 isUserPosition={userData?.userId === playerData.userId}
-                src={`/images/ROLE/${ROLE_INFO[idx]}.png`}
-              />
+              >
+                <Image
+                  width="60"
+                  height="60"
+                  src={`/images/ROLE/${ROLE_INFO[idx]}.png`}
+                />
+              </RoleIcon>
             );
           })}
 
@@ -60,7 +67,13 @@ const LiftUserIndicator = ({ userList, mode }) => {
                 isReady={playerData.isReady}
                 isUserPosition={userData?.userId === playerData.userId}
                 src={`/images/ROLE/${ROLE_INFO[idx]}.png`}
-              />
+              >
+                <Image
+                  width="60"
+                  height="60"
+                  src={`/images/ROLE/${ROLE_INFO[idx]}.png`}
+                />
+              </RoleIcon>
             );
           })}
         </>
@@ -91,14 +104,14 @@ const Filter = styled.div`
   backdrop-filter: blur(1px);
 `;
 
-const RoleIcon = styled.img`
+const RoleIcon = styled.div`
   position: absolute;
-  width: 60px;
-  height: 60px;
   border-radius: 30px;
   padding: 10px;
   border: 3px solid white;
   z-index: 10;
+  width: 60px;
+  height: 60px;
 
   @keyframes blink-effect {
     50% {
@@ -109,6 +122,7 @@ const RoleIcon = styled.img`
   ${props =>
     props.mode === MODEDATA.oneOnOne &&
     props.side === 'blue' &&
+    props.role === 'solo' &&
     css`
       bottom: 360px;
       left: 530px;
@@ -117,6 +131,7 @@ const RoleIcon = styled.img`
   ${props =>
     props.mode === MODEDATA.oneOnOne &&
     props.side === 'red' &&
+    props.role === 'solo' &&
     css`
       top: 170px;
       right: 490px;
