@@ -13,46 +13,41 @@ import WatingRoom from '../WatingRoom/WatingRoom';
 import { getGameData } from '../../../lib/games';
 import Head from 'next/head';
 
-const BanPickSimulator = ({ game, championList }) => {
+const BanPickSimulator = ({ game }) => {
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
   const router = useRouter();
+  const isFinishPreRender = typeof window === 'undefined' ? true : false;
 
   const [isFinish, setIsFinish] = useState(false);
 
   const [isDisconnectModalActive, setIsDisconnectModalActive] = useState(false);
   const [gameData, setGameData] = useState(game);
 
-  const [championData, setChampionData] = useState(championList);
+  const [championData, setChampionData] = useState([]);
   const [selectedChampion, setSelectedChampion] = useState('');
 
   const [phaseCounter, setPhaseCounter] = useState(PHASEDATA.banPhase1);
 
-  const [banPickList, setBanPickList] = useState({
-    ban: {
-      blue: ['', '', '', '', ''],
-      red: ['', '', '', '', ''],
-    },
-    pick: {
-      blue: ['', '', '', '', ''],
-      red: ['', '', '', '', ''],
-    },
-  });
-
+  const [banPickList, setBanPickList] = useState(gameData.banpickList);
+  // const [banPickList, setBanPickList] = useState({
+  //   ban: {
+  //     blue: ['', '', '', '', ''],
+  //     red: ['', '', '', '', ''],
+  //   },
+  //   pick: {
+  //     blue: ['', '', '', '', ''],
+  //     red: ['', '', '', '', ''],
+  //   },
+  // });
+  // console.log('gameData', gameData.banpickList);
+  // console.log(banPickList);
   const [initialTime, setInitialTime] = useState();
   const [leftTime, setLeftTime] = useState();
 
   const [turn, setTurn] = useState();
   const [isEditable, setIsEditable] = useState(false);
-
-  //선택된 챔피언 목록
-  const selectedChampions = [
-    ...banPickList.ban.red,
-    ...banPickList.ban.blue,
-    ...banPickList.pick.red,
-    ...banPickList.pick.blue,
-    selectedChampion,
-  ];
+  const [selectedChampions, setSelectedChampions] = useState();
 
   const phaseInfo =
     phaseCounter === PHASEDATA.banPhase1 || phaseCounter === PHASEDATA.banPhase2
@@ -219,11 +214,29 @@ const BanPickSimulator = ({ game, championList }) => {
   //   }, 50);
   // });
 
-  // useEffect(() => {
-  //   fetch(`${BASE_URL}:8080/game/${router.query.id}`)
-  //     .then(res => res.json())
-  //     .then(res => setGameData(res));
-  // }, [router.query.id]);
+  useEffect(() => {
+    fetch(
+      'https://ddragon.leagueoflegends.com/cdn/12.16.1/data/ko_KR/champion.json'
+    )
+      .then(res => res.json())
+      .then(res => setChampionData(res.data));
+  }, []);
+
+  useEffect(() => {
+    setSelectedChampions([
+      ...banPickList.ban.red,
+      ...banPickList.ban.blue,
+      ...banPickList.pick.red,
+      ...banPickList.pick.blue,
+      selectedChampion,
+    ]);
+  }, [
+    banPickList.ban.blue,
+    banPickList.ban.red,
+    banPickList.pick.blue,
+    banPickList.pick.red,
+    selectedChampion,
+  ]);
 
   //타이머 초기화
   useEffect(() => {

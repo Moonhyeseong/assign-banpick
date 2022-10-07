@@ -1,33 +1,22 @@
 import { GetServerSideProps } from 'next';
-
-import { getGameData, getInitialGameData } from '../../lib/games';
+import { getGameData } from '../../lib/games';
 import BanPickSimulator from '../components/BanPick/BanPickSimulator';
 
-const Simulator = ({ game, championList }) => {
-  return <BanPickSimulator game={game} championList={championList} />;
+const Simulator = ({ game }) => {
+  return <BanPickSimulator game={game} />;
 };
 
 export default Simulator;
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const gameId = params?.id?.toString();
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const gameId: string = query?.id?.toString();
 
-  // const [game, championList] = await Promise.all([
-  //   getGameData(gameId),
-  //   getChampionList(gameId),
-  // ]);
-
-  // const gamedata = await getGameData(gameId);
-  // console.log(gamedata.game);
-
-  // const championList = await getChampionList();
-
-  const initalGameData = await getInitialGameData(gameId);
+  const initalGameData = await getGameData(gameId);
+  //선택된 챔피언 목록
 
   return {
     props: {
-      game: initalGameData.game,
-      championList: initalGameData.championList,
+      game: initalGameData,
     },
   };
 };

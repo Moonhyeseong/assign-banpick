@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { PHASEDATA } from '../../CONSTDATA/CONSTDATA';
+import Image from 'next/image';
 
 const ChampionCard = ({
   champion,
@@ -33,12 +34,17 @@ const ChampionCard = ({
         // );
       }}
     >
-      <ChampionIcon
-        src={
-          champion &&
-          `http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${champion}.png`
-        }
-      />
+      <ChampionIcon>
+        <Image
+          src={
+            champion &&
+            `http://ddragon.leagueoflegends.com/cdn/12.16.1/img/champion/${champion}.png`
+          }
+          width="80"
+          height="80"
+          priority
+        />
+      </ChampionIcon>
       {name}
     </ChampionCardLayout>
   );
@@ -70,7 +76,7 @@ const ChampionCardLayout = styled.button`
     `}
 `;
 
-const ChampionIcon = styled.img`
+const ChampionIcon = styled.div`
   width: 80px;
   height: 80px;
   border: 1px solid ${props => props.theme.black.black85};
