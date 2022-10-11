@@ -10,14 +10,12 @@ import ChampionList from './ChampionList/ChampionList';
 import PickList from './PickBanList/PickList';
 import BanPickIndicator from './BanPickIndicator/BanPickIndicator';
 import WatingRoom from '../WatingRoom/WatingRoom';
-import { getGameData } from '../../../lib/games';
 import Head from 'next/head';
 
 const BanPickSimulator = ({ game }) => {
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
   const router = useRouter();
-  const isFinishPreRender = typeof window === 'undefined' ? true : false;
 
   const [isFinish, setIsFinish] = useState(false);
 
@@ -41,7 +39,7 @@ const BanPickSimulator = ({ game }) => {
   //   },
   // });
   // console.log('gameData', gameData.banpickList);
-  // console.log(banPickList);
+
   const [initialTime, setInitialTime] = useState();
   const [leftTime, setLeftTime] = useState();
 
@@ -174,18 +172,17 @@ const BanPickSimulator = ({ game }) => {
   };
 
   const getUserDataAPI = () => {
-    // gameData?.mode !== MODEDATA.solo &&
-    //   sessionStorage.getItem('USER_ID') &&
-    //   fetch(`${BASE_URL}:8080/user/${sessionStorage.getItem('USER_ID')}`)
-    //     .then(res => res.json())
-    //     .then(res => {
-    //       if (res) {
-    //         dispatch(getUserData(res));
-    //       } else {
-    //         alert('유저정보가 없습니다.');
-    //         window.location.replace('/');
-    //       }
-    //     });
+    sessionStorage.getItem('USER_ID') &&
+      fetch(`${BASE_URL}:8080/user/${sessionStorage.getItem('USER_ID')}`)
+        .then(res => res.json())
+        .then(res => {
+          if (res) {
+            dispatch(getUserData(res));
+          } else {
+            alert('유저정보가 없습니다.');
+            window.location.replace('/');
+          }
+        });
   };
 
   const getPhaseTitle = () => {
@@ -230,8 +227,13 @@ const BanPickSimulator = ({ game }) => {
       ...banPickList.pick.blue,
       selectedChampion,
     ]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [
+    banPickList.ban.blue,
+    banPickList.ban.red,
+    banPickList.pick.blue,
+    banPickList.pick.red,
+    selectedChampion,
+  ]);
 
   //타이머 초기화
   useEffect(() => {

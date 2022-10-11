@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import PlayerForm from './Form/PlayerForm';
 import SimulatorForm from './Form/SimulatorForm';
-import SoloModeForm from './Form/SoloModeForm';
+import SoloModeForm from './Form/SoloModeForm.tsx';
 
 const GameListModal = ({
   initModalState,

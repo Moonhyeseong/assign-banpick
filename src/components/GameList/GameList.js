@@ -4,10 +4,10 @@ import ListFilter from './ListFilter';
 import GameRoom from './GameRoom';
 import GameListModal from '../Modal/GameListModal';
 import { MODEDATA } from '../CONSTDATA/CONSTDATA';
-
 import { useDispatch } from 'react-redux';
 import { initUserData } from '../Modal/Form/userDataSlice';
 import { BASE_URL } from '../../config';
+import { socket } from '../../../lib/socket';
 
 const GameList = ({ gameData }) => {
   const dispatch = useDispatch();
@@ -23,13 +23,6 @@ const GameList = ({ gameData }) => {
       five: '',
     },
   });
-
-  //socket
-  // socket.once('updateGameList', () => {
-  //   setTimeout(() => {
-  //     getGameListAPI();
-  //   }, 100);
-  // });
 
   //필터 적용 게임 리스트
   const getGameList = () => {
@@ -88,6 +81,18 @@ const GameList = ({ gameData }) => {
   // useEffect(() => {
   //   getGameListAPI();
   // }, []);
+
+  useEffect(() => {
+    socket.once('ServerToClient', data => {
+      console.log(data);
+    });
+    //socket
+    // socket.once('updateGameList', () => {
+    //   setTimeout(() => {
+    //     getGameListAPI();
+    //   }, 100);
+    // });
+  }, []);
 
   return (
     <GameListLayout>

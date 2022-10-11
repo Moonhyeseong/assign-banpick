@@ -13,14 +13,21 @@ const BanCard = ({
 }) => {
   const [isSelecting, setIsSelecting] = useState(false);
   const currentIndex = banList.indexOf('');
+  const isSelected = () => {
+    if (champion) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   const getImgURL = () => {
     if (champion === 'NO DATA') {
-      return 'https://ddragon.leagueoflegends.com/cdn/12.13.1/img/profileicon/29.png';
+      return 'https://ddragon.leagueoflegends.com/cdn/12.16.1/img/profileicon/29.png';
     } else if (champion) {
-      return `http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${champion}.png`;
+      return `http://ddragon.leagueoflegends.com/cdn/12.16.1/img/champion/${champion}.png`;
     } else if (selectedChampion) {
-      return `http://ddragon.leagueoflegends.com/cdn/12.14.1/img/champion/${selectedChampion}.png`;
+      return `http://ddragon.leagueoflegends.com/cdn/12.16.1/img/champion/${selectedChampion}.png`;
     }
   };
 
@@ -40,15 +47,18 @@ const BanCard = ({
   return (
     <BanCardLayout>
       {(isSelecting || champion) && (
-        <>
-          <Image width="66" height="66" priority src={getImgURL()} />
+        <ChampionIcon>
+          {(champion || selectedChampion) && (
+            <Image width="66" height="66" priority src={getImgURL()} />
+          )}
           <GradientMask
             side={side}
             isSelecting={isSelecting}
+            isSelected={isSelected()}
             champion={champion}
             index={index}
           />
-        </>
+        </ChampionIcon>
       )}
     </BanCardLayout>
   );
@@ -63,14 +73,22 @@ const BanCardLayout = styled.div`
   border: 1px solid ${props => props.theme.black.black85};
 `;
 
-const GradientMask = styled.div`
+const ChampionIcon = styled.div`
+  position: absolute;
+  top: 0;
   width: 100%;
   height: 100%;
+`;
 
+const GradientMask = styled.div`
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
   ${props =>
     props.side === 'blue' &&
     props.isSelecting &&
-    !props.champion &&
+    !props.isSelected &&
     css`
       background: linear-gradient(
         to top,
@@ -83,7 +101,7 @@ const GradientMask = styled.div`
   ${props =>
     props.side === 'red' &&
     props.isSelecting &&
-    !props.champion &&
+    !props.isSelected &&
     css`
       background: linear-gradient(
         to top,
@@ -93,7 +111,7 @@ const GradientMask = styled.div`
       animation: blink 0.5s ease-in-out infinite alternate;
     `}
 
-  @keyframes blink {
+@keyframes blink {
     0% {
       opacity: 0;
     }
