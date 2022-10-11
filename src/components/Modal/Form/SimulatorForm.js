@@ -5,6 +5,7 @@ import { CgClose } from 'react-icons/cg';
 import { useDispatch } from 'react-redux';
 import { initUserData } from './userDataSlice';
 import { MODEDATA } from '../../CONSTDATA/CONSTDATA';
+import { socket } from '../../../../lib/socket';
 
 const SimulatorForm = ({
   simulatorFormData,
@@ -73,11 +74,10 @@ const SimulatorForm = ({
       .then(res => res.json(res))
       .then(res => {
         sessionStorage.setItem('GAME_ID', res._id);
-        console.log(res);
       });
 
     showModal('playerForm', mode, selectedGameData.userList);
-    // socket.emit('createGame', sessionStorage.getItem('GAME_ID'));
+    socket.emit('createGame', sessionStorage.getItem('GAME_ID'));
   };
 
   useEffect(() => {

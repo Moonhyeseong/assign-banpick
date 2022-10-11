@@ -3,6 +3,8 @@ import Head from 'next/head';
 import styled from 'styled-components';
 import WatingList from './WatingList';
 import LiftUserIndicator from './LiftUserIndicator';
+import { socket } from '../../../lib/socket';
+import { getGameData } from '../../../lib/games';
 
 const WatingRoom = ({ gameData, setGameData }) => {
   // socket.emit('joinRoom', sessionStorage.getItem('GAME_ID'));
@@ -22,6 +24,16 @@ const WatingRoom = ({ gameData, setGameData }) => {
       }
     }
   }, [gameData, gameData?.userList]);
+
+  //socket
+  useEffect(() => {
+    socket.once('updateGameData', gameId => {
+      setTimeout(async () => {
+        const gameData = await getGameData(gameId);
+        setGameData(gameData);
+      }, 100);
+    });
+  });
 
   return (
     <WatingListLayout>

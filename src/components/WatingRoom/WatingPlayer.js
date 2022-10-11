@@ -4,6 +4,7 @@ import { MODEDATA, ROLEDATA } from '../CONSTDATA/CONSTDATA';
 import { useSelector, useDispatch } from 'react-redux';
 import { BASE_URL } from '../../config';
 import { getUserData, userReadyAction } from '../Modal/Form/userDataSlice';
+import { socket } from '../../../lib/socket';
 
 const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
   const userData = useSelector(state => state.userFormData.userData);
@@ -16,43 +17,7 @@ const WatingPlayer = ({ side, role, mode, playerData, setGameData }) => {
   const isOneOneOneMode = MODEDATA.oneOnOne === mode;
 
   const postUserReadyData = () => {
-    if (mode === MODEDATA.oneOnOne) {
-      fetch(`${BASE_URL}:8080/user/ready`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          game_id: sessionStorage.getItem('GAME_ID'),
-          user_id: userData.user_id,
-          userSide: userData.side,
-          userIndex: 0,
-          mode: mode,
-        }),
-      })
-        .then(res => res.json())
-        .then(res => {
-          // socket.emit('userReadyEvent', sessionStorage.getItem('GAME_ID'), res);
-        });
-    } else if (mode === MODEDATA.fiveOnfive) {
-      fetch(`${BASE_URL}:8080/user/ready`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          game_id: sessionStorage.getItem('GAME_ID'),
-          user_id: userData.user_id,
-          userSide: userData.side,
-          userIndex: ROLEDATA[userData.role],
-          mode: mode,
-        }),
-      })
-        .then(res => res.json())
-        .then(res => {
-          // socket.emit('userReadyEvent', sessionStorage.getItem('GAME_ID'), res);
-        });
-    }
+    socket.emit('userReadyEvent', userData);
     dispatch(userReadyAction());
   };
 

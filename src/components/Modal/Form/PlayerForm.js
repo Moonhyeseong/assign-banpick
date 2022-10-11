@@ -7,6 +7,7 @@ import { CgClose } from 'react-icons/cg';
 import { MODEDATA, ROLEDATA } from '../../CONSTDATA/CONSTDATA';
 import { BASE_URL } from '../../../config';
 import { initUserData, updateUserData } from './userDataSlice';
+import { socket } from '../../../../lib/socket';
 
 const PlayerForm = ({
   selectedGameData: { gameMode, initModalState, userList },
@@ -89,6 +90,7 @@ const PlayerForm = ({
     //   //   userData.user_id
     //   // );
     // });
+    socket.emit('userJoin', sessionStorage.getItem('GAME_ID'));
     router.push(sessionStorage.getItem('GAME_ID'));
   };
 

@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { initUserData } from '../Modal/Form/userDataSlice';
 import { BASE_URL } from '../../config';
 import { socket } from '../../../lib/socket';
+import { getAllGames } from '../../../lib/games';
 
 const GameList = ({ gameData }) => {
   const dispatch = useDispatch();
@@ -70,29 +71,15 @@ const GameList = ({ gameData }) => {
     dispatch(initUserData());
   };
 
-  //게임리스트 호출
-  // const getGameListAPI = () => {
-  //   fetch(`${BASE_URL}:8080/game`)
-  //     .then(res => res.json())
-  //     .then(res => console.log(res));
-  // };
-
-  //게임리스트 get
-  // useEffect(() => {
-  //   getGameListAPI();
-  // }, []);
-
   useEffect(() => {
-    socket.once('ServerToClient', data => {
-      console.log(data);
-    });
     //socket
-    // socket.once('updateGameList', () => {
-    //   setTimeout(() => {
-    //     getGameListAPI();
-    //   }, 100);
-    // });
-  }, []);
+    socket.once('updateGameList', () => {
+      setTimeout(async () => {
+        const gamesData = await getAllGames();
+        setGames(gamesData);
+      }, 100);
+    });
+  });
 
   return (
     <GameListLayout>
