@@ -90,7 +90,7 @@ const PlayerForm = ({
     //   //   userData.user_id
     //   // );
     // });
-    socket.emit('userJoin', sessionStorage.getItem('GAME_ID'));
+    socket.emit('userJoinGame', sessionStorage.getItem('GAME_ID'));
     router.push(sessionStorage.getItem('GAME_ID'));
   };
 

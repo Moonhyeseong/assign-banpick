@@ -28,12 +28,17 @@ const WatingRoom = ({ gameData, setGameData }) => {
   //socket
   useEffect(() => {
     socket.once('updateGameData', gameId => {
+      console.log(gameId);
       setTimeout(async () => {
         const gameData = await getGameData(gameId);
         setGameData(gameData);
       }, 100);
     });
   });
+
+  useEffect(() => {
+    socket.emit('userJoinWatingRoom', sessionStorage.getItem('GAME_ID'));
+  }, []);
 
   return (
     <WatingListLayout>
