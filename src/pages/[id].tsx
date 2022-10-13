@@ -10,13 +10,13 @@ export default Simulator;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const gameId: string = query?.id?.toString();
-
-  const initalGameData = await getGameData(gameId);
-  //선택된 챔피언 목록
-
-  return {
-    props: {
-      game: initalGameData,
-    },
-  };
+  try {
+    const initalGameData = await getGameData(gameId);
+    if (initalGameData.statusCode === 500) {
+      return { notFound: true };
+    }
+    return { props: { game: initalGameData } };
+  } catch {
+    return { notFound: true };
+  }
 };

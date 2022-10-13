@@ -82,14 +82,6 @@ const PlayerForm = ({
     await fetch(`${BASE_URL}:8080/game/join`, fetchOption);
 
     createUser();
-    // .then(res => {
-    //   // socket.emit(
-    //   //   'user-join',
-    //   //   sessionStorage.getItem('GAME_ID'),
-    //   //   res,
-    //   //   userData.user_id
-    //   // );
-    // });
     socket.emit('userJoinGame', sessionStorage.getItem('GAME_ID'));
     router.push(sessionStorage.getItem('GAME_ID'));
   };

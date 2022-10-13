@@ -6,7 +6,6 @@ import GameListModal from '../Modal/GameListModal';
 import { MODEDATA } from '../CONSTDATA/CONSTDATA';
 import { useDispatch } from 'react-redux';
 import { initUserData } from '../Modal/Form/userDataSlice';
-import { BASE_URL } from '../../config';
 import { socket } from '../../../lib/socket';
 import { getAllGames } from '../../../lib/games';
 
@@ -71,15 +70,17 @@ const GameList = ({ gameData }) => {
     dispatch(initUserData());
   };
 
+  //socket
   useEffect(() => {
-    //socket
-    socket.once('updateGameList', () => {
-      setTimeout(async () => {
-        const gamesData = await getAllGames();
-        setGames(gamesData);
-      }, 100);
+    socket.on('updateGameList', async () => {
+      const gamesData = await getAllGames();
+      setGames(gamesData);
     });
-  });
+
+    return () => {
+      socket.off('updateGameList');
+    };
+  }, []);
 
   return (
     <GameListLayout>

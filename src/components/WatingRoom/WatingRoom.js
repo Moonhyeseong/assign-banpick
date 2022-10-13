@@ -4,11 +4,8 @@ import styled from 'styled-components';
 import WatingList from './WatingList';
 import LiftUserIndicator from './LiftUserIndicator';
 import { socket } from '../../../lib/socket';
-import { getGameData } from '../../../lib/games';
 
 const WatingRoom = ({ gameData, setGameData }) => {
-  // socket.emit('joinRoom', sessionStorage.getItem('GAME_ID'));
-
   //유저 준비 여부 검사
   useEffect(() => {
     if (gameData) {
@@ -20,24 +17,16 @@ const WatingRoom = ({ gameData, setGameData }) => {
       const preparedUsers = allUserList.filter(user => user.isReady);
 
       if (userCount === preparedUsers.length) {
-        // socket.emit('start-simulator', sessionStorage.getItem('GAME_ID'));
+        socket.emit('startSimulator', sessionStorage.getItem('GAME_ID'));
       }
     }
   }, [gameData, gameData?.userList]);
 
-  //socket
   useEffect(() => {
-    socket.once('updateGameData', gameId => {
-      console.log(gameId);
-      setTimeout(async () => {
-        const gameData = await getGameData(gameId);
-        setGameData(gameData);
-      }, 100);
+    socket.emit('userJoinWatingRoom', {
+      gameId: sessionStorage.getItem('GAME_ID'),
+      userId: sessionStorage.getItem('USER_ID'),
     });
-  });
-
-  useEffect(() => {
-    socket.emit('userJoinWatingRoom', sessionStorage.getItem('GAME_ID'));
   }, []);
 
   return (

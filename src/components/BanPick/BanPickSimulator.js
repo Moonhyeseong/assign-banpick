@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { MODEDATA, PHASEDATA } from '../CONSTDATA/CONSTDATA';
 import { getUserData } from '../Modal/Form/userDataSlice';
@@ -11,11 +10,12 @@ import PickList from './PickBanList/PickList';
 import BanPickIndicator from './BanPickIndicator/BanPickIndicator';
 import WatingRoom from '../WatingRoom/WatingRoom';
 import Head from 'next/head';
+import { socket } from '../../../lib/socket';
+import { getGameData } from '../../../lib/games';
 
 const BanPickSimulator = ({ game }) => {
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
-  const router = useRouter();
 
   const [isFinish, setIsFinish] = useState(false);
 
@@ -204,12 +204,17 @@ const BanPickSimulator = ({ game }) => {
   //   setIsDisconnectModalActive(true);
   // });
 
-  // socket.once('updateGameData', docs => {
-  //   setTimeout(() => {
-  //     setGameData(docs);
-  //     setBanPickList(docs.banPickList);
-  //   }, 50);
-  // });
+  //socket
+  useEffect(() => {
+    socket.on('updateGameData', async gameId => {
+      const gameData = await getGameData(gameId);
+      setGameData(gameData);
+    });
+
+    return () => {
+      socket.off('updateGameData');
+    };
+  }, []);
 
   useEffect(() => {
     fetch(

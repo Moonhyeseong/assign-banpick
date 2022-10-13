@@ -11,6 +11,7 @@ export default function Home({
   useEffect(() => {
     initSocketConnection();
   }, []);
+
   return (
     <>
       <Head>
@@ -23,6 +24,7 @@ export default function Home({
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const gameData = await getAllGames();
+  initSocketConnection();
   return {
     props: { gameData },
   };
