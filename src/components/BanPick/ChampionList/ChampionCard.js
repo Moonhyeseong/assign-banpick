@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { PHASEDATA } from '../../CONSTDATA/CONSTDATA';
 import Image from 'next/image';
+import { socket } from '../../../../lib/socket';
+import { PHASEDATA } from '../../CONSTDATA/CONSTDATA';
 
 const ChampionCard = ({
   champion,
@@ -27,11 +28,10 @@ const ChampionCard = ({
       disabled={isSelected || phaseCounter === PHASEDATA.swapPhase}
       onClick={() => {
         setSelectedChampion(champion);
-        // socket.emit(
-        //   'selectChampion',
-        //   sessionStorage.getItem('GAME_ID'),
-        //   champion
-        // );
+        socket.emit('selectChampion', {
+          gameId: sessionStorage.getItem('GAME_ID'),
+          champion: champion,
+        });
       }}
     >
       <ChampionIcon>

@@ -28,17 +28,6 @@ const BanPickSimulator = ({ game }) => {
   const [phaseCounter, setPhaseCounter] = useState(PHASEDATA.banPhase1);
 
   const [banPickList, setBanPickList] = useState(gameData.banpickList);
-  // const [banPickList, setBanPickList] = useState({
-  //   ban: {
-  //     blue: ['', '', '', '', ''],
-  //     red: ['', '', '', '', ''],
-  //   },
-  //   pick: {
-  //     blue: ['', '', '', '', ''],
-  //     red: ['', '', '', '', ''],
-  //   },
-  // });
-  // console.log('gameData', gameData.banpickList);
 
   const [initialTime, setInitialTime] = useState();
   const [leftTime, setLeftTime] = useState();
@@ -52,23 +41,10 @@ const BanPickSimulator = ({ game }) => {
       ? 'ban'
       : 'pick';
 
-  const initTimer = () => {
-    setLeftTime(29000);
-    setInitialTime(new Date().getTime() + 29000);
-  };
-
-  //타임아웃시 자동 밴픽 동작
-  const getTimeOutItem = () => {
-    const championList = Object.values(championData);
-    const randomIndex = Math.floor(Math.random() * championList.length);
-
-    if (phaseInfo === 'banList') {
-      return 'NO DATA';
-    } else if (phaseInfo === 'pickList') {
-      if (selectedChampions.indexOf(championList[randomIndex]) === -1) {
-        // socket.emit('timeout', championList[randomIndex].id);
-        return championList[randomIndex].id;
-      }
+  const initTimer = phaseCounter => {
+    if (phaseCounter !== PHASEDATA.swapPhase) {
+      setLeftTime(29000);
+      setInitialTime(new Date().getTime() + 29000);
     }
   };
 
@@ -103,14 +79,28 @@ const BanPickSimulator = ({ game }) => {
     }
   };
 
+  //타임아웃시 자동 밴픽 동작
+  const getTimeOutItem = () => {
+    const championList = Object.values(championData);
+    const randomIndex = Math.floor(Math.random() * championList.length);
+
+    if (phaseInfo === 'banList') {
+      return 'NO DATA';
+    } else if (phaseInfo === 'pickList') {
+      if (selectedChampions.indexOf(championList[randomIndex]) === -1) {
+        // socket.emit('timeout', championList[randomIndex].id);
+        return championList[randomIndex].id;
+      }
+    }
+  };
+
   //밴픽 챔피언 선택버튼
   const handleSelectBtn = () => {
     const index = banPickList[phaseInfo][turn].indexOf('');
 
     //페이즈정보 턴정보 인덱스 정보 - 선택된 챔피언 정보
-    banPickList[phaseInfo][turn][index] = selectedChampion
-      ? selectedChampion
-      : getTimeOutItem();
+    banPickList[phaseInfo][turn][index] =
+      selectedChampion !== '' ? selectedChampion : getTimeOutItem();
 
     setSelectedChampion('');
 
@@ -120,14 +110,6 @@ const BanPickSimulator = ({ game }) => {
   };
 
   const postBanPickList = async () => {
-    // socket.emit(
-    //   'banpick',
-    //   sessionStorage.getItem('GAME_ID'),
-    //   banPickList,
-    //   gameData.banpickCount,
-    //   phaseCounter
-    // );
-
     const fetchOption = {
       method: 'PATCH',
       headers: {
@@ -140,11 +122,8 @@ const BanPickSimulator = ({ game }) => {
       }),
     };
 
-    const res = await fetch(`${BASE_URL}:8080/game/banpick`, fetchOption);
-    const result = await res.json();
-    setGameData(result);
-
-    setSelectedChampion('');
+    await fetch(`${BASE_URL}:8080/game/banpick`, fetchOption);
+    socket.emit('banpick', sessionStorage.getItem('GAME_ID'));
   };
 
   const handleTimeOut = () => {
@@ -155,20 +134,6 @@ const BanPickSimulator = ({ game }) => {
         initTimer();
       }
     }
-  };
-
-  const getGameDataAPI = () => {
-    // fetch(`${BASE_URL}:8080/gameData/${params.id}`)
-    //   .then(res => res.json())
-    //   .then(res => {
-    //     if (res) {
-    //       setGameData(res);
-    //       setBanPickList(res.banPickList);
-    //     } else {
-    //       alert('존재하지 않는 게임입니다.');
-    //       window.location.replace('/');
-    //     }
-    //   });
   };
 
   const getUserDataAPI = () => {
@@ -206,15 +171,25 @@ const BanPickSimulator = ({ game }) => {
 
   //socket
   useEffect(() => {
+    const handleSimultorUpdate = updatedGameData => {
+      if (gameData.isProceeding) {
+        setBanPickList(updatedGameData.banpickList);
+        setSelectedChampion('');
+        setIsEditable(false);
+        initTimer();
+      }
+    };
+
     socket.on('updateGameData', async gameId => {
-      const gameData = await getGameData(gameId);
-      setGameData(gameData);
+      const updatedGameData = await getGameData(gameId);
+      setGameData(updatedGameData);
+      handleSimultorUpdate(updatedGameData);
     });
 
-    return () => {
-      socket.off('updateGameData');
-    };
-  }, []);
+    socket.on('updateSelectedChampion', champion => {
+      setSelectedChampion(champion);
+    });
+  }, [gameData.isProceeding]);
 
   useEffect(() => {
     fetch(
@@ -250,7 +225,6 @@ const BanPickSimulator = ({ game }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      getGameDataAPI();
       getUserDataAPI();
     }, 50);
     return clearInterval();
