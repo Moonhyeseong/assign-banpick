@@ -23,6 +23,7 @@ const SoloModeForm = () => {
       body: JSON.stringify({
         gameId: gameId,
         userId: sessionStorage.getItem('USER_ID'),
+        clientId: socket.id,
         name: 'solo',
         side: 'solo',
         role: 'solo',

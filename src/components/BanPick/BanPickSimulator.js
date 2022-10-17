@@ -16,7 +16,7 @@ import { getGameData } from '../../../lib/games';
 const BanPickSimulator = ({ game }) => {
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
-
+  console.log(userData);
   const [isFinish, setIsFinish] = useState(false);
 
   const [isDisconnectModalActive, setIsDisconnectModalActive] = useState(false);
@@ -187,6 +187,9 @@ const BanPickSimulator = ({ game }) => {
       setSelectedChampion(champion);
     });
 
+    socket.on('disconnected', payload => {
+      console.log(payload);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameData.isProceeding]);
 

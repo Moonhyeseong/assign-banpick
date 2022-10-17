@@ -51,6 +51,7 @@ const PlayerForm = ({
       body: JSON.stringify({
         gameId: sessionStorage.getItem('GAME_ID'),
         userId: userData.user_id,
+        clientId: socket.id,
         name: userData.name,
         side: userData.side,
         role: userData.role,
@@ -71,6 +72,7 @@ const PlayerForm = ({
       body: JSON.stringify({
         gameId: sessionStorage.getItem('GAME_ID'),
         userId: userData.user_id,
+        clientId: socket.id,
         name: userData.name,
         side: userData.side,
         role: userData.role,
