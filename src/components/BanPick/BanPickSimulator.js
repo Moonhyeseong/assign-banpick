@@ -33,6 +33,7 @@ const BanPickSimulator = ({ game }) => {
   const [leftTime, setLeftTime] = useState();
 
   const [turn, setTurn] = useState();
+
   const [isEditable, setIsEditable] = useState(false);
   const [selectedChampions, setSelectedChampions] = useState();
 
@@ -40,13 +41,6 @@ const BanPickSimulator = ({ game }) => {
     phaseCounter === PHASEDATA.banPhase1 || phaseCounter === PHASEDATA.banPhase2
       ? 'ban'
       : 'pick';
-
-  const initTimer = phaseCounter => {
-    if (phaseCounter !== PHASEDATA.swapPhase) {
-      setLeftTime(29000);
-      setInitialTime(new Date().getTime() + 29000);
-    }
-  };
 
   //phaseCounter 업데이트
   const updatePhaseCounter = () => {
@@ -84,11 +78,10 @@ const BanPickSimulator = ({ game }) => {
     const championList = Object.values(championData);
     const randomIndex = Math.floor(Math.random() * championList.length);
 
-    if (phaseInfo === 'banList') {
+    if (phaseInfo === 'ban') {
       return 'NO DATA';
-    } else if (phaseInfo === 'pickList') {
+    } else if (phaseInfo === 'pick') {
       if (selectedChampions.indexOf(championList[randomIndex]) === -1) {
-        // socket.emit('timeout', championList[randomIndex].id);
         return championList[randomIndex].id;
       }
     }
@@ -103,10 +96,6 @@ const BanPickSimulator = ({ game }) => {
       selectedChampion !== '' ? selectedChampion : getTimeOutItem();
 
     setSelectedChampion('');
-
-    if (phaseCounter !== PHASEDATA.swapPhase) {
-      initTimer();
-    }
   };
 
   const postBanPickList = async () => {
@@ -127,7 +116,7 @@ const BanPickSimulator = ({ game }) => {
   };
 
   const handleTimeOut = () => {
-    if (leftTime < 0) {
+    if (leftTime < 0 && isEditable === true) {
       if (phaseCounter !== PHASEDATA.swapPhase) {
         handleSelectBtn();
         postBanPickList();
@@ -164,6 +153,13 @@ const BanPickSimulator = ({ game }) => {
     }
   };
 
+  const initTimer = () => {
+    if (phaseCounter !== PHASEDATA.swapPhase) {
+      setLeftTime(29000);
+      setInitialTime(new Date().getTime() + 29000);
+    }
+  };
+
   //socket
   // socket.once('shutdown-simulator', () => {
   //   setIsDisconnectModalActive(true);
@@ -175,8 +171,6 @@ const BanPickSimulator = ({ game }) => {
       if (gameData.isProceeding) {
         setBanPickList(updatedGameData.banpickList);
         setSelectedChampion('');
-        setIsEditable(false);
-        initTimer();
       }
     };
 
@@ -184,11 +178,16 @@ const BanPickSimulator = ({ game }) => {
       const updatedGameData = await getGameData(gameId);
       setGameData(updatedGameData);
       handleSimultorUpdate(updatedGameData);
+      if (updatedGameData.banpickCount <= 20) {
+        initTimer();
+      }
     });
 
     socket.on('updateSelectedChampion', champion => {
       setSelectedChampion(champion);
     });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameData.isProceeding]);
 
   useEffect(() => {
@@ -217,11 +216,11 @@ const BanPickSimulator = ({ game }) => {
 
   //타이머 초기화
   useEffect(() => {
-    if (gameData?.isProceeding) {
+    if (gameData?.isProceeding && phaseCounter !== PHASEDATA.swapPhase) {
       setInitialTime(new Date().getTime() + 29000);
       setLeftTime(29000);
     }
-  }, [gameData?.isProceeding]);
+  }, [gameData?.isProceeding, phaseCounter]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -247,24 +246,21 @@ const BanPickSimulator = ({ game }) => {
 
   useEffect(() => {
     updatePhaseCounter();
-    if (isEditable) handleTimeOut();
+    if (isEditable) {
+      handleTimeOut();
+    }
   });
 
   // #편집권한 설정 함수
   useEffect(() => {
     if (gameData?.mode === MODEDATA.oneOnOne) {
-      if (
-        userData?.side ===
-        gameData?.banpickTurnData[gameData?.banpickCount]?.side
-      ) {
+      if (userData?.side === turn) {
         setIsEditable(true);
       } else {
         setIsEditable(false);
       }
     } else if (gameData?.mode === MODEDATA.fiveOnfive) {
-      const userSideInfo =
-        userData?.side ===
-        gameData?.banpickTurnData[gameData?.banpickCount]?.side;
+      const userSideInfo = userData?.side === turn;
       const userIndexInfo =
         userData?.role ===
         gameData?.banpickTurnData[gameData?.banpickCount]?.role;
@@ -283,6 +279,7 @@ const BanPickSimulator = ({ game }) => {
     gameData?.mode,
     userData?.role,
     userData?.side,
+    turn,
   ]);
 
   useEffect(() => {
@@ -335,7 +332,6 @@ const BanPickSimulator = ({ game }) => {
               selectedChampions={selectedChampions}
               postBanPickList={postBanPickList}
               isEditable={isEditable}
-              initTimer={initTimer}
             />
             <PickList
               side="red"

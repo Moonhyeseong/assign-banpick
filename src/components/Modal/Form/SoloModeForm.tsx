@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
 import uuid from 'react-uuid';
 import { BASE_URL } from '../../../config';
+import { socket } from '../../../../lib/socket';
 
 interface IFormOption {
   isSelected: boolean;
@@ -52,6 +53,7 @@ const SoloModeForm = () => {
     const result = await res.json();
     sessionStorage.setItem('GAME_ID', result._id);
     createSoloUser(result._id);
+    socket.emit('userJoinGame', result._id);
     router.push(result._id);
   };
 

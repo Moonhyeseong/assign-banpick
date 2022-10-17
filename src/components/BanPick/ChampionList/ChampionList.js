@@ -5,7 +5,6 @@ import ChampionFilter from './ChampionFilter';
 import { PHASEDATA } from '../../CONSTDATA/CONSTDATA';
 
 const ChampionList = ({
-  setBanPickList,
   championData,
   selectedChampion,
   setSelectedChampion,
@@ -14,7 +13,6 @@ const ChampionList = ({
   phaseCounter,
   postBanPickList,
   isEditable,
-  initTimer,
 }) => {
   const [search, setSearch] = useState('');
 
@@ -27,18 +25,6 @@ const ChampionList = ({
       champion.id.toLowerCase().includes(search.toLowerCase())
     );
   });
-
-  // socket.on('banpick', (banPickList, phaseCounter) => {
-  //   setBanPickList(banPickList);
-  //   setSelectedChampion('');
-  //   if (phaseCounter !== CONSTDATA.PHASEDATA.swapPhase) {
-  //     initTimer();
-  //   }
-  // });
-
-  // socket.on('selectChampion', champion => {
-  //   setSelectedChampion(champion);
-  // });
 
   return (
     <ChampionListLayout>

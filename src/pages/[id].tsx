@@ -10,6 +10,7 @@ export default Simulator;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const gameId: string = query?.id?.toString();
+
   try {
     const initalGameData = await getGameData(gameId);
     if (initalGameData.statusCode === 500) {
