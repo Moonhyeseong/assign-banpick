@@ -20,7 +20,7 @@ const ChampionFilter = ({ search, setSearch }) => {
   );
 };
 
-export default ChampionFilter;
+export default React.memo(ChampionFilter);
 
 const FilterLayout = styled.div`
   position: relative;

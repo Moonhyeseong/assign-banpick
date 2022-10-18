@@ -63,7 +63,7 @@ const ChampionList = ({
   );
 };
 
-export default ChampionList;
+export default React.memo(ChampionList);
 
 const ChampionListLayout = styled.div`
   text-align: center;

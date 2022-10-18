@@ -50,7 +50,7 @@ const ChampionCard = ({
   );
 };
 
-export default ChampionCard;
+export default React.memo(ChampionCard);
 
 const ChampionCardLayout = styled.button`
   display: flex;
