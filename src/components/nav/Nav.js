@@ -1,16 +1,12 @@
 import styled from 'styled-components';
 
-import Link from 'next/link';
-
 const Nav = () => {
   return (
     <NavLayout>
       <Title>BanPick Simulator</Title>
       <MenuList>
         <NavItem>
-          <Link href="/">
-            <a>Go To Lobby</a>
-          </Link>
+          <a href="/">Go To Lobby</a>
         </NavItem>
       </MenuList>
     </NavLayout>

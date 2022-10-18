@@ -16,10 +16,9 @@ import { getGameData } from '../../../lib/games';
 const BanPickSimulator = ({ game }) => {
   const userData = useSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
-  console.log(userData);
+
   const [isFinish, setIsFinish] = useState(false);
 
-  const [isDisconnectModalActive, setIsDisconnectModalActive] = useState(false);
   const [gameData, setGameData] = useState(game);
 
   const [championData, setChampionData] = useState([]);
@@ -36,6 +35,8 @@ const BanPickSimulator = ({ game }) => {
 
   const [isEditable, setIsEditable] = useState(false);
   const [selectedChampions, setSelectedChampions] = useState();
+
+  const [isDisconnectModalActive, setIsDisconnectModalActive] = useState(false);
 
   const phaseInfo =
     phaseCounter === PHASEDATA.banPhase1 || phaseCounter === PHASEDATA.banPhase2
@@ -161,11 +162,6 @@ const BanPickSimulator = ({ game }) => {
   };
 
   //socket
-  // socket.once('shutdown-simulator', () => {
-  //   setIsDisconnectModalActive(true);
-  // });
-
-  //socket
   useEffect(() => {
     const handleSimultorUpdate = updatedGameData => {
       if (gameData.isProceeding) {
@@ -187,11 +183,20 @@ const BanPickSimulator = ({ game }) => {
       setSelectedChampion(champion);
     });
 
-    socket.on('disconnected', payload => {
-      console.log(payload);
-    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameData.isProceeding]);
+
+  //unmount socket disconnect
+  useEffect(() => {
+    socket.on('shutdownSimulator', () => {
+      setIsDisconnectModalActive(true);
+    });
+    return () => {
+      socket.disconnect();
+      sessionStorage.removeItem('GAME_ID');
+      sessionStorage.removeItem('USER_ID');
+    };
+  }, []);
 
   useEffect(() => {
     fetch(
@@ -254,7 +259,7 @@ const BanPickSimulator = ({ game }) => {
     }
   });
 
-  // #편집권한 설정 함수
+  //#편집권한 설정 함수
   useEffect(() => {
     if (gameData?.mode === MODEDATA.oneOnOne) {
       if (userData?.side === turn) {
