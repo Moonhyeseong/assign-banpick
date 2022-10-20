@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { HiRefresh } from 'react-icons/hi';
 import { BsCheck } from 'react-icons/bs';
@@ -9,36 +9,45 @@ const ListFilter = ({ showModal, setFilterData, filterData }) => {
     setFilterData({ ...filterData, searchFilter: event.target.value });
   };
 
-  const handleModeCheckBox = option => {
-    if (option === MODEDATA.oneOnOne) {
-      if (filterData.checkBoxFilter.one === '') {
-        setFilterData({
-          ...filterData,
-          checkBoxFilter: { one: option, five: filterData.checkBoxFilter.five },
-        });
-      } else {
-        setFilterData({
-          ...filterData,
-          checkBoxFilter: { one: '', five: filterData.checkBoxFilter.five },
-        });
+  const handleModeCheckBox = useCallback(
+    option => {
+      if (option === MODEDATA.oneOnOne) {
+        if (filterData.checkBoxFilter.one === '') {
+          setFilterData({
+            ...filterData,
+            checkBoxFilter: {
+              one: option,
+              five: filterData.checkBoxFilter.five,
+            },
+          });
+        } else {
+          setFilterData({
+            ...filterData,
+            checkBoxFilter: { one: '', five: filterData.checkBoxFilter.five },
+          });
+        }
+      } else if (option === MODEDATA.fiveOnfive) {
+        if (filterData.checkBoxFilter.five === '') {
+          setFilterData({
+            ...filterData,
+            checkBoxFilter: {
+              one: filterData.checkBoxFilter.one,
+              five: option,
+            },
+          });
+        } else {
+          setFilterData({
+            ...filterData,
+            checkBoxFilter: {
+              one: filterData.checkBoxFilter.one,
+              five: '',
+            },
+          });
+        }
       }
-    } else if (option === MODEDATA.fiveOnfive) {
-      if (filterData.checkBoxFilter.five === '') {
-        setFilterData({
-          ...filterData,
-          checkBoxFilter: { one: filterData.checkBoxFilter.one, five: option },
-        });
-      } else {
-        setFilterData({
-          ...filterData,
-          checkBoxFilter: {
-            one: filterData.checkBoxFilter.one,
-            five: '',
-          },
-        });
-      }
-    }
-  };
+    },
+    [filterData, setFilterData]
+  );
 
   return (
     <ListFilterLayout>
@@ -92,7 +101,7 @@ const ListFilter = ({ showModal, setFilterData, filterData }) => {
   );
 };
 
-export default ListFilter;
+export default React.memo(ListFilter);
 
 const ListFilterLayout = styled.div`
   position: relative;

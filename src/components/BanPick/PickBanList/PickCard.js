@@ -15,13 +15,13 @@ const PickCard = ({
   swapItems,
   setSwapItems,
   phaseCounter,
-  leftTime,
+  isFinish,
   playerData,
 }) => {
   const [isSelecting, setIsSelecting] = useState(false);
   const userData = useSelector(state => state.userFormData.userData);
   const currentIndex = pickList.indexOf('');
-  const isSwapPhase = phaseCounter === PHASEDATA.swapPhase && leftTime > 0;
+  const isSwapPhase = phaseCounter === PHASEDATA.swapPhase && !isFinish;
 
   const imgURL = champion
     ? `http://ddragon.leagueoflegends.com/cdn/img/champion/centered/${champion}_0.jpg`

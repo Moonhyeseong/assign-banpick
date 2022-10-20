@@ -1,8 +1,13 @@
 import { GetServerSideProps } from 'next';
 import { getGameData } from '../../lib/games';
 import BanPickSimulator from '../components/BanPick/BanPickSimulator';
+import { IGame } from '../interfaces/game.interface';
 
-const Simulator = ({ game }) => {
+type SimulatorProps = {
+  game: IGame;
+};
+
+const Simulator: React.FC<SimulatorProps> = ({ game }) => {
   return <BanPickSimulator game={game} />;
 };
 

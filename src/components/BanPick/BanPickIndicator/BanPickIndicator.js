@@ -1,6 +1,7 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { MODEDATA } from '../../CONSTDATA/CONSTDATA';
+import TeamInfoCard from './TeamInfoCard';
 import Timer from './Timer';
 
 const BanPickIndicator = ({
@@ -10,25 +11,10 @@ const BanPickIndicator = ({
   gameData,
   initialTime,
 }) => {
-  const notReadyPlayers = side => {
-    const teamSide = side;
-    return (
-      gameData?.userList &&
-      gameData?.userList[teamSide].length -
-        gameData?.userList[teamSide].filter(element => '' === element).length
-    );
-  };
-
   return (
     <IndicatorLayout>
-      <TeamInfo side="blue">
-        <TeamName side="blue">
-          <TeamSide>BLUE</TeamSide>
-          {gameData?.blueTeamName}
-          {gameData?.isProceeding ||
-            `(${notReadyPlayers('blue')}/${gameData?.userList?.blue.length})`}
-        </TeamName>
-      </TeamInfo>
+      <TeamInfoCard side="blue" gameData={gameData} />
+
       {gameData?.isProceeding ? (
         <TimerContainer>
           <PatchVersion> Patch 12.5.1</PatchVersion>
@@ -54,14 +40,7 @@ const BanPickIndicator = ({
         </GameInfoContainer>
       )}
 
-      <TeamInfo side="red">
-        <TeamName side="blue">
-          <TeamSide>RED</TeamSide>
-          {gameData?.redTeamName}
-          {gameData?.isProceeding ||
-            `(${notReadyPlayers('red')}/${gameData?.userList?.red.length})`}
-        </TeamName>
-      </TeamInfo>
+      <TeamInfoCard side="red" gameData={gameData} />
     </IndicatorLayout>
   );
 };
@@ -84,43 +63,6 @@ const TimerContainer = styled.div`
   height: 100%;
   background-color: black;
   padding-top: 4px;
-`;
-
-const TeamInfo = styled.div`
-  display: flex;
-  align-items: center;
-  width: 50%;
-  ${props =>
-    props.side === 'blue'
-      ? css`
-          background: linear-gradient(
-            to right,
-            ${props => props.theme.blue.blueB40},
-            black
-          );
-          text-align: left;
-          justify-content: flex-start;
-        `
-      : css`
-          background: linear-gradient(
-            to left,
-            ${props => props.theme.red.redB40},
-            black
-          );
-          text-align: right;
-          justify-content: flex-end;
-        `}
-`;
-
-const TeamName = styled.div`
-  color: white;
-  font-size: 32px;
-  font-weight: 700;
-  padding: 32px;
-`;
-
-const TeamSide = styled.p`
-  font-size: 16px;
 `;
 
 const PatchVersion = styled.p`

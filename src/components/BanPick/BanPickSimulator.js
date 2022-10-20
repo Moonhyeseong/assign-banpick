@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { MODEDATA, PHASEDATA } from '../CONSTDATA/CONSTDATA';
@@ -76,7 +76,7 @@ const BanPickSimulator = ({ game }) => {
   };
 
   //타임아웃시 자동 밴픽 동작
-  const getTimeOutItem = () => {
+  const getTimeOutItem = useCallback(() => {
     const championList = Object.values(championData);
     const randomIndex = Math.floor(Math.random() * championList.length);
 
@@ -87,10 +87,10 @@ const BanPickSimulator = ({ game }) => {
         return championList[randomIndex].id;
       }
     }
-  };
+  }, [championData, phaseInfo, selectedChampions]);
 
   //밴픽 챔피언 선택버튼
-  const handleSelectBtn = () => {
+  const handleSelectBtn = useCallback(() => {
     const index = banPickList[phaseInfo][turn].indexOf('');
 
     //페이즈정보 턴정보 인덱스 정보 - 선택된 챔피언 정보
@@ -98,9 +98,9 @@ const BanPickSimulator = ({ game }) => {
       selectedChampion !== '' ? selectedChampion : getTimeOutItem();
 
     setSelectedChampion('');
-  };
+  }, [banPickList, getTimeOutItem, phaseInfo, selectedChampion, turn]);
 
-  const postBanPickList = async () => {
+  const postBanPickList = useCallback(async () => {
     const fetchOption = {
       method: 'PATCH',
       headers: {
@@ -115,7 +115,7 @@ const BanPickSimulator = ({ game }) => {
 
     await fetch(`${BASE_URL}:8080/game/banpick`, fetchOption);
     socket.emit('banpick', sessionStorage.getItem('GAME_ID'));
-  };
+  }, [banPickList, gameData?.banpickCount]);
 
   const handleTimeOut = () => {
     if (leftTime < 0 && isEditable === true) {
@@ -200,11 +200,14 @@ const BanPickSimulator = ({ game }) => {
   }, []);
 
   useEffect(() => {
-    fetch(
-      'https://ddragon.leagueoflegends.com/cdn/12.16.1/data/ko_KR/champion.json'
-    )
-      .then(res => res.json())
-      .then(res => setChampionData(res.data));
+    const getChampionData = async () => {
+      const res = await fetch(
+        'https://ddragon.leagueoflegends.com/cdn/12.16.1/data/ko_KR/champion.json'
+      );
+      const ddragonCahmpionData = await res.json();
+      setChampionData(ddragonCahmpionData.data);
+    };
+    getChampionData();
   }, []);
 
   useEffect(() => {
@@ -327,20 +330,20 @@ const BanPickSimulator = ({ game }) => {
               phaseInfo={phaseInfo}
               phaseCounter={phaseCounter}
               turn={turn}
-              leftTime={leftTime}
+              isFinish={isFinish}
               postBanPickList={postBanPickList}
               playerList={gameData?.userList.blue}
             />
             <ChampionList
-              setBanPickList={setBanPickList}
-              championData={championData}
+              selectedChampions={selectedChampions}
               selectedChampion={selectedChampion}
+              championData={championData}
+              phaseCounter={phaseCounter}
+              isEditable={isEditable}
+              setBanPickList={setBanPickList}
               setSelectedChampion={setSelectedChampion}
               handleSelectBtn={handleSelectBtn}
-              phaseCounter={phaseCounter}
-              selectedChampions={selectedChampions}
               postBanPickList={postBanPickList}
-              isEditable={isEditable}
             />
             <PickList
               side="red"
@@ -349,7 +352,7 @@ const BanPickSimulator = ({ game }) => {
               phaseInfo={phaseInfo}
               phaseCounter={phaseCounter}
               turn={turn}
-              leftTime={leftTime}
+              isFinish={isFinish}
               postBanPickList={postBanPickList}
               playerList={gameData?.userList.red}
             />

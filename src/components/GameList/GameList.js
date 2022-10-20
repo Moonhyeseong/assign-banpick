@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import ListFilter from './ListFilter';
 import GameRoom from './GameRoom';
@@ -63,12 +63,17 @@ const GameList = ({ gameData }) => {
     });
   };
 
-  const initModalState = () => {
+  const initModalState = useCallback(() => {
     setIsModalActive(false);
     setSelectedGameData('');
     sessionStorage.removeItem('GAME_ID');
     dispatch(initUserData());
-  };
+  }, [dispatch]);
+
+  useEffect(() => {
+    sessionStorage.removeItem('GAME_ID');
+    sessionStorage.removeItem('USER_ID');
+  }, []);
 
   //socket
   useEffect(() => {
@@ -118,7 +123,7 @@ const GameList = ({ gameData }) => {
   );
 };
 
-export default GameList;
+export default React.memo(GameList);
 
 const GameListLayout = styled.div`
   display: flex;

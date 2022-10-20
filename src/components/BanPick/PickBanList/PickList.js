@@ -10,7 +10,7 @@ const PickList = ({
   turn,
   phaseInfo,
   phaseCounter,
-  leftTime,
+  isFinish,
   postBanPickList,
   playerList,
 }) => {
@@ -57,7 +57,7 @@ const PickList = ({
               swapItems={swapItems}
               setSwapItems={setSwapItems}
               phaseCounter={phaseCounter}
-              leftTime={leftTime}
+              isFinish={isFinish}
               playerData={playerList && playerList[idx]}
             />
           );
@@ -74,7 +74,7 @@ const PickList = ({
   );
 };
 
-export default PickList;
+export default React.memo(PickList);
 
 const PickListLayout = styled.div`
   position: relative;
