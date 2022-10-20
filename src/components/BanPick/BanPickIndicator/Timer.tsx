@@ -1,17 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 
-const Timer = ({ leftTime, setLeftTime, initialTime }) => {
-  const milToSeconds = leftTime => {
-    let leftSeconds = Math.ceil(leftTime / 1000)
+type TimerProps = {
+  leftTime: number;
+  setLeftTime: Dispatch<SetStateAction<number>>;
+  initialTime: any;
+};
+
+const Timer: React.FC<TimerProps> = ({
+  leftTime,
+  setLeftTime,
+  initialTime,
+}) => {
+  const milToSeconds = (leftTime: number) => {
+    const leftSeconds = Math.ceil(leftTime / 1000)
       .toString()
       .padStart(2, '0');
     return leftSeconds;
   };
 
   useEffect(() => {
-    let timer;
-    timer = setInterval(() => {
+    const timer = setInterval(() => {
       setLeftTime(initialTime - new Date().getTime());
     }, 1000);
     leftTime < 0 && clearInterval(timer);
@@ -19,11 +28,7 @@ const Timer = ({ leftTime, setLeftTime, initialTime }) => {
     return () => clearInterval(timer);
   }, [initialTime, leftTime, setLeftTime]);
 
-  return (
-    <TimerText>
-      {milToSeconds(leftTime) > 0 ? milToSeconds(leftTime) : `00`}
-    </TimerText>
-  );
+  return <TimerText>{leftTime > 0 ? milToSeconds(leftTime) : `00`}</TimerText>;
 };
 
 export default Timer;

@@ -1,8 +1,18 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { IGame } from '../../../interfaces/game.interface';
 
-const TeamInfoCard = ({ side, gameData }) => {
-  const notReadyPlayers = side => {
+type TeamInfoCardProps = {
+  side: string;
+  gameData: IGame;
+};
+
+type TeamInfoProps = {
+  side: string;
+};
+
+const TeamInfoCard: React.FC<TeamInfoCardProps> = ({ side, gameData }) => {
+  const notReadyPlayers = (side: string) => {
     return (
       gameData?.userList &&
       gameData?.userList[side].length -
@@ -12,7 +22,7 @@ const TeamInfoCard = ({ side, gameData }) => {
 
   return (
     <TeamInfo side={side}>
-      <TeamName side={side}>
+      <TeamName>
         <TeamSide>{side.toUpperCase()}</TeamSide>
         {gameData?.[`${side}TeamName`]}
         {gameData?.isProceeding ||
@@ -24,7 +34,7 @@ const TeamInfoCard = ({ side, gameData }) => {
 
 export default React.memo(TeamInfoCard);
 
-const TeamInfo = styled.div`
+const TeamInfo = styled.div<TeamInfoProps>`
   display: flex;
   align-items: center;
   width: 50%;

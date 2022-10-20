@@ -29,8 +29,8 @@ const BanPickSimulator = ({ game }) => {
 
   const [banPickList, setBanPickList] = useState(gameData.banpickList);
 
-  const [initialTime, setInitialTime] = useState();
-  const [leftTime, setLeftTime] = useState();
+  const [initialTime, setInitialTime] = useState(0);
+  const [leftTime, setLeftTime] = useState(0);
 
   const [turn, setTurn] = useState();
 

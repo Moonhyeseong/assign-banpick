@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 
-const ChampionFilter = ({ search, setSearch }) => {
-  const onChange = e => {
-    setSearch(e.target.value);
+type ChampionFilterProps = {
+  search: string;
+  setSearch: Dispatch<SetStateAction<string>>;
+};
+const ChampionFilter: React.FC<ChampionFilterProps> = ({
+  search,
+  setSearch,
+}) => {
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
   };
 
   return (
@@ -13,7 +20,7 @@ const ChampionFilter = ({ search, setSearch }) => {
           type="text"
           placeholder="챔피언의 이름을 입력하세요"
           value={search}
-          onChange={e => onChange(e)}
+          onChange={event => onChange(event)}
         />
       </SearchFilter>
     </FilterLayout>

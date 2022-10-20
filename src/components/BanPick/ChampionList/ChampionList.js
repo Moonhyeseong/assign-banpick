@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import ChampionCard from './ChampionCard';
-import ChampionFilter from './ChampionFilter';
+import ChampionFilter from './ChampionFilter.tsx';
 import { PHASEDATA } from '../../CONSTDATA/CONSTDATA';
 
 const ChampionList = ({
