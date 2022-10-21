@@ -7,11 +7,7 @@ type TimerProps = {
   initialTime: any;
 };
 
-const Timer: React.FC<TimerProps> = ({
-  leftTime,
-  setLeftTime,
-  initialTime,
-}) => {
+const Timer = ({ leftTime, setLeftTime, initialTime }: TimerProps) => {
   const milToSeconds = (leftTime: number) => {
     const leftSeconds = Math.ceil(leftTime / 1000)
       .toString()

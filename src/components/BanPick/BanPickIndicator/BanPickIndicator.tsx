@@ -13,13 +13,13 @@ type BanPickIndicatorProps = {
   initialTime: any;
 };
 
-const BanPickIndicator: React.FC<BanPickIndicatorProps> = ({
+const BanPickIndicator = ({
   phaseTitle,
   leftTime,
   setLeftTime,
   gameData,
   initialTime,
-}) => {
+}: BanPickIndicatorProps) => {
   return (
     <IndicatorLayout>
       <TeamInfoCard side="blue" gameData={gameData} />

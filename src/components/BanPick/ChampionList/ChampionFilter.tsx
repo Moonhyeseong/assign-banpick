@@ -5,10 +5,7 @@ type ChampionFilterProps = {
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;
 };
-const ChampionFilter: React.FC<ChampionFilterProps> = ({
-  search,
-  setSearch,
-}) => {
+const ChampionFilter = ({ search, setSearch }: ChampionFilterProps) => {
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
   };

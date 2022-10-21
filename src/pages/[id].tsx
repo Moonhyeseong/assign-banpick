@@ -7,7 +7,7 @@ type SimulatorProps = {
   game: IGame;
 };
 
-const Simulator: React.FC<SimulatorProps> = ({ game }) => {
+const Simulator = ({ game }: SimulatorProps) => {
   return <BanPickSimulator game={game} />;
 };
 

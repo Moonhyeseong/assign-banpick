@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Nav from '../nav/Nav';
 
-const ContentsWrapper = ({ children }: any) => {
+const ContentsWrapper = ({ children }) => {
   return (
     <Layout>
       <Nav />

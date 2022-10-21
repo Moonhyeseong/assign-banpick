@@ -11,7 +11,7 @@ type TeamInfoProps = {
   side: string;
 };
 
-const TeamInfoCard: React.FC<TeamInfoCardProps> = ({ side, gameData }) => {
+const TeamInfoCard = ({ side, gameData }: TeamInfoCardProps) => {
   const notReadyPlayers = (side: string) => {
     return (
       gameData?.userList &&
