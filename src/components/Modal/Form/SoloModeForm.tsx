@@ -4,10 +4,7 @@ import { useRouter } from 'next/router';
 import uuid from 'react-uuid';
 import { BASE_URL } from '../../../config';
 import { socket } from '../../../../lib/socket';
-
-interface IFormOption {
-  isSelected: boolean;
-}
+import { FormOptionBtnProps } from '../GameListModal';
 
 const SoloModeForm = () => {
   const [timerOption, setTimerOption] = useState(null);
@@ -133,7 +130,7 @@ const BtnContainer = styled.div`
   gap: 32px;
 `;
 
-const FormOptionBtn = styled.span<IFormOption>`
+const FormOptionBtn = styled.span<FormOptionBtnProps>`
   opacity: 0.3;
   border-bottom: 3px solid white;
   font-size: 20px;

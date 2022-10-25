@@ -28,6 +28,7 @@ const GameList = ({ gameData }: GameListProps) => {
 
   const [isModalActive, setIsModalActive] = useState(false);
   const [selectedGameData, setSelectedGameData] = useState(null);
+
   const [games, setGames] = useState(gameData);
 
   const [filterData, setFilterData] = useState<FilterDataState>({

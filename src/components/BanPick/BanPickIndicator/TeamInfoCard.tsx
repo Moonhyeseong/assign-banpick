@@ -2,13 +2,12 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { IGame } from '../../../interfaces/game.interface';
 
-type TeamInfoCardProps = {
+type SideProps = {
   side: string;
-  gameData: IGame;
 };
 
-type TeamInfoProps = {
-  side: string;
+type TeamInfoCardProps = SideProps & {
+  gameData: IGame;
 };
 
 const TeamInfoCard = ({ side, gameData }: TeamInfoCardProps) => {
@@ -34,7 +33,7 @@ const TeamInfoCard = ({ side, gameData }: TeamInfoCardProps) => {
 
 export default React.memo(TeamInfoCard);
 
-const TeamInfo = styled.div<TeamInfoProps>`
+const TeamInfo = styled.div<SideProps>`
   display: flex;
   align-items: center;
   width: 50%;
