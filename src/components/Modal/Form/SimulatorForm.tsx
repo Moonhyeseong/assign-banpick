@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { BASE_URL } from '../../../config';
-import { CgClose } from 'react-icons/cg';
 import { useDispatch } from 'react-redux';
 import { initUserData } from './userDataSlice';
 import { MODEDATA } from '../../CONSTDATA/CONSTDATA';
@@ -98,16 +97,6 @@ const SimulatorForm = ({
 
   return (
     <LandingLayout>
-      <CgClose
-        style={{
-          position: 'absolute',
-          right: '20',
-          top: '20',
-          cursor: 'pointer',
-        }}
-        size={32}
-        onClick={initModalState}
-      />
       <Title>방 만들기 </Title>
       <NameInputContainer>
         방 제목을 입력해주세요.

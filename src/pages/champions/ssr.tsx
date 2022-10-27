@@ -11,7 +11,7 @@ const Ssr = ({ championData }) => {
   return (
     <RenderTestLayout>
       <Head>
-        {championList ? (
+        {championData ? (
           <title>Render Test | SSR</title>
         ) : (
           <title>Loading...</title>

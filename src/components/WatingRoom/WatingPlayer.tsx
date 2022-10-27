@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { MODEDATA } from '../CONSTDATA/CONSTDATA';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useAppSelector } from '../../app/hooks';
 import { BASE_URL } from '../../config';
 import { getUserData, userReadyAction } from '../Modal/Form/userDataSlice';
 import { socket } from '../../../lib/socket';
@@ -12,7 +13,7 @@ type PlayerNameProps = {
 };
 
 const WatingPlayer = ({ side, role, mode, playerData }) => {
-  const userData = useSelector(state => state.userFormData.userData);
+  const userData = useAppSelector(state => state.userFormData.userData);
   const dispatch = useDispatch();
 
   const playerRoleData = userData?.role === role || playerData?.role === role;

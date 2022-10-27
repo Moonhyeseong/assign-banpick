@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../../app/hooks';
 import { PHASEDATA } from '../../CONSTDATA/CONSTDATA';
-import { IUser } from '../../../interfaces/user.interface';
 import { SwapItems } from './PickList';
 
 type PickCardProps = {
@@ -56,7 +55,7 @@ const PickCard = ({
   playerData,
 }: PickCardProps) => {
   const [isSelecting, setIsSelecting] = useState(false);
-  const userData: IUser = useSelector(state => state.userFormData.userData);
+  const userData = useAppSelector(state => state.userFormData.userData);
   const currentIndex = pickList.indexOf('');
   const isSwapPhase = phaseCounter === PHASEDATA.swapPhase && !isFinish;
 

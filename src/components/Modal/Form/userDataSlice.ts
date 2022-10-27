@@ -1,18 +1,27 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type UserData = {
-  userData: { name: string; side: string; role: string; isReady: boolean };
+  userData: {
+    userId: string | null;
+    name: string;
+    side: string;
+    role: string;
+    isReady: boolean;
+  };
 };
 
 const initialState: UserData = {
-  userData: { name: '', side: '', role: '', isReady: false },
+  userData: { userId: '', name: '', side: '', role: '', isReady: false },
 };
 
 export const userDataSlice = createSlice({
   name: 'userinfo',
   initialState,
   reducers: {
-    updateUserData: (state, actions) => {
+    updateUserData: (
+      state,
+      actions: PayloadAction<{ type: string; value: string }>
+    ) => {
       state.userData = {
         ...state.userData,
         [actions.payload.type]: actions.payload.value,
@@ -27,7 +36,13 @@ export const userDataSlice = createSlice({
     },
 
     initUserData: state => {
-      state.userData = { name: '', side: '', role: '', isReady: false };
+      state.userData = {
+        userId: '',
+        name: '',
+        side: '',
+        role: '',
+        isReady: false,
+      };
       sessionStorage.removeItem('USER_ID');
     },
 

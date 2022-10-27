@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import styled, { css } from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../app/hooks';
 import { MODEDATA } from '../CONSTDATA/CONSTDATA';
 import { SideProps, ModeProps, RoleProps } from '../types/component.type';
 
@@ -13,7 +13,7 @@ type RoleIconProps = SideProps &
   };
 
 const LiftUserIndicator = ({ userList, mode }) => {
-  const userData = useSelector(state => state.userFormData.userData);
+  const userData = useAppSelector(state => state.userFormData.userData);
 
   return (
     <LiftBackGround>

@@ -2,6 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js",
-  "/champions/ssg": "pages/champions/ssg.js"
+  "/champions/csr": "pages/champions/csr.js",
+  "/champions/ssg": "pages/champions/ssg.js",
+  "/champions/ssr": "pages/champions/ssr.js",
+  "/champions": "pages/champions.js"
 }

@@ -11,17 +11,17 @@ const Champions = () => {
       </Head>
       <LinkList>
         <LinkListItem>
-          <Link href="/champions/csr">
+          <Link href="/champions/csr" passHref>
             <LinkBtn>CSR Page</LinkBtn>
           </Link>
         </LinkListItem>
         <LinkListItem>
-          <Link href="/champions/ssr">
+          <Link href="/champions/ssr" passHref>
             <LinkBtn>SSR Page</LinkBtn>
           </Link>
         </LinkListItem>
         <LinkListItem>
-          <Link href="/champions/ssg">
+          <Link href="/champions/ssg" passHref>
             <LinkBtn>SSG Page</LinkBtn>
           </Link>
         </LinkListItem>

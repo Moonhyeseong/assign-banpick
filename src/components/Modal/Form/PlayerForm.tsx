@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useAppSelector } from '../../../app/hooks';
 import uuid from 'react-uuid';
-import { CgClose } from 'react-icons/cg';
 import { MODEDATA, ROLEDATA } from '../../CONSTDATA/CONSTDATA';
 import { BASE_URL } from '../../../config';
 import { initUserData, updateUserData } from './userDataSlice';
@@ -25,7 +25,7 @@ type PlayerFormProps = {
 const PlayerForm = ({
   selectedGameData: { gameMode, userList },
 }: PlayerFormProps) => {
-  const userData = useSelector(state => state.userFormData.userData);
+  const userData = useAppSelector(state => state.userFormData.userData);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -63,7 +63,7 @@ const PlayerForm = ({
       },
       body: JSON.stringify({
         gameId: sessionStorage.getItem('GAME_ID'),
-        userId: userData.user_id,
+        userId: userData.userId,
         clientId: socket.id,
         name: userData.name,
         side: userData.side,
@@ -84,7 +84,7 @@ const PlayerForm = ({
       },
       body: JSON.stringify({
         gameId: sessionStorage.getItem('GAME_ID'),
-        userId: userData.user_id,
+        userId: userData.userId,
         clientId: socket.id,
         name: userData.name,
         side: userData.side,
@@ -109,21 +109,11 @@ const PlayerForm = ({
 
     const newUuid = uuid();
     sessionStorage.setItem('USER_ID', newUuid);
-    dispatch(updateUserData({ type: 'user_id', value: newUuid }));
+    dispatch(updateUserData({ type: 'userId', value: newUuid }));
   }, [dispatch, gameMode]);
 
   return (
     <PlayerFormLayout>
-      <CgClose
-        style={{
-          position: 'absolute',
-          right: '20',
-          top: '20',
-          cursor: 'pointer',
-        }}
-        size={32}
-        // onClick={initModalState}
-      />
       {MODEDATA.oneOnOne === gameMode ? (
         <FormContainer>
           <NameInputContainer>
