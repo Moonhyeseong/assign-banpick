@@ -3,39 +3,32 @@ import styled, { css } from 'styled-components';
 import { useAppSelector } from '../../../app/hooks';
 import { PHASEDATA } from '../../CONSTDATA/CONSTDATA';
 import { SwapItems } from './PickList';
-
-type PickCardProps = {
-  side: string;
-  champion: string;
-  pickList: string[];
-  role: string;
-  index: number;
-  selectedChampion: string;
-  phaseInfo: string;
-  turn: string;
-  swapItems: SwapItems;
-  setSwapItems: any;
-  phaseCounter: number;
-  isFinish: boolean;
-  playerData: any;
-};
-
-type SideProps = {
-  side: string;
-};
+import { SideProps, RoleProps } from '../../types/component.type';
+type PickCardProps = SideProps &
+  RoleProps & {
+    champion: string;
+    pickList: string[];
+    index: number;
+    selectedChampion: string;
+    phaseInfo: string;
+    turn: string;
+    swapItems: SwapItems;
+    setSwapItems: any;
+    phaseCounter: number;
+    isFinish: boolean;
+    playerData: any;
+  };
 
 type PickCardLayoutProps = {
   isSwapPhase: boolean;
 };
 
-type GradientMaskProps = {
-  side: string;
+type GradientMaskProps = SideProps & {
   isSelecting: boolean;
   champion: string;
 };
 
-type BackgroundImageProps = {
-  side: string;
+type BackgroundImageProps = SideProps & {
   imgURL: null | string;
 };
 

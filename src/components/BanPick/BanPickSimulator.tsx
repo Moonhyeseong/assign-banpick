@@ -199,8 +199,6 @@ const BanPickSimulator = ({ game }: BanPickSimulatorProps) => {
     });
     return () => {
       socket.disconnect();
-      sessionStorage.removeItem('GAME_ID');
-      sessionStorage.removeItem('USER_ID');
     };
   }, []);
 

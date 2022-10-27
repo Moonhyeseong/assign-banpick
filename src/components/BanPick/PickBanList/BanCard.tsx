@@ -3,10 +3,9 @@ import styled, { css } from 'styled-components';
 import Image from 'next/image';
 import { SideProps } from '../../types/component.type';
 
-type BanCardProps = {
+type BanCardProps = SideProps & {
   index: number;
   champion: string;
-  side: string;
   selectedChampion: string;
   banList: string[];
   turn: string;

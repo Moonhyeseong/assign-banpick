@@ -1,10 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { IGame } from '../../../interfaces/game.interface';
-
-type SideProps = {
-  side: string;
-};
+import { SideProps } from '../../types/component.type';
 
 type TeamInfoCardProps = SideProps & {
   gameData: IGame;

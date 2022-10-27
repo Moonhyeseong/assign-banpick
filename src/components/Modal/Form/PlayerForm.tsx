@@ -94,11 +94,22 @@ const PlayerForm = ({
       }),
     };
 
-    await fetch(`${BASE_URL}:8080/game/join`, fetchOption);
-
-    createUser();
-    socket.emit('userJoinGame', sessionStorage.getItem('GAME_ID'));
-    router.push(sessionStorage.getItem('GAME_ID'));
+    await fetch(`${BASE_URL}:8080/game/join`, fetchOption)
+      .then(response => {
+        // reponse가 ok가 아닐 때
+        if (!response.ok) {
+          throw new Error('400 or 500 에러 발생');
+        }
+        return response.json();
+      })
+      .then(response => {
+        createUser();
+        socket.emit('userJoinGame', sessionStorage.getItem('GAME_ID'));
+        router.push(sessionStorage.getItem('GAME_ID'));
+      })
+      .catch(() => {
+        alert('참여가 불가능한 게임입니다.');
+      });
   };
 
   useEffect(() => {
