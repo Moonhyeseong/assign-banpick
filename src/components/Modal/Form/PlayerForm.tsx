@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
-import { useDispatch } from 'react-redux';
-import { useAppSelector } from '../../../app/hooks';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import uuid from 'react-uuid';
 import { MODEDATA, ROLEDATA } from '../../CONSTDATA/CONSTDATA';
 import { BASE_URL } from '../../../config';
@@ -27,7 +26,7 @@ const PlayerForm = ({
 }: PlayerFormProps) => {
   const userData = useAppSelector(state => state.userFormData.userData);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const isFormReady = () => {
     const formValues = Object.values(userData);
@@ -96,7 +95,6 @@ const PlayerForm = ({
 
     await fetch(`${BASE_URL}:8080/game/join`, fetchOption)
       .then(response => {
-        // reponse가 ok가 아닐 때
         if (!response.ok) {
           throw new Error('400 or 500 에러 발생');
         }
@@ -104,8 +102,8 @@ const PlayerForm = ({
       })
       .then(response => {
         createUser();
-        socket.emit('userJoinGame', sessionStorage.getItem('GAME_ID'));
-        router.push(sessionStorage.getItem('GAME_ID'));
+        socket.emit('userJoinGame', response._id);
+        router.push(response._id);
       })
       .catch(() => {
         alert('참여가 불가능한 게임입니다.');

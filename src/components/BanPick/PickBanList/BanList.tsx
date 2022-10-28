@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import BanCard from './BanCard';
+import { SideProps } from '../../types/component.type';
 
-type BanListProps = {
-  side: string;
+type BanListProps = SideProps & {
   selectedChampion: string;
   banList: string[];
   turn: string;

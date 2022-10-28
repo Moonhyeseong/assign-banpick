@@ -1,14 +1,11 @@
 import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { BASE_URL } from '../../../config';
-import { useDispatch } from 'react-redux';
 import { initUserData } from './userDataSlice';
 import { MODEDATA } from '../../CONSTDATA/CONSTDATA';
 import { socket } from '../../../../lib/socket';
-
-type SideProps = {
-  side: string;
-};
+import { useAppDispatch } from '../../../app/hooks';
+import { SideProps } from '../../types/component.type';
 
 type ModeItemProps = {
   mode: number;
@@ -24,7 +21,7 @@ const SimulatorForm = ({
   setSelectedGameData,
   selectedGameData,
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSimulatorFormData({ ...simulatorFormData, title: event.target.value });
@@ -85,8 +82,10 @@ const SimulatorForm = ({
       .then(res => res.json())
       .then(res => {
         sessionStorage.setItem('GAME_ID', res._id);
+      })
+      .catch(() => {
+        alert('게임 생성에 실패했습니다.');
       });
-
     showModal('playerForm', mode, selectedGameData.userList);
     socket.emit('createGame', sessionStorage.getItem('GAME_ID'));
   };

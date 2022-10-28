@@ -1,12 +1,6 @@
 {
   "/_app": "pages/_app.js",
-  "/_document": "pages/_document.js",
-  "/404": "pages/404.html",
-  "/champions/csr": "pages/champions/csr.html",
-  "/champions": "pages/champions.html",
   "/_error": "pages/_error.js",
-  "/[id]": "pages/[id].js",
-  "/": "pages/index.js",
-  "/champions/ssr": "pages/champions/ssr.js",
-  "/champions/ssg": "pages/champions/ssg.js"
+  "/_document": "pages/_document.js",
+  "/": "pages/index.js"
 }

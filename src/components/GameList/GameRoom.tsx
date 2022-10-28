@@ -3,18 +3,14 @@ import Image from 'next/image';
 import styled, { css } from 'styled-components';
 import { IUser } from '../../interfaces/user.interface';
 import { ROLEDATA, MODEDATA } from '../CONSTDATA/CONSTDATA';
+import { SideProps, ModeProps } from '../types/component.type';
 
 type GameIndicatorProps = {
   isFull: boolean;
 };
 
-type SideProps = {
-  side: string;
-};
-
-type RoleIconProps = {
+type RoleIconProps = ModeProps & {
   isEmpty: boolean;
-  mode: number;
 };
 
 type JoinBtnProps = {

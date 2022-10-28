@@ -4,12 +4,12 @@ import ListFilter from './ListFilter';
 import GameRoom from './GameRoom';
 import GameListModal from '../Modal/GameListModal';
 import { MODEDATA } from '../CONSTDATA/CONSTDATA';
-import { useDispatch } from 'react-redux';
 import { initUserData } from '../Modal/Form/userDataSlice';
 import { socket } from '../../../lib/socket';
 import { getAllGames } from '../../../lib/games';
 import { IGame } from '../../interfaces/game.interface';
 import { IUser } from '../../interfaces/user.interface';
+import { useAppDispatch } from '../../app/hooks';
 
 type GameListProps = {
   gameData: IGame[];
@@ -24,7 +24,7 @@ type FilterDataState = {
 };
 
 const GameList = ({ gameData }: GameListProps) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [isModalActive, setIsModalActive] = useState(false);
   const [selectedGameData, setSelectedGameData] = useState(null);

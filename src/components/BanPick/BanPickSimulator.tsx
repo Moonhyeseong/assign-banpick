@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
-import { useAppSelector } from '../../app/hooks';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { MODEDATA, PHASEDATA } from '../CONSTDATA/CONSTDATA';
 import { getUserData } from '../Modal/Form/userDataSlice';
 import { BASE_URL } from '../../config';
@@ -21,7 +20,7 @@ type BanPickSimulatorProps = {
 
 const BanPickSimulator = ({ game }: BanPickSimulatorProps) => {
   const userData = useAppSelector(state => state.userFormData.userData);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [isFinish, setIsFinish] = useState(false);
 

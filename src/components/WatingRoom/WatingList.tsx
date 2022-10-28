@@ -2,12 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { IUser } from '../../interfaces/user.interface';
 import WatingPlayer from './WatingPlayer';
+import { SideProps, ModeProps } from '../types/component.type';
 
-type WatingListProps = {
-  mode: number;
-  side: string;
-  userList: IUser[] | string[];
-};
+type WatingListProps = SideProps &
+  ModeProps & {
+    userList: IUser[] | string[];
+  };
 
 const WatingList = ({ mode, side, userList }: WatingListProps) => {
   return (

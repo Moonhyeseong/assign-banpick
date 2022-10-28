@@ -2,20 +2,17 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import PickCard from './PickCard';
 import BanList from './BanList';
+import { BanPickList } from '../../../interfaces/game.interface';
 import { IUser } from '../../../interfaces/user.interface';
+import { SideProps } from '../../types/component.type';
 
-export type SwapItems = {
-  side: string;
+export type SwapItems = SideProps & {
   currentIndex: number | string;
   replaceIndex: number | string;
 };
 
-type PickListProps = {
-  banPickList: {
-    ban: { blue: string[]; red: string[] };
-    pick: { blue: string[]; red: string[] };
-  };
-  side: string;
+type PickListProps = SideProps & {
+  banPickList: BanPickList;
   selectedChampion: string;
   turn: string;
   phaseInfo: string;
