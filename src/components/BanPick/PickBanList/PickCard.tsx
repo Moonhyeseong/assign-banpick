@@ -4,6 +4,7 @@ import { useAppSelector } from '../../../app/hooks';
 import { PHASEDATA } from '../../CONSTDATA/CONSTDATA';
 import { SwapItems } from './PickList';
 import { SideProps, RoleProps } from '../../types/component.type';
+
 type PickCardProps = SideProps &
   RoleProps & {
     champion: string;
@@ -48,6 +49,7 @@ const PickCard = ({
   playerData,
 }: PickCardProps) => {
   const [isSelecting, setIsSelecting] = useState(false);
+  const [championId, setChampionId] = useState(null);
   const userData = useAppSelector(state => state.userFormData.userData);
   const currentIndex = pickList.indexOf('');
   const isSwapPhase = phaseCounter === PHASEDATA.swapPhase && !isFinish;
@@ -73,6 +75,17 @@ const PickCard = ({
       if (turn === side) setIsSelecting(currentIndex === index);
     }
   }, [currentIndex, index, phaseInfo, side, turn]);
+
+  useEffect(() => {
+    async function getChampionId(champion: string) {
+      const res = await fetch(
+        `http://ddragon.leagueoflegends.com/cdn/12.20.1/data/en_US/champion/${champion}.json`
+      );
+      const championData = await res.json();
+      setChampionId(championData.data[champion].key);
+    }
+    isFinish && getChampionId(champion);
+  }, [champion, isFinish]);
 
   return (
     <PickCardLayout
@@ -119,6 +132,16 @@ const PickCard = ({
             </SwapIconWrapper>
           </SwapBackground>
         )}
+      {isFinish && (
+        <GoToLolpsBtnBackground>
+          <GoToLolps
+            href={`https://lol.ps/ko/champ/${championId}/statistics/?lane=0&region=0&tier=2&version=58`}
+            target="_blank"
+          >
+            챔피언 공략 바로가기
+          </GoToLolps>
+        </GoToLolpsBtnBackground>
+      )}
     </PickCardLayout>
   );
 };
@@ -152,7 +175,7 @@ const BackgroundImage = styled.div<BackgroundImageProps>`
     props.side === 'blue' &&
     css`
       transform: scaleX(-1); ;
-    `}
+    `};
 `;
 
 const GradientMask = styled.div<GradientMaskProps>`
@@ -265,5 +288,30 @@ const SwapIconWrapper = styled.div`
   align-items: center;
   width: 100px;
   height: 100px;
+  cursor: pointer;
+`;
+
+const GoToLolpsBtnBackground = styled.div`
+  opacity: 0;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+
+  :hover {
+    opacity: 1;
+    z-index: 1000;
+  }
+`;
+
+const GoToLolps = styled.a`
+  font-size: 24px;
+  font-weight: 700;
+
   cursor: pointer;
 `;
