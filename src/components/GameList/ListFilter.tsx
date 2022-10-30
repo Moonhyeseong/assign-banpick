@@ -92,6 +92,7 @@ const ListFilter = ({ showModal, setFilterData, filterData }) => {
             onClick={() => {
               showModal('soloModeForm');
             }}
+            data-cy="makeGameBtn"
           >
             혼자하기
           </MakeGameBtn>

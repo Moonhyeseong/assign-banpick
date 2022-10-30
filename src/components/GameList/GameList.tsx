@@ -130,7 +130,7 @@ const GameList = ({ gameData }: GameListProps) => {
               );
             })
           ) : (
-            <EmptyList>생성된 게임이 없습니다.</EmptyList>
+            <EmptyList data-cy="EmptyList">생성된 게임이 없습니다.</EmptyList>
           )}
         </GameRoomContainer>
       </GameRoomsLayout>

@@ -24,7 +24,11 @@ const Timer = ({ leftTime, setLeftTime, initialTime }: TimerProps) => {
     return () => clearInterval(timer);
   }, [initialTime, leftTime, setLeftTime]);
 
-  return <TimerText>{leftTime > 0 ? milToSeconds(leftTime) : `00`}</TimerText>;
+  return (
+    <TimerText data-testid="timer">
+      {leftTime > 0 ? milToSeconds(leftTime) : `00`}
+    </TimerText>
+  );
 };
 
 export default Timer;
