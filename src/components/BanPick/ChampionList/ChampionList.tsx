@@ -71,6 +71,7 @@ const ChampionList = ({
           handleSelectBtn();
           postBanPickList();
         }}
+        data-cy="selectChampion"
       >
         선택
       </SelectBtn>

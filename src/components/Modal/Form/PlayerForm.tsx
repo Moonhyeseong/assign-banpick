@@ -133,6 +133,7 @@ const PlayerForm = ({
                   updateUserData({ type: 'name', value: e.target.value })
                 )
               }
+              data-cy="playerNameInput"
             />
           </NameInputContainer>
           <BtnContainer>
@@ -146,6 +147,7 @@ const PlayerForm = ({
                 }
               }}
               isSelected={userData.side === 'blue'}
+              data-cy="sideBtn"
             >
               BLUE
             </FormOptionBtn>
@@ -230,6 +232,7 @@ const PlayerForm = ({
         onClick={() => {
           isFormReady() && postUserJoin();
         }}
+        data-cy="joinBtn"
       >
         JOIN
       </ReadyBtn>

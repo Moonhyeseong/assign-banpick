@@ -20,7 +20,8 @@
     "**/*.ts",
     "**/*.tsx",
     "src/**/*",
-    "jest.config.js"
+    "jest.config.js",
+    "cypress/e2e/spec.cy.js"
   ],
   "exclude": ["node_modules "]
 }

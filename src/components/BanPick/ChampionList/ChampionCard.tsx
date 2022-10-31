@@ -46,6 +46,7 @@ const ChampionCard = ({
           champion: champion,
         });
       }}
+      data-cy={`${champion}Card`}
     >
       <ChampionIcon>
         <Image

@@ -39,7 +39,7 @@ const BanPickIndicator = ({
             )}
           </LeftTime>
 
-          <PhaseInfo>{phaseTitle()}</PhaseInfo>
+          <PhaseInfo data-cy="phaseInfo">{phaseTitle()}</PhaseInfo>
         </TimerContainer>
       ) : (
         <GameInfoContainer>

@@ -16,7 +16,6 @@ type ModeItemProps = {
 const SimulatorForm = ({
   simulatorFormData,
   setSimulatorFormData,
-  initModalState,
   showModal,
   setSelectedGameData,
   selectedGameData,
@@ -105,6 +104,7 @@ const SimulatorForm = ({
             handleTitle(e);
           }}
           style={{ marginTop: 16 }}
+          data-cy="roomNameInput"
         />
       </NameInputContainer>
       <NameInputContainer>
@@ -116,6 +116,7 @@ const SimulatorForm = ({
             onChange={e => {
               handleTeamName(e, 'blue');
             }}
+            data-cy="blueTeamNameInput"
           />
         </TeamNameInputContainer>
         <TeamNameInputContainer>
@@ -125,6 +126,7 @@ const SimulatorForm = ({
             onChange={e => {
               handleTeamName(e, 'red');
             }}
+            data-cy="redTeamNameInput"
           />
         </TeamNameInputContainer>
       </NameInputContainer>
@@ -137,6 +139,7 @@ const SimulatorForm = ({
               handleMode(1);
             }}
             mode={1}
+            data-cy="modeBtn"
           >
             1 : 1
           </ModeItem>
@@ -158,6 +161,7 @@ const SimulatorForm = ({
           !isFormReady() && alert('모든 항목을 입력, 선택해주세요');
           createGame();
         }}
+        data-cy="startBtn"
       >
         CREATE
       </StartBtn>

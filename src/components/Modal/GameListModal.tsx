@@ -36,7 +36,6 @@ const GameListModal = ({
       )}
       {selectedGameData.type === 'simulatorForm' && (
         <SimulatorForm
-          initModalState={initModalState}
           simulatorFormData={simulatorFormData}
           setSimulatorFormData={setSimulatorFormData}
           showModal={showModal}

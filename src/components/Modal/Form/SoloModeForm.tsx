@@ -70,6 +70,7 @@ const SoloModeForm = () => {
               setTimerOption(true);
             }}
             isSelected={timerOption === true}
+            data-cy="timerOnBtn"
           >
             ON
           </FormOptionBtn>
@@ -92,6 +93,7 @@ const SoloModeForm = () => {
             createGame();
           }
         }}
+        data-cy="startBtn"
       >
         START
       </StartBtn>

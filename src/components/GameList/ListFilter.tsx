@@ -85,6 +85,7 @@ const ListFilter = ({ showModal, setFilterData, filterData }) => {
             onClick={() => {
               showModal('simulatorForm');
             }}
+            data-cy="makeGameBtn"
           >
             방만들기
           </MakeGameBtn>
@@ -92,7 +93,7 @@ const ListFilter = ({ showModal, setFilterData, filterData }) => {
             onClick={() => {
               showModal('soloModeForm');
             }}
-            data-cy="makeGameBtn"
+            data-cy="soloGameBtn"
           >
             혼자하기
           </MakeGameBtn>

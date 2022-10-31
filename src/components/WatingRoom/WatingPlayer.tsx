@@ -61,6 +61,7 @@ const WatingPlayer = ({ side, role, mode, playerData }) => {
           onClick={() => {
             postUserReadyData();
           }}
+          data-cy="readyBtn"
         >
           Ready
         </ReadyBtn>

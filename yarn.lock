@@ -1626,7 +1626,7 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@*", "@types/jest@^29.2.0":
+"@types/jest@*":
   "integrity" "sha512-KO7bPV21d65PKwv3LLsD8Jn3E05pjNjRZvkm+YTacWhVmykAb07wW6IkZUmQAltwQafNcDUEUrMO2h3jeBSisg=="
   "resolved" "https://registry.npmjs.org/@types/jest/-/jest-29.2.0.tgz"
   "version" "29.2.0"
@@ -2147,6 +2147,11 @@
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.3.3"
 
+"babel-plugin-react-remove-properties@^0.3.0":
+  "integrity" "sha512-vbxegtXGyVcUkCvayLzftU95vuvpYFV85pRpeMpohMHeEY46Qe0VNWfkVVcCbaZ12CXHzDFOj0esumATcW83ng=="
+  "resolved" "https://registry.npmjs.org/babel-plugin-react-remove-properties/-/babel-plugin-react-remove-properties-0.3.0.tgz"
+  "version" "0.3.0"
+
 "babel-plugin-styled-components@^2.0.7", "babel-plugin-styled-components@>= 1.12.0":
   "integrity" "sha512-i7YhvPgVqRKfoQ66toiZ06jPNA3p6ierpfUuEWxNF+fV27Uv5gxBkf8KZLHUCc1nFA9j6+80pYoIpqCeyW3/bA=="
   "resolved" "https://registry.npmjs.org/babel-plugin-styled-components/-/babel-plugin-styled-components-2.0.7.tgz"
@@ -2614,13 +2619,6 @@
   "integrity" "sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA=="
   "resolved" "https://registry.npmjs.org/csstype/-/csstype-3.1.0.tgz"
   "version" "3.1.0"
-
-"cypress-react-selector@^3.0.0":
-  "integrity" "sha512-AQCgwbcMDkIdYcf6knvLxqzBnejahIbJPHqUhARi8k+QbM8sgUBDds98PaHJVMdPiX2J8RJjXHmUMPD8VerPSw=="
-  "resolved" "https://registry.npmjs.org/cypress-react-selector/-/cypress-react-selector-3.0.0.tgz"
-  "version" "3.0.0"
-  dependencies:
-    "resq" "1.10.2"
 
 "cypress@^10.11.0", "cypress@^2.1.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0":
   "integrity" "sha512-lsaE7dprw5DoXM00skni6W5ElVVLGAdRUUdZjX2dYsGjbY/QnpzWZ95Zom1mkGg0hAaO/QVTZoFVS7Jgr/GUPA=="
@@ -3314,11 +3312,6 @@
   "integrity" "sha512-11Ndz7Nv+mvAC1j0ktTa7fAb0vLyGGX+rMHNBYQviQDGU0Hw7lhctJANqbPhu9nV9/izT/IntTgZ7Im/9LJs9g=="
   "resolved" "https://registry.npmjs.org/extsprintf/-/extsprintf-1.3.0.tgz"
   "version" "1.3.0"
-
-"fast-deep-equal@^2.0.1":
-  "integrity" "sha512-bCK/2Z4zLidyB4ReuIsvALH6w31YfAQDmXMqMx6FyfHqvBxtjC0eRumeSu4Bs3XtXwpyIywtSTrVT99BxY1f9w=="
-  "resolved" "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz"
-  "version" "2.0.1"
 
 "fast-deep-equal@^3.1.1", "fast-deep-equal@^3.1.3":
   "integrity" "sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q=="
@@ -5461,13 +5454,6 @@
     "is-core-module" "^2.9.0"
     "path-parse" "^1.0.7"
     "supports-preserve-symlinks-flag" "^1.0.0"
-
-"resq@1.10.2":
-  "integrity" "sha512-HmgVS3j+FLrEDBTDYysPdPVF9/hioDMJ/otOiQDKqk77YfZeeLOj0qi34yObumcud1gBpk+wpBTEg4kMicD++A=="
-  "resolved" "https://registry.npmjs.org/resq/-/resq-1.10.2.tgz"
-  "version" "1.10.2"
-  dependencies:
-    "fast-deep-equal" "^2.0.1"
 
 "restore-cursor@^3.1.0":
   "integrity" "sha512-l+sSefzHpj5qimhFSE5a8nufZYAM3sBSVMAPtYkmC+4EH2anSGaEMXSD0izRQbu9nfyQ9y5JrVmp7E8oZrUjvA=="
