@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type UserData = {
   userData: {
+    gameId: string | null;
     userId: string | null;
     name: string;
     side: string;
@@ -11,7 +12,14 @@ type UserData = {
 };
 
 const initialState: UserData = {
-  userData: { userId: '', name: '', side: '', role: '', isReady: false },
+  userData: {
+    gameId: '',
+    userId: '',
+    name: '',
+    side: '',
+    role: '',
+    isReady: false,
+  },
 };
 
 export const userDataSlice = createSlice({
@@ -37,6 +45,7 @@ export const userDataSlice = createSlice({
 
     initUserData: state => {
       state.userData = {
+        gameId: '',
         userId: '',
         name: '',
         side: '',

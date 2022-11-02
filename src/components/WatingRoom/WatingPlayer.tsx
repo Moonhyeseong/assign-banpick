@@ -59,7 +59,7 @@ const WatingPlayer = ({ side, role, mode, playerData }) => {
       {userIndicateData && userData?.isReady === false && (
         <ReadyBtn
           onClick={() => {
-            postUserReadyData();
+            userData?.gameId && postUserReadyData();
           }}
           data-cy="readyBtn"
         >

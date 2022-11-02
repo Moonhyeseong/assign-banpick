@@ -35,8 +35,8 @@ const GameRoom = ({ showModal, gameData: { _id, title, mode, userList } }) => {
   };
 
   return (
-    <GameRoomLayout>
-      <GameTitle>방 제목: {title}</GameTitle>
+    <GameRoomLayout data-cy="room">
+      <GameTitle data-cy="roomTitle">방 제목: {title}</GameTitle>
       <GameIndicator isFull={isFull()}>
         {isFull() ? `입장불가` : `입장가능`}
       </GameIndicator>

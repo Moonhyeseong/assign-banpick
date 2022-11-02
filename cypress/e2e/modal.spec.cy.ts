@@ -1,5 +1,5 @@
-describe('create game', () => {
-  it('passes', () => {
+describe('modal', () => {
+  it('create game', () => {
     cy.visit('/');
 
     cy.get('[data-cy=makeGameBtn]').click();
@@ -15,11 +15,13 @@ describe('create game', () => {
     cy.get('[data-cy=sideBtn]').click();
     cy.get('[data-cy=joinBtn]').click();
 
+    cy.contains('1 : 1').should('exist');
+    cy.contains('player1').should('exist');
     cy.contains('Ready').should('exist');
-    cy.window().then(win => {
-      // cy.url().should('include', win.sessionStorage.getItem('GAEM_ID'));
-      cy.log(win.sessionStorage.getItem('GAEM_ID'));
-    });
+
+    cy.wait(500);
     cy.get('[data-cy=readyBtn]').click();
   });
 });
+
+export {};

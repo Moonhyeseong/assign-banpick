@@ -119,6 +119,12 @@ const PlayerForm = ({
     const newUuid = uuid();
     sessionStorage.setItem('USER_ID', newUuid);
     dispatch(updateUserData({ type: 'userId', value: newUuid }));
+    dispatch(
+      updateUserData({
+        type: 'gameId',
+        value: sessionStorage.getItem('GAME_ID'),
+      })
+    );
   }, [dispatch, gameMode]);
 
   return (

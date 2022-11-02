@@ -118,7 +118,7 @@ const GameList = ({ gameData }: GameListProps) => {
         />
       )}
       <GameRoomsLayout>
-        <GameRoomContainer>
+        <GameRoomContainer daya-cy="rooms">
           {getGameList()?.length ? (
             getGameList()?.map(gameData => {
               return (
