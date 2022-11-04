@@ -4,7 +4,7 @@ FROM node:18.8.0
 
 WORKDIR /app
 
-#의존성 설치를 위해 package.json,yarn.lock 복사
+
 COPY . .
 
 

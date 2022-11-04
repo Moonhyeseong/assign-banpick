@@ -15,3 +15,5 @@ describe('lobby room list', () => {
     });
   });
 });
+
+export {};
