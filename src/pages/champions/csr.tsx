@@ -9,7 +9,7 @@ const Csr = () => {
 
   useEffect(() => {
     const getChampionData = async () => {
-      const res = await fetch(`${BASE_URL}:8080/game/champions`);
+      const res = await fetch(`${BASE_URL}:8000/game/champions`);
       const championData = await res.json();
       const championListData = Object.values(championData);
 

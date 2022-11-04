@@ -28,7 +28,7 @@ const WatingPlayer = ({ side, role, mode, playerData }) => {
 
   useEffect(() => {
     sessionStorage.getItem('USER_ID') &&
-      fetch(`${BASE_URL}:8080/user/${sessionStorage.getItem('USER_ID')}`)
+      fetch(`${BASE_URL}:8000/user/${sessionStorage.getItem('USER_ID')}`)
         .then(res => res.json())
         .then(res => {
           dispatch(getUserData(res));

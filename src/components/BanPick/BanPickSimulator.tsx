@@ -117,7 +117,7 @@ const BanPickSimulator = ({ game }: BanPickSimulatorProps) => {
       }),
     };
 
-    await fetch(`${BASE_URL}:8080/game/banpick`, fetchOption);
+    await fetch(`${BASE_URL}:8000/game/banpick`, fetchOption);
     socket.emit('banpick', sessionStorage.getItem('GAME_ID'));
   }, [banPickList, gameData?.banpickCount]);
 
@@ -133,7 +133,7 @@ const BanPickSimulator = ({ game }: BanPickSimulatorProps) => {
 
   const getUserDataAPI = () => {
     sessionStorage.getItem('USER_ID') &&
-      fetch(`${BASE_URL}:8080/user/${sessionStorage.getItem('USER_ID')}`)
+      fetch(`${BASE_URL}:8000/user/${sessionStorage.getItem('USER_ID')}`)
         .then(res => res.json())
         .then(res => {
           if (res) {

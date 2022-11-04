@@ -43,7 +43,7 @@ const Ssr = ({ championData }) => {
 export default Ssr;
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch(`${BASE_URL}:8080/game/champions`);
+  const res = await fetch(`${BASE_URL}:8000/game/champions`);
   const championData = await res.json();
 
   return { props: { championData: championData } };

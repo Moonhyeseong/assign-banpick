@@ -77,7 +77,7 @@ const SimulatorForm = ({
       }),
     };
 
-    fetch(`${BASE_URL}:8080/game`, fetchOption)
+    fetch(`${BASE_URL}:8000/game`, fetchOption)
       .then(res => res.json())
       .then(res => {
         sessionStorage.setItem('GAME_ID', res._id);

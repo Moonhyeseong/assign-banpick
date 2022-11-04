@@ -29,7 +29,7 @@ const SoloModeForm = () => {
       }),
     };
 
-    await fetch(`${BASE_URL}:8080/user`, fetchOption);
+    await fetch(`${BASE_URL}:8000/user`, fetchOption);
   };
 
   const createGame = async () => {
@@ -47,7 +47,7 @@ const SoloModeForm = () => {
         isProceeding: true,
       }),
     };
-    const res = await fetch(`${BASE_URL}:8080/game`, fetchOption);
+    const res = await fetch(`${BASE_URL}:8000/game`, fetchOption);
     const result = await res.json();
     sessionStorage.setItem('GAME_ID', result._id);
     createSoloUser(result._id);

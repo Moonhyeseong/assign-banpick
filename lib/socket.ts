@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { BASE_URL } from '../src/config';
 
-export const socket = io(`${BASE_URL}:8080`, {
+export const socket = io(`${BASE_URL}:8000`, {
   path: '/socket.io',
   transports: ['websocket'],
 });

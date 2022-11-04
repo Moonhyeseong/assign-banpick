@@ -72,7 +72,7 @@ const PlayerForm = ({
       }),
     };
 
-    await fetch(`${BASE_URL}:8080/user`, fetchOption);
+    await fetch(`${BASE_URL}:8000/user`, fetchOption);
   };
 
   const postUserJoin = async () => {
@@ -93,7 +93,7 @@ const PlayerForm = ({
       }),
     };
 
-    await fetch(`${BASE_URL}:8080/game/join`, fetchOption)
+    await fetch(`${BASE_URL}:8000/game/join`, fetchOption)
       .then(response => {
         if (!response.ok) {
           throw new Error('400 or 500 에러 발생');
