@@ -8,9 +8,9 @@ import { initSocketConnection } from '../../lib/socket';
 export default function Home({
   gameData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  useEffect(() => {
-    initSocketConnection();
-  }, []);
+  // useEffect(() => {
+  //   initSocketConnection();
+  // }, []);
 
   return (
     <>

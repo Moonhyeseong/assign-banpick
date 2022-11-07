@@ -7,6 +7,8 @@ WORKDIR /app
 
 COPY . .
 
+ENV NEXT_PUBLIC_BASE_API_URL="http://banpick.back.ps9.ps-analytics.com" \
+    NEXT_PUBLIC_API_PORT="" 
 
 #의존성 설치
 RUN yarn

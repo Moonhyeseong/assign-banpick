@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { MODEDATA } from '../CONSTDATA/CONSTDATA';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { BASE_URL } from '../../config';
 import { getUserData, userReadyAction } from '../Modal/Form/userDataSlice';
 import { socket } from '../../../lib/socket';
 import { SideProps } from '../types/component.type';
@@ -28,7 +27,11 @@ const WatingPlayer = ({ side, role, mode, playerData }) => {
 
   useEffect(() => {
     sessionStorage.getItem('USER_ID') &&
-      fetch(`${BASE_URL}:8080/user/${sessionStorage.getItem('USER_ID')}`)
+      fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}:${
+          process.env.NEXT_PUBLIC_API_PORT
+        }/user/${sessionStorage.getItem('USER_ID')}`
+      )
         .then(res => res.json())
         .then(res => {
           dispatch(getUserData(res));

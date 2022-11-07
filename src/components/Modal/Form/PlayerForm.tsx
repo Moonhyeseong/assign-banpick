@@ -4,7 +4,6 @@ import styled, { css } from 'styled-components';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import uuid from 'react-uuid';
 import { MODEDATA, ROLEDATA } from '../../CONSTDATA/CONSTDATA';
-import { BASE_URL } from '../../../config';
 import { initUserData, updateUserData } from './userDataSlice';
 import { socket } from '../../../../lib/socket';
 import { FormOptionBtnProps } from '../GameListModal';
@@ -72,7 +71,10 @@ const PlayerForm = ({
       }),
     };
 
-    await fetch(`${BASE_URL}:8080/user`, fetchOption);
+    await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}:${process.env.NEXT_PUBLIC_API_PORT}/user`,
+      fetchOption
+    );
   };
 
   const postUserJoin = async () => {
@@ -93,7 +95,10 @@ const PlayerForm = ({
       }),
     };
 
-    await fetch(`${BASE_URL}:8080/game/join`, fetchOption)
+    await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}:${process.env.NEXT_PUBLIC_API_PORT}/game/join`,
+      fetchOption
+    )
       .then(response => {
         if (!response.ok) {
           throw new Error('400 or 500 에러 발생');

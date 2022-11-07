@@ -5,8 +5,10 @@ import { ThemeProvider } from 'styled-components';
 import ContentWrapper from '../components/Layout/ContentsWrapper';
 import { theme } from '../styles/theme';
 import GlobalStyle from '../styles/GlobalStyle';
+import { initSocketConnection } from '../../lib/socket';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
+  initSocketConnection();
   return (
     <>
       <GlobalStyle />

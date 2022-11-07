@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { MODEDATA, PHASEDATA } from '../CONSTDATA/CONSTDATA';
 import { getUserData } from '../Modal/Form/userDataSlice';
-import { BASE_URL } from '../../config';
 import DisconnectAlert from '../Modal/DisconnectAlert';
 import ChampionList from './ChampionList/ChampionList';
 import PickList from './PickBanList/PickList';
@@ -117,7 +116,10 @@ const BanPickSimulator = ({ game }: BanPickSimulatorProps) => {
       }),
     };
 
-    await fetch(`${BASE_URL}:8080/game/banpick`, fetchOption);
+    await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}:${process.env.NEXT_PUBLIC_API_PORT}/game/banpick`,
+      fetchOption
+    );
     socket.emit('banpick', sessionStorage.getItem('GAME_ID'));
   }, [banPickList, gameData?.banpickCount]);
 
@@ -133,7 +135,11 @@ const BanPickSimulator = ({ game }: BanPickSimulatorProps) => {
 
   const getUserDataAPI = () => {
     sessionStorage.getItem('USER_ID') &&
-      fetch(`${BASE_URL}:8080/user/${sessionStorage.getItem('USER_ID')}`)
+      fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}:${
+          process.env.NEXT_PUBLIC_API_PORT
+        }/user/${sessionStorage.getItem('USER_ID')}`
+      )
         .then(res => res.json())
         .then(res => {
           if (res) {

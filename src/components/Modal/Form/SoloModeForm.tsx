@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
 import uuid from 'react-uuid';
-import { BASE_URL } from '../../../config';
 import { socket } from '../../../../lib/socket';
 import { FormOptionBtnProps } from '../GameListModal';
 
@@ -29,7 +28,10 @@ const SoloModeForm = () => {
       }),
     };
 
-    await fetch(`${BASE_URL}:8080/user`, fetchOption);
+    await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}:${process.env.NEXT_PUBLIC_API_PORT}/user`,
+      fetchOption
+    );
   };
 
   const createGame = async () => {
@@ -47,7 +49,10 @@ const SoloModeForm = () => {
         isProceeding: true,
       }),
     };
-    const res = await fetch(`${BASE_URL}:8080/game`, fetchOption);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}:${process.env.NEXT_PUBLIC_API_PORT}/game`,
+      fetchOption
+    );
     const result = await res.json();
     sessionStorage.setItem('GAME_ID', result._id);
     createSoloUser(result._id);

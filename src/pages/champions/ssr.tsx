@@ -2,7 +2,6 @@ import React from 'react';
 import Image from 'next/image';
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
-import { BASE_URL } from '../../config';
 import { RenderTestLayout, ChampionDataCard, ChampionName } from './index';
 
 const Ssr = ({ championData }) => {
@@ -43,7 +42,9 @@ const Ssr = ({ championData }) => {
 export default Ssr;
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch(`${BASE_URL}:8080/game/champions`);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_API_URL}:${process.env.NEXT_PUBLIC_API_PORT}/game/champions`
+  );
   const championData = await res.json();
 
   return { props: { championData: championData } };

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { BASE_URL } from '../../../config';
 import { initUserData } from './userDataSlice';
 import { MODEDATA } from '../../CONSTDATA/CONSTDATA';
 import { socket } from '../../../../lib/socket';
@@ -77,7 +76,10 @@ const SimulatorForm = ({
       }),
     };
 
-    fetch(`${BASE_URL}:8080/game`, fetchOption)
+    fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}:${process.env.NEXT_PUBLIC_API_PORT}/game`,
+      fetchOption
+    )
       .then(res => res.json())
       .then(res => {
         sessionStorage.setItem('GAME_ID', res._id);
